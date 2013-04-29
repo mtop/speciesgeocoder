@@ -4,9 +4,9 @@
 #	geocoder.py is a program written in Python that takes one file 
 #	containing polygons, and one file with species locality data 
 #	as input. The program then tests if a species have been recorded 
-#	inside any of the polygons. The result is presented as a nexux- 
-#	file with "0" indicating absence, and "1" indicating presence 
-#	in a polygon.
+#	inside any of the polygons. The result is presented as a nexus- 
+#	file with "0" indicating absence, and "1" indicating presence of
+#	a species in a polygon.
 #
 # 	Input:	See the example files localities.txt and polygons.txt. 
 # 	Output: 	See the example file ivesioids_out.nex.
@@ -29,42 +29,20 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from optparse import OptionParser
+import argparse
 
-# Figure out the options and arguments
-def input(option, opt_str, value, parser):
-	assert value is None
-	value = []
-	for arg in parser.rargs:
-		# Stop on --foo like option
-		if arg[:2] == "--" and len(arg) > 2:
-			break
-		# Stop on -a
-		if arg[:1] == "-" and len(arg) > 1:
-			break
-		value.append(arg)
-	del parser.rargs[:len(value)]
-	setattr(parser.values, option.dest, value)
-
-usage = "\n  %prog -p [Polygon_file] -l [Locality_data_file] -o [Optional_output_file]"
-opts=OptionParser(usage=usage, version="%prog v.0.2")
-
-opts.add_option("--polygons", "-p", dest="polygons", action="callback",
-callback=input, help="Path to file containing polygon coordinates")
-
-opts.add_option("--localities", "-l", dest="localities", action="callback",
-callback=input, help="Path to file containig species locality data")
-
-opts.add_option("--out", "-o", dest="output", action="callback",
-callback=input, default=[None], help="Name of optional outputfile. Output is otherwise sent to STDOUT by default")
-
-options, arguments = opts.parse_args()
+parser = argparse.ArgumentParser()
+parser.add_argument("-p", "--polygons", help="Path to file containing polygon coordinates")
+parser.add_argument("-l", "--localities", help="Path to file containing species locality data")
+parser.add_argument("-o", "--out", help="Name of optional output file. Output is sent to STDOUT by default")
+parser.add_argument("-v", "--verbose", action="store_true", help="Also report the number of times a species is found in a particular polygon")
+args = parser.parse_args()
 
 
 class Polygons(object):
 	# Object that contains all polygons.
 	def __init__(self):
-		self.polygonFile = options.polygons[0]
+		self.polygonFile = args.polygons # [0]
 		self.polygonNames = []
 		for polygon in self.getPolygons():
 			self.setPolygonNames(polygon[0])
@@ -104,7 +82,7 @@ class Polygons(object):
 class Localities(object):
 	# Object that contains the locality data,
 	def __init__(self):
-		self.localityFile = options.localities[0]
+		self.localityFile = args.localities # [0]
 		self.speciesNames = []
 		for name in self.getLocalities():
 			self.setSpeciesNames(name[1])
@@ -219,7 +197,7 @@ class Result(object):
 		print "\tMatrix"
 		# Print the species names and character matrix
 		for name in self.getResult():
-			print name.replace(" ","_"), '\t', self.resultToStr(self.result[name])
+			print name.replace(" ","_"), '\t\t', self.resultToStr(self.result[name])
 		print '\t;'
 		print 'End;'
 
@@ -228,7 +206,10 @@ class Result(object):
 		string = ''
 		for i in resultList:
 			if i > 0:
-				string += "1"
+				if args.verbose:
+					string += "1" + "[" + str(i) + "]"
+				else:
+					string += "1"
 			else:
 				string += "0"
 		return string
@@ -248,7 +229,6 @@ def main():
 			# polygon[1] = species name, locality[2] = longitude, locality[3] = latitude
 			if pointInPolygon(polygon[1], locality[2], locality[3]) == True:
 				result.setResult(locality[1], polygon[0])
-
 	result.printNexus()
 
 
