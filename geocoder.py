@@ -29,6 +29,12 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+### TODO ###
+#
+# Check that in-data is in the right format.
+#
+############
+
 import argparse
 
 parser = argparse.ArgumentParser()
@@ -86,6 +92,7 @@ class Localities(object):
 	def __init__(self):
 		self.localityFile = args.localities # [0]
 		self.speciesNames = []
+		self.order = ""
 		for name in self.getLocalities():
 			self.setSpeciesNames(name[0])
 
@@ -127,20 +134,25 @@ class GbifLocalities(object):
 		self.gbifFile = args.gbif
 		self.speciesNames = []
 		for name in self.getLocalities():
-			self.setSpeciesNames(name)	# [1]
+			self.setSpeciesNames(name[0])	# [1]
 
 	def getLocalities(self):
 		f = open(self.gbifFile)
 		lines = f.readlines()
 		for line in lines:
-			if line.split("\t")[5] and line.split("\t")[6]:
+			# Make sure the record has both lat. and long. data.
+			if len(line.split("\t")[5]) > 0 and len(line.split("\t")[6]) > 0:
 				if line.split("\t")[5] == "Latitude":
 					continue
-			else:
-				species = line.split("\t")[3]
-				latitude = line.split("\t")[5]
-				longitude = line.split("\t")[6]
-				yield species, latitude, longitude
+			try:
+				float(line.split("\t")[5])
+				float(line.split("\t")[6])
+			except:
+				continue
+			species = line.split("\t")[3]
+			latitude = line.split("\t")[5]
+			longitude = line.split("\t")[6]
+			yield species, latitude, longitude
 
 	def setSpeciesNames(self, name):
 		if name not in self.speciesNames:
@@ -156,9 +168,15 @@ def pointInPolygon(poly, x, y):
 	# Othewise returns "False". The polygon is a list of 
 	# Longitude/Latitude (x,y) pairs.
 	# Code modified from  http://www.ariel.com.au/a/python-point-int-poly.html
-
-	x = float(x)
-	y = float(y)
+	
+	try:
+		x = float(x)
+	except:
+		print "x is not a number"
+	try:
+		y = float(y)
+	except:
+		print "y is not a number"
 	n = len(poly)
 	inside = False
 	p1x,p1y = poly[0].split(',')
@@ -252,7 +270,7 @@ class Result(object):
 		print "\n"
 		print "\tMatrix"
 		# Print the species names and character matrix
-		for name in self.getResult():
+		for name in sorted(self.getResult()):
 			print name.replace(" ","_"), '\t\t', self.resultToStr(self.result[name])
 		print '\t;'
 		print 'End;'
@@ -270,29 +288,15 @@ class Result(object):
 				string += "0"
 		return string
 
-class MyResult(Result): #, localities, polygons):
-	def __init__(self, localities, polygons):
-		self.speciesNames = localities.getSpeciesNames()
-		self.polygonNames =  polygons.getPolygonNames()
-#		self.result = {}
-
-class GbifResult(Result):
-	def __init__(self, gbifData, polygons):
-		self.speciesNames = gbifData.getSpeciesNames()
-#		self.result = {}
-
-
 def main():
 	# Read the locality data and test if the coordinates 
 	# are located in any of the polygons.
 	polygons = Polygons()
-#	result = Result(polygons, localities)
 	result = Result(polygons)
 	# For each locality record ...
 	if args.localities:
 		localities = Localities()
 		result.setSpeciesNames(localities)
-#		localities = Localities()
 		for locality in localities.getLocalities():
 			# ... and for each polygon ...
 			for polygon in polygons.getPolygons():
@@ -300,7 +304,6 @@ def main():
 				if localities.getCoOrder() == "lat-long":
 					# locality[0] = species name, locality[1] = latitude, locality[2] =  longitude
 					if pointInPolygon(polygon[1], locality[2], locality[1]) == True:
-#						print result.getSpeciesNames()
 						result.setResult(locality[0], polygon[0])
 				else:
 					# locality[0] = species name, locality[1] = longitude, locality[2] =  latitude
@@ -308,7 +311,8 @@ def main():
 						result.setResult(locality[0], polygon[0])
 	
 	if args.gbif:
-#		gbifData = GbifLocalities()
+		gbifData = GbifLocalities()
+		result.setSpeciesNames(gbifData)
 		# For each GBIF locality record ...
 		for locality in gbifData.getLocalities():
 			# ... and for each polygon ...
@@ -322,6 +326,3 @@ def main():
 
 if __name__ == "__main__":
 	main()
-#	polygons = Polygons()
-#	for i in polygons.getPolygonNames():
-#		print i
