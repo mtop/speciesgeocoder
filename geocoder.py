@@ -34,6 +34,7 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--polygons", help="Path to file containing polygon coordinates")
 parser.add_argument("-l", "--localities", help="Path to file containing species locality data")
+parser.add_argument("-g", "--gbif", help="Path to file containing species locality data downloaded from GBIF")
 parser.add_argument("-o", "--out", help="Name of optional output file. Output is sent to STDOUT by default")
 parser.add_argument("-v", "--verbose", action="store_true", help="Also report the number of times a species is found in a particular polygon")
 args = parser.parse_args()
@@ -80,12 +81,13 @@ class Polygons(object):
 
 
 class Localities(object):
-	# Object that contains the locality data,
+	# Object that contains the locality data
+	# read from a tab-delimited *.csv file.
 	def __init__(self):
 		self.localityFile = args.localities # [0]
 		self.speciesNames = []
 		for name in self.getLocalities():
-			self.setSpeciesNames(name[1])
+			self.setSpeciesNames(name[0])
 
 	def getLocalities(self):
 		f = open(self.localityFile)
@@ -93,16 +95,23 @@ class Localities(object):
 		for line in lines:
 			if not line:
 				break
-			# Skip comments in the file
+			# Determine the Lat/Long column order
 			if line[0] == "#":
+				strings = ["Latitude", "latitude", "Lat.", "lat.", "Lat", "lat"]
+				if line.split("\t")[1] not in strings:
+					self.order = "long-lat"
+				else:
+					self.order = "lat-long"
 				continue
-			splitline = line.split()
-			numbers = splitline[0]
-			species = splitline[1] + ' ' + splitline[2]
+			splitline = line.split("\t")
+			species = splitline[0]  # + ' ' + splitline[2]
 			self.setSpeciesNames(species)
-			longitude = splitline[3]
-			latitude = splitline[4]
-			yield numbers, species, longitude, latitude
+			latitude = splitline[1]
+			longitude = splitline[2]
+			yield species, latitude, longitude
+	
+	def getCoOrder(self):
+		return self.order
 
 	def setSpeciesNames(self, name):
 		if name not in self.speciesNames:
@@ -110,7 +119,36 @@ class Localities(object):
 
 	def getSpeciesNames(self):
 		return self.speciesNames
-		
+
+class GbifLocalities(object):
+	# Object that contains the locality data in the form
+	# that is delivered from http://data.gbif.org 
+	def __init__(self):
+		self.gbifFile = args.gbif
+		self.speciesNames = []
+		for name in self.getLocalities():
+			self.setSpeciesNames(name)	# [1]
+
+	def getLocalities(self):
+		f = open(self.gbifFile)
+		lines = f.readlines()
+		for line in lines:
+			if line.split("\t")[5] and line.split("\t")[6]:
+				if line.split("\t")[5] == "Latitude":
+					continue
+			else:
+				species = line.split("\t")[3]
+				latitude = line.split("\t")[5]
+				longitude = line.split("\t")[6]
+				yield species, latitude, longitude
+
+	def setSpeciesNames(self, name):
+		if name not in self.speciesNames:
+			self.speciesNames.append(name)
+	
+	def getSpeciesNames(self):
+		return self.speciesNames
+
 
 
 def pointInPolygon(poly, x, y):
@@ -139,22 +177,40 @@ def pointInPolygon(poly, x, y):
 		p1x,p1y = p2x,p2y
 	return inside
 
+
 class Result(object):
-	def __init__(self, polygons, localities):
+	def __init__(self, polygons):
 		self.polygonNames =  polygons.getPolygonNames()
-		self.speciesNames = localities.getSpeciesNames()
+	
+	def setSpeciesNames(self, dataObject):
 		# Create a dictionary where each key corresponds to 
 		# a speceis names, and the values are initially lists
 		# of zeros of the same length as the number of polygons. 
-		self.emptyList = []
+		self.initialList = []
 		for i in range(len(self.polygonNames)):
-			self.emptyList.append(0)
-		self.result = {}
-		for name in self.speciesNames:
-			self.result[name] = self.emptyList
+			self.initialList.append(0)
+		try:
+			if self.result:
+				pass
+		except:
+			self.result = {}
+
+		for name in dataObject.getSpeciesNames():
+			if name not in self.result:
+				self.result[name] = self.initialList
+			else:
+				continue
+#		print self.result		# Devel.
+
 
 	def getSpeciesNames(self):
-		return self.speciesNames
+		speciesNames = []
+		for key in self.result:
+			speciesNames.append(key)
+		return speciesNames
+
+#	def setSpeciesNames(self, ):
+#		self.speciesNames = localities.getSpeciesNames()
 
 	def getPolygonNames(self):
 		return self.polygonNames
@@ -214,21 +270,53 @@ class Result(object):
 				string += "0"
 		return string
 
+class MyResult(Result): #, localities, polygons):
+	def __init__(self, localities, polygons):
+		self.speciesNames = localities.getSpeciesNames()
+		self.polygonNames =  polygons.getPolygonNames()
+#		self.result = {}
+
+class GbifResult(Result):
+	def __init__(self, gbifData, polygons):
+		self.speciesNames = gbifData.getSpeciesNames()
+#		self.result = {}
+
 
 def main():
 	# Read the locality data and test if the coordinates 
 	# are located in any of the polygons.
 	polygons = Polygons()
-	localities = Localities()
-	result = Result(polygons, localities)
+#	result = Result(polygons, localities)
+	result = Result(polygons)
 	# For each locality record ...
-	for locality in localities.getLocalities():
-		# ... and for each polygon ...
-		for polygon in polygons.getPolygons():
-			# ... test if the locality record is found in the polygon.
-			# polygon[1] = species name, locality[2] = longitude, locality[3] = latitude
-			if pointInPolygon(polygon[1], locality[2], locality[3]) == True:
-				result.setResult(locality[1], polygon[0])
+	if args.localities:
+		localities = Localities()
+		result.setSpeciesNames(localities)
+#		localities = Localities()
+		for locality in localities.getLocalities():
+			# ... and for each polygon ...
+			for polygon in polygons.getPolygons():
+				# ... test if the locality record is found in the polygon.
+				if localities.getCoOrder() == "lat-long":
+					# locality[0] = species name, locality[1] = latitude, locality[2] =  longitude
+					if pointInPolygon(polygon[1], locality[2], locality[1]) == True:
+#						print result.getSpeciesNames()
+						result.setResult(locality[0], polygon[0])
+				else:
+					# locality[0] = species name, locality[1] = longitude, locality[2] =  latitude
+					if pointInPolygon(polygon[1], locality[1], locality[2]) == True:
+						result.setResult(locality[0], polygon[0])
+	
+	if args.gbif:
+#		gbifData = GbifLocalities()
+		# For each GBIF locality record ...
+		for locality in gbifData.getLocalities():
+			# ... and for each polygon ...
+			for polygon in polygons.getPolygons():
+				# ... test if the locality record is found in the polygon.
+				if pointInPolygon(polygon[1], locality[2], locality[1]) == True:
+					result.setResult(locality[0], polygon[0])
+
 	result.printNexus()
 
 
