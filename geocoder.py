@@ -32,6 +32,8 @@
 ### TODO ###
 #
 # Check that in-data is in the right format.
+# Remove "_" characters from species names.
+# Add option to only regard "Genus" and "species epithet" parts of species names.
 #
 ############
 
@@ -41,8 +43,9 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--polygons", help="Path to file containing polygon coordinates")
 parser.add_argument("-l", "--localities", help="Path to file containing species locality data")
 parser.add_argument("-g", "--gbif", help="Path to file containing species locality data downloaded from GBIF")
-parser.add_argument("-o", "--out", help="Name of optional output file. Output is sent to STDOUT by default")
+#parser.add_argument("-o", "--out", help="Name of optional output file. Output is sent to STDOUT by default")
 parser.add_argument("-v", "--verbose", action="store_true", help="Also report the number of times a species is found in a particular polygon")
+parser.add_argument("-b", "--binomial", action="store_true", help="Treats first two words in species names as genus name and species epithet. Use with case as this option is LIKELY TO LEAD TO ERRONEOUS RESULTS if names in input data are not in binomial form.")
 args = parser.parse_args()
 
 
@@ -84,9 +87,19 @@ class Polygons(object):
 				poly_2.append(mod.rstrip('\n'))
 		return poly_2
 									
-
-
 class Localities(object):
+	def getBinomialName(self, speciesName):
+		# Returns a string including only the genus name and species epithet.
+		n = speciesName.split()
+		name = n[0]
+		try:
+			if n[1]:
+				name = str(name + " " + n[1])
+		except:
+			pass
+		return name
+
+class MyLocalities(Localities):
 	# Object that contains the locality data
 	# read from a tab-delimited *.csv file.
 	def __init__(self):
@@ -111,11 +124,15 @@ class Localities(object):
 					self.order = "lat-long"
 				continue
 			splitline = line.split("\t")
-			species = splitline[0]  # + ' ' + splitline[2]
+
+			if args.binomial:
+				species = self.getBinomialName(splitline[0])
+			else:
+				species = splitline[0]  # + ' ' + splitline[2]
 			self.setSpeciesNames(species)
 			latitude = splitline[1]
 			longitude = splitline[2]
-			yield species, latitude, longitude
+			yield species.replace("  ", " "), latitude, longitude
 	
 	def getCoOrder(self):
 		return self.order
@@ -127,7 +144,7 @@ class Localities(object):
 	def getSpeciesNames(self):
 		return self.speciesNames
 
-class GbifLocalities(object):
+class GbifLocalities(Localities):
 	# Object that contains the locality data in the form
 	# that is delivered from http://data.gbif.org 
 	def __init__(self):
@@ -149,10 +166,13 @@ class GbifLocalities(object):
 				float(line.split("\t")[6])
 			except:
 				continue
-			species = line.split("\t")[3]
+			if args.binomial:
+				species = self.getBinomialName(line.split("\t")[3])
+			else:
+				species = line.split("\t")[3]
 			latitude = line.split("\t")[5]
 			longitude = line.split("\t")[6]
-			yield species, latitude, longitude
+			yield species.replace("  ", " "), latitude, longitude
 
 	def setSpeciesNames(self, name):
 		if name not in self.speciesNames:
@@ -295,7 +315,7 @@ def main():
 	result = Result(polygons)
 	# For each locality record ...
 	if args.localities:
-		localities = Localities()
+		localities = MyLocalities()
 		result.setSpeciesNames(localities)
 		for locality in localities.getLocalities():
 			# ... and for each polygon ...
