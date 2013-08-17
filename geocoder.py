@@ -7,10 +7,26 @@
 #	inside any of the polygons. The result is presented as a nexus- 
 #	file with "0" indicating absence, and "1" indicating presence of
 #	a species in a polygon.
+###
+# 	Input localities:
+#	
+#	#Species name	Lat.	Longitude	Comment
+#	Ivesia aperta	39.82	-120.4	CHSC35943
+#	Ivesia aperta	39.81	-120.39	CHSC88602
+#	Ivesia aperta	39.53	-120.37	
+#	...
 #
-# 	Input:	See the example files localities.txt and polygons.txt. 
+#	Input polygons:
+#
+#	polygon_USA_Long_Lat: -132.1875,49.61071 -80.15625,50.513427 -79.101562,23.885838 -132.1875,24.846565 -132.1875,49.61071
+#	polygon_EU: 24.287109,72.118943 7.587891,68.323557 -14.384766,55.760092 -14.033203,34.428056 -5.068359,36.007635 10.224609,38.525248 20.947266,33.991954 40.634766,60.744845 24.287109,72.118943
+#	
+#	Also see the example files localities.csv and polygons.txt. 
+#			
 # 	Output: 	See the example file ivesioids_out.nex.
-
+#
+###
+#
 #	Copyright (C) 2013 Mats Töpel. 
 #
 #	Citation: If you use this version of the program, please cite;
@@ -32,8 +48,8 @@
 ### TODO ###
 #
 # Check that in-data is in the right format.
-# Remove "_" characters from species names.
-# Add option to only regard "Genus" and "species epithet" parts of species names.
+# Remove "_" characters from species names. - DONE
+# Add option to only regard "Genus" and "species epithet" parts of species names. - DONE
 #
 ############
 
@@ -45,7 +61,7 @@ parser.add_argument("-l", "--localities", help="Path to file containing species 
 parser.add_argument("-g", "--gbif", help="Path to file containing species locality data downloaded from GBIF")
 #parser.add_argument("-o", "--out", help="Name of optional output file. Output is sent to STDOUT by default")
 parser.add_argument("-v", "--verbose", action="store_true", help="Also report the number of times a species is found in a particular polygon")
-parser.add_argument("-b", "--binomial", action="store_true", help="Treats first two words in species names as genus name and species epithet. Use with case as this option is LIKELY TO LEAD TO ERRONEOUS RESULTS if names in input data are not in binomial form.")
+parser.add_argument("-b", "--binomial", action="store_true", help="Treats first two words in species names as genus name and species epithet. Use with care as this option is LIKELY TO LEAD TO ERRONEOUS RESULTS if names in input data are not in binomial form.")
 args = parser.parse_args()
 
 
