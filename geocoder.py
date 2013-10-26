@@ -60,6 +60,7 @@
 ############
 
 import argparse
+import sys
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--polygons", help="Path to file containing polygon coordinates")
@@ -244,11 +245,11 @@ def pointInPolygon(poly, x, y):
 	try:
 		x = float(x)
 	except:
-		print "x is not a number"
+		print >> sys.stderr, "[Warning] x is not a number"
 	try:
 		y = float(y)
 	except:
-		print "y is not a number"
+		print >> sys.stderr, "[Warning] y is not a number"
 	n = len(poly)
 	inside = False
 	p1x,p1y = poly[0].split(',')
