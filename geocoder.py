@@ -70,6 +70,7 @@ parser.add_argument("-t", "--tif", help="Path to geotiff file(s)", nargs="*")
 #parser.add_argument("-o", "--out", help="Name of optional output file. Output is sent to STDOUT by default")
 parser.add_argument("-v", "--verbose", action="store_true", help="Also report the number of times a species is found in a particular polygon")
 parser.add_argument("-b", "--binomial", action="store_true", help="Treats first two words in species names as genus name and species epithet. Use with care as this option is LIKELY TO LEAD TO ERRONEOUS RESULTS if names in input data are not in binomial form.")
+parser.add_argument("--test", help="Test if the imput data is in the right format", action="store_true")
 args = parser.parse_args()
 
 
@@ -82,7 +83,7 @@ class Polygons(object):
 			self.setPolygonNames(polygon[0])
 
 	def getPolygons(self):
-		f = open(self.polygonFile)
+		f = open(self.polygonFile, "rU")
 		lines = f.readlines()
 		for line in lines:
 			low = None
@@ -161,7 +162,7 @@ class MyLocalities(Localities):
 			self.setSpeciesNames(name[0])
 
 	def getLocalities(self):
-		f = open(self.localityFile)
+		f = open(self.localityFile, "rU")
 		lines = f.readlines()
 		for line in lines:
 			if not line:
@@ -195,6 +196,9 @@ class MyLocalities(Localities):
 	def getSpeciesNames(self):
 		return self.speciesNames
 
+	def getLocalityFileName(self):
+		return self.localityFile
+
 class GbifLocalities(Localities):
 	# Object that contains the locality data in the form
 	# that is delivered from http://data.gbif.org 
@@ -205,7 +209,7 @@ class GbifLocalities(Localities):
 			self.setSpeciesNames(name[0])	# [1]
 
 	def getLocalities(self):
-		f = open(self.gbifFile)
+		f = open(self.gbifFile, "rU")
 		lines = f.readlines()
 		for line in lines:
 			# Make sure the record has both lat. and long. data.
@@ -245,11 +249,11 @@ def pointInPolygon(poly, x, y):
 	try:
 		x = float(x)
 	except:
-		print >> sys.stderr, "[Warning] x is not a number"
+		print >> sys.stderr, "[ Warning ] x is not a number"
 	try:
 		y = float(y)
 	except:
-		print >> sys.stderr, "[Warning] y is not a number"
+		print >> sys.stderr, "[ Warning ] y is not a number"
 	n = len(poly)
 	inside = False
 	p1x,p1y = poly[0].split(',')
@@ -416,8 +420,6 @@ def elevationTest(lat, lon, polygon, index):
 #	print "Long:	", lon
 
 	
-
-
 def main():
 	# Read the locality data and test if the coordinates 
 	# are located in any of the polygons.
@@ -485,4 +487,14 @@ def main():
 
 
 if __name__ == "__main__":
-	main()
+	
+	if args.test == True:
+		from lib.testData import testLocality
+		if args.localities:
+			localities = MyLocalities()
+			for locality in localities.getLocalities():
+				testLocality(locality, args.localities)
+
+
+	else:
+		main()
