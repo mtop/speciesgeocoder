@@ -489,11 +489,15 @@ def main():
 if __name__ == "__main__":
 	
 	if args.test == True:
-		from lib.testData import testLocality
 		if args.localities:
+			from lib.testData import testLocality
 			localities = MyLocalities()
-			for locality in localities.getLocalities():
-				testLocality(locality, args.localities)
+			testLocality(localities, args.localities)
+
+		if args.polygons:
+			from lib.testData import testPolygons
+			polygons = Polygons()
+			testPolygons(polygons, args.polygons)
 
 
 	else:
