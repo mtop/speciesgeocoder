@@ -1,6 +1,7 @@
 #!/opt/python/bin/python2.7
-###!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
+###!/usr/bin/env python
 
 #	geocoder.py is a program written in Python that takes one file 
 #	containing polygons, and one file with species locality data 
