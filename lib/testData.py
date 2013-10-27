@@ -9,16 +9,27 @@ def testLocality(localities, fileName):
 			try:
 				i.decode('ascii')
 			except UnicodeDecodeError:
-				string = "[ Warning ] \'%s\' conains non-ascii characters" % locality[0]
+				string = "[ Warning ] A problem was detected on row [" + locality[0] + " " + locality[1] + " " + locality[2] + "]"
 				result.append(string)
-				string = "	" + locality[0] + " " + locality[1] + " " + locality[2] + "\n"
+				string = "[ Warning ] \'%s\' contains non-ascii characters" % i
 				result.append(string)
+
+		# Check that the coordinates only contains legal characters 
+		# and hence can be converted to a floating point number.
+		try:
+			float(locality[1])
+		except:
+			string =  "[ Error ]   \'%s\' is not a decimal number." % locality[1]
+			result.append(string)
+			
+
 	if result: 	
-		print ""
 		for string in result:
 			print str(string)
+	else:
+		print "[--] \'%s\' passed all tests." % fileName
 
-def testPolygons(polygons, filename):
+def testPolygons(polygons, fileName):
 	result = []
 	for polygon in polygons.getPolygons():
 		for i in polygon[0]:				# polygon[0] = Polygon name
@@ -57,7 +68,7 @@ def testPolygons(polygons, filename):
 			
 
 	if result:
-		print ""
 		for string in result:
 			print str(string)
-		print ""
+	else:
+		print "[--] \'%s\' passed all tests." % fileName
