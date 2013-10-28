@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from osgeo import gdal
+import random
 import sys
 
 infiles = sys.argv[1:]
@@ -31,6 +32,14 @@ class geoTiff(object):
 	def maxy(self):
 		return self.MAXY
 
+	def corners(self):
+		return "MinX: ", ds.minx(), "MaxX: ", ds.maxx(), "MinY: ", ds.miny(), "MaxY: ", ds.maxy()
+
+	
+	def random(self):	
+		lon, lat = random.randrange(int(self.MINX), int(self.MAXX)), random.randrange(int(self.MINY), int(self.MAXY))
+#		return self.elevation(lon, lat)
+
 	def elevation(self, lon, lat):
 		# self.MAXY + (row * self.gt[5]) together with
 		# self.MINX + (col * self.gt[1]) referes to the 
@@ -43,8 +52,40 @@ class geoTiff(object):
 		col = 1
 		while (self.MINX + (col * self.gt[1])) < lon:
 			col += 1
-		print "Elevation: ", self.ds.ReadAsArray()[col][row]
+#		print "Elevation: ", self.ds.ReadAsArray()[col][row]
 		return self.ds.ReadAsArray()[col][row]
+
+	def test(self, lon, lat):
+		row = 1
+		while (self.MAXY + (row * self.gt[5])) > lat:
+#			print "MaxY: ", self.MAXY
+#			print "Row: ", row
+#			print "Lat: ", lat
+			row += 1
+		print "Row: ", row
+		col = 1
+
+#		print "MinX: ", self.MINX
+#		print "Col: ", col
+#		print "Long: ", lon
+#		print "Test: ", (self.MINX + (col * self.gt[1]))
+
+		while (self.MINX + (col * self.gt[1])) < lon:
+#			print "Test lon: ", (self.MINX + (col * self.gt[1]))
+#			print "MinY: ", self.MINY
+#			print "Col: ", col
+#			print "Long: ", lon
+			col += 1
+		print "Col: ", col
+#		print self.ds.ReadAsArray()[0][col][row]
+#		print self.ds.ReadAsArray()[0][row][col]
+#		print self.ds.ReadAsArray()[1][row][col]
+#		print self.ds.ReadAsArray()[2][row][col]
+#		print self.ds.ReadAsArray().shape				# Works
+		print self.ds.ReadAsArray()[0:3, row, col]
+
+	def test_2(self, col, row, i):
+		print self.ds.ReadAsArray()[col][row][i]
 		
 
 
@@ -91,20 +132,48 @@ def coordInTif(lon, lat, tifFiles):
 if __name__ == "__main__":
 	# 57.496642,18.448362 are the coordinates for Roma, Gotland.
 	# 57.6627998352, 18.346200943 are the coordinates for Visby airport.
-#	lat = 57.496642
-#	lon = 18.448362
-	lat = 57.6627998352
-	lon = 18.346200943
 
-	### Identify the correct file, given the lat/long coordinates and a set of geotiff files.
-	tifIndex = indexTiffs(infiles)
-#	print tifIndex
-	correct_file = coordInTif(lon, lat, tifIndex)
+	my_file = gdal.Open(sys.argv[1])	
+	ds = geoTiff(my_file)
+#	print dir(my_file)
+#	print ""
+#	print dir(ds)
+	print "Corners: ", ds.corners()
+	print "GetGeoTransform: ", my_file.GetGeoTransform()
+	ds.test(float(63), float(63))							# Result: 107, 146, 36 as expected
+#	ds.test_2(9559, 4366)
+#	ds.test_2(2,400,3)			# Testat Max [0]: 2 [1]: 361
 
-	### Test elevation extraction given long/lat coordinates and one geotiff file.
-	if correct_file:
-		my_file = gdal.Open(correct_file)
-		ds = geoTiff(my_file)
-		print ds.elevation(float(lon), float(lat))
+
+
+#	print "Value 1-1: ", ds.elevation(float(18.448362), float(57.496642))
+#	print "Value 1-1: ", ds.elevation(float(-1), float(-1))						# Crash
+#	print "Metadata: ", my_file.GetMetadata()					# Metadata: {}
+#	print "Metadata_list: ", my_file.GetMetadata_List()			# None
+#	print "As array: ", my_file.ReadAsArray()					# OK
+#	print "Length of array: ", len(my_file.ReadAsArray())		# Length is 3.
+#	print "GetGeoTransform: ", my_file.GetGeoTransform()		# (-180.03879301265735, 0.018939867494837094, 0.0, 83.678805953060021, 0.0, -0.018939867494837094)
+#	print my_file.GetMetadataItem(1,1)							# Crash
+
+
+
+
+
+
+
+
+
+#	lat = 57.6627998352
+#	lon = 18.346200943
+#
+#	### Identify the correct file, given the lat/long coordinates and a set of geotiff files.
+#	tifIndex = indexTiffs(infiles)
+#	correct_file = coordInTif(lon, lat, tifIndex)
+#
+#	### Test elevation extraction given long/lat coordinates and one geotiff file.
+#	if correct_file:
+#		my_file = gdal.Open(correct_file)
+#		ds = geoTiff(my_file)
+#		print ds.elevation(float(lon), float(lat))
 
 
