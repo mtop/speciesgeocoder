@@ -70,7 +70,7 @@ parser.add_argument("-t", "--tif", help="Path to geotiff file(s)", nargs="*")
 #parser.add_argument("-o", "--out", help="Name of optional output file. Output is sent to STDOUT by default")
 parser.add_argument("-v", "--verbose", action="store_true", help="Also report the number of times a species is found in a particular polygon")
 parser.add_argument("-b", "--binomial", action="store_true", help="Treats first two words in species names as genus name and species epithet. Use with care as this option is LIKELY TO LEAD TO ERRONEOUS RESULTS if names in input data are not in binomial form.")
-parser.add_argument("-n", "--number", help="Minimum number of occurences in a polygon", nargs="*")
+parser.add_argument("-n", "--number", help="Minimum number of occurences in a polygon. The number of excluded localities will be reported by default", nargs="*")
 parser.add_argument("--test", help="Test if the imput data is in the right format", action="store_true")
 args = parser.parse_args()
 
