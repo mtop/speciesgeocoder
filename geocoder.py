@@ -463,9 +463,9 @@ def main():
 #								print polygon[0], "has elevation restrictions"		# Devel.
 								# Store the result
 								result.setResult(locality[0], polygon[0])		
-		#				else:
-		#					# Store the result
-		#					result.setResult(locality[0], polygon[0])
+						else:
+							# Store the result
+							result.setResult(locality[0], polygon[0])
 				else:
 					print "In Main: Reversed order of coordinated found!"
 ###					# locality[0] = species name, locality[1] = longitude, locality[2] =  latitude
