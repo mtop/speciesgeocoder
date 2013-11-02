@@ -8,7 +8,7 @@
 #	file with "0" indicating absence, and "1" indicating presence of
 #	a species in a polygon.
 ###
-# 	Input localities (e.g exported in tab delimited cvs format. Lines starting with "#" are ignored):
+# 	Input localities: Tab delimited data in cvs format. Lines starting with "#" are ignored.
 #	
 #	#Species name	Lat.	Longitude	Comment
 #	Ivesia aperta	39.82	-120.4	CHSC35943
@@ -101,22 +101,10 @@ class Polygons(object):
 					if "-" in splitline[2]:
 						low = splitline[2].split("-")[0]
 						high = splitline[2].split("-")[1]
-#						print "##################"
-#						print name, "has the elevation restrictions", splitline[2]
-#						print "Min: ", low
-#						print "Max: ", high
 					if ">" in splitline[2]:
 						low = splitline[2].split(">")[1]
-#						print "##################"
-#						print name, "has the elevation restrictions", splitline[2]
-#						print "Min: ", low.rstrip("\n")
-#						print "Max: Unlimited\n"
 					if "<" in splitline[2]:
 						high = splitline[2].split("<")[1]
-#						print "##################"
-#						print name, "has the elevation restrictions", splitline[2]
-#						print "Min: Unlimited"
-#						print "Max: ", high
 			except:
 				low = None
 				hight = None
@@ -244,8 +232,6 @@ def pointInPolygon(poly, x, y):
 	# Othewise returns "False". The polygon is a list of 
 	# Longitude/Latitude (x,y) pairs.
 	# Code modified from  http://www.ariel.com.au/a/python-point-int-poly.html
-
-#	print "In pIp: Here we go!"			# Devel.
 	
 	try:
 		x = float(x)
@@ -296,17 +282,12 @@ class Result(object):
 				self.result[name] = self.initialList
 			else:
 				continue
-#		print self.result		# Devel.
-
 
 	def getSpeciesNames(self):
 		speciesNames = []
 		for key in self.result:
 			speciesNames.append(key)
 		return speciesNames
-
-#	def setSpeciesNames(self, ):
-#		self.speciesNames = localities.getSpeciesNames()
 
 	def getPolygonNames(self):
 		return self.polygonNames
@@ -360,14 +341,9 @@ class Result(object):
 			if i > 0:
 				# If a minimum number of occurenses are required...
 				if args.number:
-#					print int(args.number[0])		# Devel.
 					string = self.minOccurence(i, string)
 				else:	
 					string = self.verbose(i, string)
-#					if args.verbose:
-#						string += "1" + "[" + str(i) + "]"
-#					else:
-#						string += "1"
 			else:
 				string += "0"
 		return string
@@ -380,12 +356,10 @@ class Result(object):
 			return string
 
 	def verbose(self, i, string):
-#		print "In verbose"			# Devel.
 		if args.verbose:
 			string += "1" + "[" + str(i) + "]"
 		else:
 			string += "1"
-#		print string			# Devel.
 		return string
 
 
@@ -394,16 +368,10 @@ def elevationTest(lat, lon, polygon, index):
 	from lib.readGeoTiff import coordInTif
 	from lib.readGeoTiff import geoTiff
 	from osgeo import gdal
-#	print lon, lat
-#	print "In elevationTest"
-#	print polygon[0]
-#	print type(polygon[2]), type(polygon[3])
 	if polygon[2] is None and polygon[3] is None:
-#		print "In elevationTest: ", polygon[0], "has no elevation limit"
 		return True
 	# Identify the correct tif file 
 	correct_file = coordInTif(float(lon), float(lat), index)
-#	print "Correct file: ", correct_file
 	# The following two lines of code can be usefull if one 
 	# wants to disregard the elevation limits if no elevation 
 	# data is available for a particular area.
@@ -423,25 +391,7 @@ def elevationTest(lat, lon, polygon, index):
 			high = -1000			# A really low elevation.
 		else:
 			high = int(polygon[3])
-#		print polygon[0]
-#		print "Elevation:   ", elevation, type(elevation)
-#		print "Low bound    ", low, type(low)
-#		print "High bound   ", high, type(high)
-#		if (low < elevation and elevation < high):
-#			print "Match"
-#		else:
-#			print "No match"
 		return (low < elevation and elevation < high)
-#		if low < elevation and elevation < high:
-#			return True
-#		print "Elevation: 	", elevation
-#		print "Low bound	", low
-#		print "High bound	", high
-
-#	print "Imported lib.readGeoTiff"
-#	print "Lat: 	", lat
-#	print "Long:	", lon
-
 	
 def main():
 	# Read the locality data and test if the coordinates 
@@ -452,48 +402,34 @@ def main():
 	if args.tif:
 		from lib.readGeoTiff import indexTiffs
 		index = indexTiffs(args.tif)
-		print "New index has been created"				# Devel.
+#		print "New index has been created"				# Devel.
 	# For each locality record ...
 	if args.localities:
-#		print "In Main: args.localities are in place."
 		localities = MyLocalities()
 		result.setSpeciesNames(localities)
 		for locality in localities.getLocalities():
-#			print "In Main: Found a locality data point."
 			# ... and for each polygon ...
 			for polygon in polygons.getPolygons():
-#				print "In main", polygon[0]						# Devel.
 				# ... test if the locality record is found in the polygon.
 				if localities.getCoOrder() == "lat-long":
-#					print "In Main: Correct order of coordinates was found."
 					# locality[0] = species name, locality[1] = latitude, locality[2] =  longitude
 					if pointInPolygon(polygon[1], locality[2], locality[1]) == True:
-#						print "In main, Point was found in polygon", polygon[0]
-
-###################### OK, so the point is in the polygon
 
 						# Test if elevation files are available.
-#						print ((polygon[2] or polygon[3]) and args.tif)				# Devel.
-#						if (polygon[2] or polygon[3]) and args.tif:
-#						print "In Main: Available TIFFs: ", args.tif
 						if args.tif:
-#							print "In Main: We have found Tiffs"
-#							print "Elevation restrictions and Tiff files found", polygon[0]		# Devel.
 							if elevationTest(locality[1], locality[2], polygon, index) == True:
-#								print "####################################"		# Devel.
-#								print polygon[0], "has elevation restrictions"		# Devel.
 								# Store the result
 								result.setResult(locality[0], polygon[0])		
 						else:
 							# Store the result
 							result.setResult(locality[0], polygon[0])
 				else:
-					print "In Main: Reversed order of coordinated found!"
-###					# locality[0] = species name, locality[1] = longitude, locality[2] =  latitude
-###					if pointInPolygon(polygon[1], locality[1], locality[2]) == True:
-###						if args.tif:
-###							if elevationTest(locality[2], locality[1], polygon, index) == True:
-###								result.setResult(locality[0], polygon[0])
+# 					print "In Main: Reversed order of coordinated found!"				# Devel.
+					# locality[0] = species name, locality[1] = longitude, locality[2] =  latitude
+					if pointInPolygon(polygon[1], locality[1], locality[2]) == True:
+						if args.tif:
+							if elevationTest(locality[2], locality[1], polygon, index) == True:
+								result.setResult(locality[0], polygon[0])
 	
 	if args.gbif:
 		gbifData = GbifLocalities()
