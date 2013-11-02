@@ -1,8 +1,6 @@
-#!/opt/python/bin/python2.7
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-###!/usr/bin/env python
-
+#
 #	geocoder.py is a program written in Python that takes one file 
 #	containing polygons, and one file with species locality data 
 #	as input. The program then tests if a species have been recorded 
@@ -72,6 +70,7 @@ parser.add_argument("-t", "--tif", help="Path to geotiff file(s)", nargs="*")
 #parser.add_argument("-o", "--out", help="Name of optional output file. Output is sent to STDOUT by default")
 parser.add_argument("-v", "--verbose", action="store_true", help="Also report the number of times a species is found in a particular polygon")
 parser.add_argument("-b", "--binomial", action="store_true", help="Treats first two words in species names as genus name and species epithet. Use with care as this option is LIKELY TO LEAD TO ERRONEOUS RESULTS if names in input data are not in binomial form.")
+parser.add_argument("-n", "--number", help="Minimum number of occurences in a polygon", nargs="*")
 parser.add_argument("--test", help="Test if the imput data is in the right format", action="store_true")
 args = parser.parse_args()
 
@@ -359,12 +358,34 @@ class Result(object):
 		string = ''
 		for i in resultList:
 			if i > 0:
-				if args.verbose:
-					string += "1" + "[" + str(i) + "]"
-				else:
-					string += "1"
+				# If a minimum number of occurenses are required...
+				if args.number:
+#					print int(args.number[0])		# Devel.
+					string = self.minOccurence(i, string)
+				else:	
+					string = self.verbose(i, string)
+#					if args.verbose:
+#						string += "1" + "[" + str(i) + "]"
+#					else:
+#						string += "1"
 			else:
 				string += "0"
+		return string
+
+	def minOccurence(self, occurences, string):
+		if int(occurences) > int(args.number[0]):
+			return self.verbose(occurences, string)
+		else:
+			string += "0" + "[" + str(occurences) + "]"
+			return string
+
+	def verbose(self, i, string):
+#		print "In verbose"			# Devel.
+		if args.verbose:
+			string += "1" + "[" + str(i) + "]"
+		else:
+			string += "1"
+#		print string			# Devel.
 		return string
 
 
@@ -431,7 +452,7 @@ def main():
 	if args.tif:
 		from lib.readGeoTiff import indexTiffs
 		index = indexTiffs(args.tif)
-#		print "New index has been created"				# Devel.
+		print "New index has been created"				# Devel.
 	# For each locality record ...
 	if args.localities:
 #		print "In Main: args.localities are in place."
@@ -463,9 +484,9 @@ def main():
 #								print polygon[0], "has elevation restrictions"		# Devel.
 								# Store the result
 								result.setResult(locality[0], polygon[0])		
-		#				else:
-		#					# Store the result
-		#					result.setResult(locality[0], polygon[0])
+						else:
+							# Store the result
+							result.setResult(locality[0], polygon[0])
 				else:
 					print "In Main: Reversed order of coordinated found!"
 ###					# locality[0] = species name, locality[1] = longitude, locality[2] =  latitude
