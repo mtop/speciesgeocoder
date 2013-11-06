@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#	geocoder.py is a program written in Python that takes one file 
+#	geocoder.py is a program written in Python and R that takes one file 
 #	containing polygons, and one file with species locality data 
 #	as input. The program then tests if a species have been recorded 
 #	inside any of the polygons. The result is presented as a nexus- 
@@ -194,15 +194,21 @@ class GbifLocalities(Localities):
 	def __init__(self):
 		self.gbifFile = args.gbif
 		self.speciesNames = []
+#		nr = 0											# Devel.
 		for name in self.getLocalities():
 			self.setSpeciesNames(name[0])	# [1]
+#			nr += 1										# Devel.
+#			print nr									# Devel.
 
 	def getLocalities(self):
 		f = open(self.gbifFile, "rU")
 		lines = f.readlines()
 		for line in lines:
+#			print line									# Devel.
 			# Make sure the record has both lat. and long. data.
+#			print line.split("\t")[5], line.split("\t")[6]			# Devel.
 			if len(line.split("\t")[5]) > 0 and len(line.split("\t")[6]) > 0:
+#				print line.rstrip('\n')
 				if line.split("\t")[5] == "Latitude":
 					continue
 			try:
@@ -432,15 +438,29 @@ def main():
 								result.setResult(locality[0], polygon[0])
 	
 	if args.gbif:
+#		print "GBIF"											# Devel.
 		gbifData = GbifLocalities()
 		result.setSpeciesNames(gbifData)
+#		print result.getSpeciesNames()											# Devel.
 		# For each GBIF locality record ...
 		for locality in gbifData.getLocalities():
+#			print locality.getLocalities()										# Devel.
 			# ... and for each polygon ...
 			for polygon in polygons.getPolygons():
 				# ... test if the locality record is found in the polygon.
 				if pointInPolygon(polygon[1], locality[2], locality[1]) == True:
+#					print "pIp == True"												# Devel.
 					result.setResult(locality[0], polygon[0])
+					
+					# Test if elevation files are available.
+					if args.tif:
+						if elevationTest(locality[1], locality[2], polygon, index) == True:
+							# Store the result
+							result.setResult(locality[0], polygon[0])
+						else:
+							# Store the result
+							result.setResult(locality[0], polygon[0])
+						
 
 	result.printNexus()
 
