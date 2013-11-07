@@ -67,7 +67,7 @@ class geoTiff(object):
 		row = 1
 		while (self.MAXY + (row * self.gt[5])) < lat:
 			row += 1
-			print row									# Devel.
+#			print row									# Devel.
 		col = 1
 		while (self.MINX + (col * self.gt[1])) < lon:
 			col += 1
