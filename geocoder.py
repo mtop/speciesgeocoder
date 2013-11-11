@@ -159,6 +159,7 @@ class MyLocalities(Localities):
 			# Determine the Lat/Long column order
 			if line[0] == "#":
 				strings = ["Latitude", "latitude", "Lat.", "lat.", "Lat", "lat"]
+				# Dev-note: Test for other delimiters than \t
 				if line.split("\t")[1] not in strings:
 					self.order = "long-lat"
 				else:
