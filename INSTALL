@@ -1,0 +1,3 @@
+Dependencies:   python-argparse
+                python-gdal
+                gdal-bin

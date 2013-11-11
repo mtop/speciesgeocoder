@@ -1,38 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#
-#	geocoder.py is a program written in Python that takes one file 
-#	containing polygons, and one file with species locality data 
-#	as input. The program then tests if a species have been recorded 
-#	inside any of the polygons. The result is presented as a nexus- 
-#	file with "0" indicating absence, and "1" indicating presence of
-#	a species in a polygon.
-###
-# 	Input localities: Tab delimited data in cvs format. Lines starting with "#" are ignored.
-#	
-#	#Species name	Lat.	Longitude	Comment
-#	Ivesia aperta	39.82	-120.4	CHSC35943
-#	Ivesia aperta	39.81	-120.39	CHSC88602
-#	Ivesia aperta	39.53	-120.37	
-#	...
-#
-#	Input polygons:
-#
-#	polygon_USA_Long_Lat: -132.1875,49.61071 -80.15625,50.513427 -79.101562,23.885838 -132.1875,24.846565 -132.1875,49.61071
-#	polygon_EU: 24.287109,72.118943 7.587891,68.323557 -14.384766,55.760092 -14.033203,34.428056 -5.068359,36.007635 10.224609,38.525248 20.947266,33.991954 40.634766,60.744845 24.287109,72.118943
-#	
-#	Also see the example files localities.csv and polygons.txt. 
-#			
-# 	Output: 	See the example file ivesioids_out.nex.
-#
-###
-#
-#	Dependencies:	python-argparse
-#					python-gdal
-#					gdal-bin
-#
-###
-#
+
 #	Copyright (C) 2013 Mats Töpel. 
 #
 #	Citation: If you use this version of the program, please cite;
@@ -172,8 +140,12 @@ class MyLocalities(Localities):
 			else:
 				species = splitline[0]  # + ' ' + splitline[2]
 			self.setSpeciesNames(species)
-			latitude = splitline[1]
-			longitude = splitline[2]
+			try:
+				latitude = splitline[1]
+				longitude = splitline[2]
+			except IndexError:
+				print >> sys.stderr, "\n[ Error ] The locality data file is not in tab delimited text format.\n"
+				sys.exit(1)
 			yield species.replace("  ", " "), latitude, longitude
 	
 	def getCoOrder(self):
@@ -196,7 +168,7 @@ class GbifLocalities(Localities):
 		self.gbifFile = args.gbif
 		self.speciesNames = []
 		for name in self.getLocalities():
-			self.setSpeciesNames(name[0])	# [1]
+			self.setSpeciesNames(name[0])
 
 	def getLocalities(self):
 		f = open(self.gbifFile, "rU")
@@ -233,6 +205,7 @@ def pointInPolygon(poly, x, y):
 	# Othewise returns "False". The polygon is a list of 
 	# Longitude/Latitude (x,y) pairs.
 	# Code modified from  http://www.ariel.com.au/a/python-point-int-poly.html
+	# and alos described at http://geospatialpython.com/2011/01/point-in-polygon.html
 	
 	try:
 		x = float(x)
@@ -403,7 +376,6 @@ def main():
 	if args.tif:
 		from lib.readGeoTiff import indexTiffs
 		index = indexTiffs(args.tif)
-#		print "New index has been created"				# Devel.
 	# For each locality record ...
 	if args.localities:
 		localities = MyLocalities()
@@ -425,7 +397,6 @@ def main():
 							# Store the result
 							result.setResult(locality[0], polygon[0])
 				else:
-# 					print "In Main: Reversed order of coordinated found!"				# Devel.
 					# locality[0] = species name, locality[1] = longitude, locality[2] =  latitude
 					if pointInPolygon(polygon[1], locality[1], locality[2]) == True:
 						if args.tif:
@@ -442,6 +413,16 @@ def main():
 				# ... test if the locality record is found in the polygon.
 				if pointInPolygon(polygon[1], locality[2], locality[1]) == True:
 					result.setResult(locality[0], polygon[0])
+					
+					# Test if elevation files are available.
+					if args.tif:
+						if elevationTest(locality[1], locality[2], polygon, index) == True:
+							# Store the result
+							result.setResult(locality[0], polygon[0])
+						else:
+							# Store the result
+							result.setResult(locality[0], polygon[0])
+						
 
 	result.printNexus()
 
