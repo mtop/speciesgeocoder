@@ -139,8 +139,12 @@ class MyLocalities(Localities):
 			else:
 				species = splitline[0]  # + ' ' + splitline[2]
 			self.setSpeciesNames(species)
-			latitude = splitline[1]
-			longitude = splitline[2]
+			try:
+				latitude = splitline[1]
+				longitude = splitline[2]
+			except IndexError:
+				print >> sys.stderr, "\n[ Error ] The locality data file is not in tab delimited text format.\n"
+				sys.exit(1)
 			yield species.replace("  ", " "), latitude, longitude
 	
 	def getCoOrder(self):
@@ -200,6 +204,7 @@ def pointInPolygon(poly, x, y):
 	# Othewise returns "False". The polygon is a list of 
 	# Longitude/Latitude (x,y) pairs.
 	# Code modified from  http://www.ariel.com.au/a/python-point-int-poly.html
+	# and alos described at http://geospatialpython.com/2011/01/point-in-polygon.html
 	
 	try:
 		x = float(x)
