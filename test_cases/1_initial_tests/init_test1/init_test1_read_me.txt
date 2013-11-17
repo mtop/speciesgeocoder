@@ -25,3 +25,13 @@ user    0m2.694s
 sys     0m3.239s
 
 Comment: I think I have bumped into another problem. Old files are generating the same message.
+
+### Closed ###
+This bug has been fixed. The code now handles the IndexError problem and produces a more informative error meassage.
+
+mats@Slartibartfasts:~/git/geocoder/test_cases/1_initial_tests/init_test1$ phylogeocoder -l points_10.csv -p polygons_1elev.txt
+
+[ Error ] The locality data file is not in tab delimited text format.
+
+mats@Slartibartfasts:~/git/geocoder/test_cases/1_initial_tests/init_test1$
+
