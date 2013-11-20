@@ -1027,12 +1027,3 @@ SpeciesGeoCoder <- function(x,y, ...){
   WriteTablesSpGeo(outo, ...)
   PlotOutSpGeo(outo, ...)
 }
-
-setwd("C:\\Users\\xzizal\\Dropbox\\Arbeit\\Gothenburg\\projects\\3_phylogeocoder")
-test <- ReadPoints("fernanda_coords.txt","test_polygons3.txt")
-test2 <- SpGeoCod("fernanda_coords.txt","test_polygons3.txt")
-
-SpeciesGeoCoder("fernanda_coords_ano.txt","test_polygons.txt")
-
-wwf <- readShapeSpatial("C:\\Users\\xzizal\\Dropbox\\Arbeit\\Gothenburg\\other_researchers\\Fernanda\\wwf_ecoregions\\wwf_terr_ecos.shp")
-
