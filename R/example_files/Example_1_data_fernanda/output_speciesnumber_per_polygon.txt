@@ -1,0 +1,3 @@
+"x"
+"Caatinga"	12
+"N_Andes"	8
