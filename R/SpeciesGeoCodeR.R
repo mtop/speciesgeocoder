@@ -71,7 +71,7 @@ Cord2Polygon <- function(x){
 ReadPoints<- function(x, y) {   
   res <- list()
   coords <- read.table(x, sep = "\t", header = T)
-  polycord <- read.table(y, sep = "\t")
+  polycord <- read.table(y, sep = "\t", header = T)
   if (dim(coords)[2] !=  3){
     stop(paste("Wrong input format: \n", 
                "Inputfile for coordinates must be a tab-delimited text file with three columns", sep  = ""))
@@ -93,9 +93,27 @@ ReadPoints<- function(x, y) {
   }
   if (!is.character(polycord[, 1]) && !is.factor(polycord[, 1])){
     warning("Polygon identifier (column 1) should be a string or a factor.")
-  } 
+  }
+  if(max(polycord[, 2]) > 180){
+    stop(paste("Wrong polygon input coordinates. Contains longitude values outside possible range in row:",
+               rownames(polycord[polycord[,2] > 180,]),"\n"))
+  }
+  if(min(polycord[, 2]) < -180){
+    stop(paste("Wrong polygon input coordinates. Contains longitude values outside possible range in row:",
+               rownames(polycord[polycord[,2] < -180,]),"\n"))
+  }
+  if(max(polycord[, 3]) > 90){
+    stop(paste("Wrong polygon input coordinates. Contains longitude values outside possible range in row:",
+               rownames(polycord[polycord[,3] > 90,]),"\n"))
+  }
+  if(min(polycord[, 3]) < -90){
+    stop(paste("Wrong polygon input coordinates. Contains longitude values outside possible range in row:",
+               rownames(polycord[polycord[,3] < -90,]),"\n"))
+  }
   poly <- Cord2Polygon(polycord)
-  res <- list(identifier = coords[, 1], species_coordinates = as.matrix(coords[, c(2, 3)]), 
+  coordi <- coords[, c(2, 3)]
+  coordi2 <- as.matrix(coordi)
+  res <- list(identifier = coords[, 1], species_coordinates = coordi, 
               polygons = poly)
   class(res) <- "spgeoIN"
   return(res)
@@ -264,6 +282,7 @@ SpGeoCodH <- function(x){
     identifier <- x$identifier[as.numeric(rownames(nc))]
     bb <- x$species_coordinates[as.numeric(rownames(nc)), ]
     miss <- data.frame(identifier, bb)
+    names(miss) <- c("identifier","XCOOR","YCOOR")
     coex <- CoExClassH(spsum) 
     
     out <- list(identifier_in = x$identifier, species_coordinates_in = x$species_coordinates, polygons = x$polygons, 
@@ -282,7 +301,6 @@ SpGeoCod <- function(x, y){
   return(outo)
 }
 
-#format(YCOORD, XCOORD)
 CropPointCountry <- function(x, y){
   if (length(dim(x)) ==  0 || dim(x)[2] != 3){
     stop(paste("Wrong input format:\n", 
@@ -339,9 +357,8 @@ CropPointPolygon <- function(points, polygon, outside = F){
   if (outside %in% is.na(testp)){
     cleared <- points[is.na(testp) ==  outside ]
   }else{
-    cleared <- data.frame(0, 0)
-    names(cleared) <- c("XCOOR", "YCOOR")
-  }
+    cleared <- data.frame()
+      }
   if(is.character(testid[,1]) || is.factor(testid[,1])){
     idcleared <- id[is.na(testp) ==  outside ]
     out <- cbind(idcleared, data.frame(cleared))
@@ -508,11 +525,12 @@ WriteTablesSpGeo <- function(x, ...){
 PlotSpPoly <- function(x, ...){
   if (class(x) ==  "spgeoOUT") {
     num <- length(names(x$polygon_table))
+    dat <- sort(x$polygon_table)
     counter <- num/10
     #     if (counter < 1){
     par(mar = c(10, 4, 2, 2))
-    barplot(x$polygon_table, 
-            ylim = c(0, round((max(x$polygon_table) + max(x$polygon_table)/4), 0)), 
+    barplot(dat, 
+            ylim = c(0, round((max(dat) + max(dat)/4), 0)), 
             ylab = "Number of Species per Polygon", las = 2, )# ...)
     #     }else{
     #       sets <- seq(1, (ceiling(num/10) *10)+1, by = 10)
@@ -585,14 +603,14 @@ BarChartPoly <- function(x, plotout = F, ...){
     stop("This function is only defined for class spgeoOUT")
   }  
   if (plotout ==  FALSE){par(ask = T, mar = c(15, 4, 3, 3))}
-  x$spec_table
   liste <- names(x$spec_table)
   leng <- length(liste)
   par(mar = c(15, 4, 3, 3))
   for(i in 2:leng){
     subs <-subset(x$spec_table, x$spec_table[, i] > 0)
-    barplot(subs[, i], names.arg = subs$identifier, 
-            las = 2, ylab = "Number of occurences", ...)
+    datsubs <- subs[order(subs[, i]),]
+    barplot(datsubs[, i], names.arg = datsubs$identifier, 
+            las = 2, ylab = "Number of occurences",cex.names = .7, ...)
     title(liste[i])
   }
   par(ask = F)
@@ -605,50 +623,57 @@ HeatPlotCoEx <- function(x, ...){
   }else{ 
     dat <- x
   }
-  if (class(dat) !=  "data.frame"){
-    stop("Wrong input format. Input must be a data.frame.")
-  }
-  if (dim(dat)[2] !=  (dim(dat)[1] + 1)){
-    warning("Suspicous data dimensions, check input file.")
-  }
-  ymax <- dim(dat)[1]
-  xmax <- dim(dat)[2]
-  colo <- rev(heat.colors(10))
-  numer <- rev(1:ymax)
+  if(dim(dat)[1] > 40) {
+    plot(c(1,10),c(1,10), type = "n", axes = F, xlab ="", ylab="")
+    text(0,5, 
+         label = "The Co-existence plot is only possible with less than 40 species.
+         \n See species coexistence matrix for results.",adj = 0)
+  }else{
+    if (class(dat) !=  "data.frame"){
+      stop("Wrong input format. Input must be a data.frame.")
+    }
+    if (dim(dat)[2] !=  (dim(dat)[1] + 1)){
+      warning("Suspicous data dimensions, check input file.")
+    }
+    ymax <- dim(dat)[1]
+    xmax <- dim(dat)[2]
+    colo <- rev(heat.colors(10))
+    numer <- rev(1:ymax)
   
-  layout(matrix(c(rep(1, 9), 2), ncol = 1, nrow = 10))
-  par(mar =  c(0, 10, 10, 0))
-  plot(0, xlim = c(0, xmax - 1), ylim = c(0, ymax) , type = "n", axes = F, xlab = "", ylab = "")
-  for(j in 2:xmax ){
-    for(i in 1:ymax){
-      if (i ==  (j - 1)){
-        rect(j - 2, numer[i] - 1 , j - 1, numer[i], col = "black" )
-      }else{
-        ind <- round(dat[i, j]/10, 0)
-        if (ind ==  0) {
-          rect(j - 2, numer[i]-1, j - 1, numer[i], col = "white" )
+    layout(matrix(c(rep(1, 9), 2), ncol = 1, nrow = 10))
+    par(mar =  c(0, 10, 10, 0))
+    plot(0, xlim = c(0, xmax - 1), ylim = c(0, ymax) , type = "n", axes = F, xlab = "", ylab = "")
+    for(j in 2:xmax ){
+      for(i in 1:ymax){
+        if (i ==  (j - 1)){
+          rect(j - 2, numer[i] - 1 , j - 1, numer[i], col = "black" )
         }else{
-          rect(j - 2, numer[i]-1 , j - 1, numer[i], col = colo[ind] )
+          ind <- round(dat[i, j]/10, 0)
+          if (ind ==  0) {
+            rect(j - 2, numer[i]-1, j - 1, numer[i], col = "white" )
+          }else{
+            rect(j - 2, numer[i]-1 , j - 1, numer[i], col = colo[ind] )
+          }
         }
       }
     }
-  }
-  axis(side = 3, at = seq(0.5, (xmax - 1.5)), labels = colnames(dat)[-1], las = 2, cex.axis = .7, pos = ymax)
-  axis(2, at = seq(0.5, ymax), labels = rev(dat$identifier), las = 2, cex.axis = .7, pos =  0)
-  title("Species co-occurrence", line = 9)
+    axis(side = 3, at = seq(0.5, (xmax - 1.5)), labels = colnames(dat)[-1], las = 2, cex.axis = .7, pos = ymax)
+    axis(2, at = seq(0.5, ymax), labels = rev(dat$identifier), las = 2, cex.axis = .7, pos =  0)
+    title("Species co-occurrence", line = 9)
   
-  par(mar = c(0.5, 10, 0, 0))
-  plot(c(1, 59), c(1, 12), type = "n", axes = F, ylab  = "", xlab = "")
-  text(c(13, 13), c(10, 7), c("0%", "10%"))
-  text(c(20, 20), c(10, 7), c("20%", "30%"))
-  text(c(27, 27), c(10, 7), c("40%", "50%"))
-  text(c(34, 34), c(10, 7), c("60%", "70%"))
-  text(c(41, 41), c(10, 7), c("80%", "90%"))
-  text(c(48), 10, "100%")
-  rect(c(9, 9, 16, 16, 23, 23, 30, 30, 37, 37, 44), c(rep(c(10.7, 7.7), 5), 10.7), 
-       c(11, 11, 18, 18, 25, 25, 32, 32, 39, 39, 46), c(rep(c(8.7, 5.7), 5), 8.7), 
-       col = c("white", colo))
-  rect(7, 5, 51, 12)
+    par(mar = c(0.5, 10, 0, 0))
+    plot(c(1, 59), c(1, 12), type = "n", axes = F, ylab  = "", xlab = "")
+    text(c(13, 13), c(10, 7), c("0%", "10%"))
+    text(c(20, 20), c(10, 7), c("20%", "30%"))
+    text(c(27, 27), c(10, 7), c("40%", "50%"))
+    text(c(34, 34), c(10, 7), c("60%", "70%"))
+    text(c(41, 41), c(10, 7), c("80%", "90%"))
+    text(c(48), 10, "100%")
+    rect(c(9, 9, 16, 16, 23, 23, 30, 30, 37, 37, 44), c(rep(c(10.7, 7.7), 5), 10.7), 
+         c(11, 11, 18, 18, 25, 25, 32, 32, 39, 39, 46), c(rep(c(8.7, 5.7), 5), 8.7), 
+         col = c("white", colo))
+    rect(7, 5, 51, 12)
+  }
 }
 
 Mapping <- function(x, pdataf, mode = c("dataset", "spgeoOUT"), 
@@ -810,10 +835,11 @@ MapPerPoly <- function(x, plotout = FALSE){
   }
   for(i in 1:length(names(x$polygons))){
     chopo <- names(x$polygons)[i]
-    xmax <- max(bbox(x$polygons[i])[1, 2]) + 5
-    xmin <- min(bbox(x$polygons[i])[1, 1]) - 5
-    ymax <- max(bbox(x$polygons[i])[2, 2]) + 5
-    ymin <- min(bbox(x$polygons[i])[2, 1]) - 5
+    xmax <- min(max(bbox(x$polygons[i])[1, 2]) + 5,180)
+    xmin <- max(min(bbox(x$polygons[i])[1, 1]) - 5, -180)
+    ymax <- min(max(bbox(x$polygons[i])[2, 2]) + 5, 90)
+    ymin <- max(min(bbox(x$polygons[i])[2, 1]) - 5,-90)
+    
     
     po <- data.frame(x$sample_table, x$species_coordinates_in)
     subpo <- subset(po, po$homepolygon ==  chopo)
@@ -840,21 +866,30 @@ MapPerPoly <- function(x, plotout = FALSE){
     box("plot")
     title(chopo)
     plot(x$polygons[i], col = "grey60", add = T)
-    points(subpo$XCOOR, subpo$YCOOR, 
+    points(subpo[,3], subpo[,4], 
            cex = 0.7, pch = 3 , col = rain[subpo$color])
     #legend
     par(mar = c(3, 0, 3, 0), ask = F)
     plot(c(1, 50), c(1, 50), type = "n", axes = F)
+    if(lcolorh == 0){
+      yset <- 25
+      xset <- 1}
     if (lcolorh ==  1){
       yset <- 25
-    }else{
+      xset <- rep(4, lcolorh)
+    }
+    if(lcolorh >  1){
       yset <- rev(sort(c(seq(25, 25 + max(ceiling(lcolorh/2) - 1, 0)), 
                          seq(24, 24 - lcolorh/2 + 1))))
+      xset <- rep(4, lcolorh)
     }
-    xset <- rep(4, lcolorh)
     points(xset-2, yset, pch =  3, col = rain)
-    text(xset, yset, labels =  colorh, adj = 0, xpd = T)
-    rect(min(xset) - 4, min(yset) -1, 50 + 1, max(yset) + 1, xpd = T)
+    if(lcolorh == 0){
+      text(xset, yset, labels = "No species found in this polygon", adj = 0)
+    }else{
+      text(xset, yset, labels =  colorh, adj = 0, xpd = T)
+      rect(min(xset) - 4, min(yset) -1, 50 + 1, max(yset) + 1, xpd = T)
+    }
     
     if (plotout ==  FALSE){par(ask = T)}
   }
@@ -868,6 +903,7 @@ MapPerSpecies <- function(x, moreborders = F, plotout = FALSE, ...){
   layout(matrix(c(1, 1, 1, 1), ncol = 1, nrow = 1))
   if (plotout ==  FALSE){par(ask = T)}
   dat <- data.frame(x$sample_table, x$species_coordinates_in)
+  names(dat) <- c("identifier", "homepolygon","XCOOR","YCOOR")
   liste <- levels(dat$identifier)
   
   
@@ -877,22 +913,26 @@ MapPerSpecies <- function(x, moreborders = F, plotout = FALSE, ...){
                                outside = F)
     outside <- CropPointPolygon(data.frame(XCOOR = kk$XCOOR, YCOOR = kk$YCOOR), x$polygons, 
                                 outside = T)
-    xmax <- max(dat$XCOOR) + 2
-    xmin <- min(dat$XCOOR) - 2
-    ymax <- max(dat$YCOOR) + 2
-    ymin <- min(dat$YCOOR) - 2
+    xmax <- min(max(dat$XCOOR) + 2, 180)
+    xmin <- max(min(dat$XCOOR) - 2, -180)
+    ymax <- min(max(dat$YCOOR) + 2, 90)
+    ymin <- max(min(dat$YCOOR) - 2, -90)
     
     map ("world", xlim = c(xmin, xmax), ylim = c(ymin, ymax))
     axis(1)
     axis(2)
-    box("plot")
     title(liste[i])
     if (moreborders == T) {plot(wrld_simpl, add = T)}
     plot(x$polygons, col = "grey60", add = T)
-    points(inside$XCOOR, inside$YCOOR, 
-           cex = 0.7, pch = 3 , col = "blue")
-    points(outside$XCOOR, outside$YCOOR, 
-           cex = 0.7, pch = 3 , col = "red")
+    if(length(inside) > 0){
+      points(inside$XCOOR, inside$YCOOR, 
+             cex = 0.7, pch = 3 , col = "blue")
+    }
+    if(length(outside) >0){
+      points(outside$XCOOR, outside$YCOOR, 
+             cex = 0.7, pch = 3 , col = "red")
+    }
+    box("plot")
   }
   par(ask = F)
 }
@@ -900,11 +940,18 @@ MapPerSpecies <- function(x, moreborders = F, plotout = FALSE, ...){
 MapAll <- function(x, polyg, moreborders = F, ...){
   data(wrld_simpl)
   if (class(x) ==  "spgeoOUT"){
-    xmax <- max(x$species_coordinates_in[, 2]) + 2
-    xmin <- min(x$species_coordinates_in[, 2]) - 2
-    ymax <- max(x$species_coordinates_in[, 1]) + 2
-    ymin <- min(x$species_coordinates_in[, 1]) - 2
-    
+    xmax <- min(max(x$species_coordinates_in[, 2]) + 2, 180)
+    xmin <- max(min(x$species_coordinates_in[, 2]) - 2, -180)
+    ymax <- min(max(x$species_coordinates_in[, 1]) + 2, 90)
+    ymin <- max(min(x$species_coordinates_in[, 1]) - 2, -90)
+    difx <- sqrt(xmax^2 + xmin^2)
+    dify <- sqrt(ymax^2 + ymin^2)  
+    if(difx > 90){
+      xmax <- min(xmax +10, 180)
+      xmin <- max(xmin -10,-180)
+      ymax <- min(ymax +10, 90)
+      ymin <- max(ymin -10,-90)
+    }
     map ("world", xlim = c(xmin, xmax), ylim = c(ymin, ymax))
     axis(1)
     axis(2)
@@ -927,10 +974,10 @@ MapAll <- function(x, polyg, moreborders = F, ...){
     x <- as.data.frame(x)
     nums <- sapply(x, is.numeric)
     x<- x[, nums]
-    xmax <- max(x[, 2]) + 2
-    xmin <- min(x[, 2]) - 2
-    ymax <- max(x[, 1]) + 2
-    ymin <- min(x[, 1]) - 2
+    xmax <- min(max(x[, 2]) + 2, 180)
+    xmin <- max(min(x[, 2]) - 2, -180)
+    ymax <- min(max(x[, 1]) + 2, 90)
+    ymin <- max(min(x[, 1]) - 2, -90)
     if (ymax > 92 || ymin < -92){
       warning("Column order must be lon-lat, not lat - lon. Please check")
     }
@@ -957,20 +1004,20 @@ MapUnclassified <- function(x, moreborders = F, ...){
     text(10, 10, labels = paste("All points fell into the polygons and were classified.\n", 
                                 "No unclassified points", sep = ""))
   }else{
-    xmax <- max(dat$XCOOR) + 2
-    xmin <- min(dat$XCOOR) - 2
-    ymax <- max(dat$YCOOR) + 2
-    ymin <- min(dat$YCOOR) - 2
+    xmax <- min(max(dat$XCOOR) + 2, 180)
+    xmin <- max(min(dat$XCOOR) - 2, -180)
+    ymax <- min(max(dat$YCOOR) + 2, 90)
+    ymin <- max(min(dat$YCOOR) - 2, -90)
     
     map ("world", xlim = c(xmin, xmax), ylim = c(ymin, ymax), ...)
     axis(1)
     axis(2)
-    box("plot")
     title("Samples not classified to polygons")
     if (moreborders == T) {plot(wrld_simpl, add = T)}
     plot(x$polygons, col = "grey60", add = T, ...)
     points(dat$XCOOR, dat$YCOOR, 
            cex = 0.7, pch = 3 , col = "red", ...)
+    box("plot")
   }
 }  
 
@@ -1001,7 +1048,7 @@ OutBarChartSpec <- function(x, ...){
 
 OutBarChartPoly <- function(x, ...){
   pdf(file = "barchart_per_polygon.pdf", paper = "a4r", onefile = T)
-  BarChartPoly(x, plotout = T, cex.names = .8, cex.axis = .8, ...)
+  BarChartPoly(x, plotout = T, cex.axis = .8, ...)
   dev.off()
 }
 
