@@ -140,7 +140,7 @@ class MyLocalities(Localities):
 			if args.binomial:
 				species = self.getBinomialName(splitline[0])
 			else:
-				species = splitline[0]  # + ' ' + splitline[2]
+				species = splitline[0].strip()  # + ' ' + splitline[2]
 			self.setSpeciesNames(species)
 			try:
 				latitude = splitline[1]
@@ -481,7 +481,7 @@ def main():
 							# Store the result
 							result.setResult(locality[0], polygon[0])
 						
-
+	sys.stderr.write("\r")
 	result.printNexus()
 	
 	### Go to R ###
