@@ -29,6 +29,7 @@
 
 import argparse
 import sys
+from lib.exceptions import *
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--polygons", help="Path to file containing polygon coordinates")
@@ -481,7 +482,7 @@ def main():
 							# Store the result
 							result.setResult(locality[0], polygon[0])
 						
-	sys.stderr.write("\r")
+	sys.stderr.write("\n")
 	result.printNexus()
 	
 	### Go to R ###
