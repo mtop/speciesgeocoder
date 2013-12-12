@@ -35,6 +35,7 @@ parser.add_argument("-p", "--polygons", help="Path to file containing polygon co
 parser.add_argument("-l", "--localities", help="Path to file containing species locality data")
 parser.add_argument("-g", "--gbif", help="Path to file containing species locality data downloaded from GBIF")
 parser.add_argument("-t", "--tif", help="Path to geotiff file(s)", nargs="*")
+parser.add_argument("--plots", help="Produce graphical output illustrating coexistance, distribution etc.", action="store_true", default="True")
 #parser.add_argument("-o", "--out", help="Name of optional output file. Output is sent to STDOUT by default")
 parser.add_argument("-v", "--verbose", action="store_true", help="Also report the number of times a species is found in a particular polygon")
 parser.add_argument("-b", "--binomial", action="store_true", help="Treats first two words in species names as genus name and species epithet. Use with care as this option is LIKELY TO LEAD TO ERRONEOUS RESULTS if names in input data are not in binomial form.")
@@ -115,6 +116,7 @@ class MyLocalities(Localities):
 		self.localityFile = args.localities # [0]
 		self.speciesNames = []
 		self.order = ""
+		self.progress = 0
 		for name in self.getLocalities():
 			self.setSpeciesNames(name[0])
 
@@ -160,6 +162,17 @@ class MyLocalities(Localities):
 
 	def getLocalityFileName(self):
 		return self.localityFile
+
+	def getQuant(self):
+		nr = 0
+		for i in self.getLocalities():
+			nr += 1
+		return nr
+
+	def getProgress(self, done):
+		progress = (done/float(self.getQuant()))*100
+		sys.stderr.write("Progress: {0:.0f}%     \r".format(progress))
+		
 
 class GbifLocalities(Localities):
 	# Object that contains the locality data in the form
@@ -336,6 +349,14 @@ class Result(object):
 			string += "1"
 		return string
 
+class Geotiff(object):
+	def __init__(self, tiffile):
+		self.my_file = gdal.Open(tiffile)
+		self.ds = geoTiff(self.my_file)
+	
+	def get_elevation(self, lon, lat):
+		self.elevation = int(self.ds.elevation(float(lon), float(lat)))
+		return self.elevation
 
 
 def elevationTest(lat, lon, polygon, index):
@@ -354,9 +375,28 @@ def elevationTest(lat, lon, polygon, index):
 #		return True	
 
 	if correct_file:
-		my_file = gdal.Open(correct_file)
-		ds = geoTiff(my_file)
-		elevation = int(ds.elevation(float(lon), float(lat)))
+
+		###############################################
+		### Create an instance of a "geotif" object ###
+		###############################################
+		### This object will be stored in memory, and 
+		### hopefully reduce computation time
+		###
+		### First check if an object with the file name 
+		### has already been created.
+
+#		my_file = gdal.Open(correct_file)
+#		ds = geoTiff(my_file)
+#		elevation = int(ds.elevation(float(lon), float(lat)))
+
+		if correct_file in getiffs:
+			correct_file.get_elevation(lon, lat)
+		else:
+			new_tiff = Geotiff(correct_file)
+			elevation = new_tiff.get_elevation(lon, lat)
+
+		###############################################
+
 		if not polygon[2]:
 			low = -1000				# A really low elevation.
 		else:
@@ -368,6 +408,9 @@ def elevationTest(lat, lon, polygon, index):
 		return (low < elevation and elevation < high)
 	
 def main():
+	# Create list to store the geotif objects in.
+	getiffs = []
+	done = 0
 	# Read the locality data and test if the coordinates 
 	# are located in any of the polygons.
 	polygons = Polygons()
@@ -379,8 +422,17 @@ def main():
 	# For each locality record ...
 	if args.localities:
 		localities = MyLocalities()
+		numLoc = localities.getQuant()
 		result.setSpeciesNames(localities)
+
+#		print localities.getQuant()
+#		return
+
 		for locality in localities.getLocalities():
+			# Print progress report to STDERR (Thanks Martin Zackrisson for code snippet)
+			done += 1
+			progress = (done/float(numLoc))*100
+			sys.stderr.write("Progress: {0:.0f}%     \r".format(progress))
 			# ... and for each polygon ...
 			for polygon in polygons.getPolygons():
 				# ... test if the locality record is found in the polygon.
@@ -408,6 +460,12 @@ def main():
 		result.setSpeciesNames(gbifData)
 		# For each GBIF locality record ...
 		for locality in gbifData.getLocalities():
+#			done += 1
+
+#			progress = (done/float(self.getQuant()))*100
+#			sys.stderr.write("Progress: {0:.0f}%     \r".format(progress))
+
+#			localities.getProgress(done)
 			# ... and for each polygon ...
 			for polygon in polygons.getPolygons():
 				# ... test if the locality record is found in the polygon.
@@ -425,6 +483,10 @@ def main():
 						
 
 	result.printNexus()
+	
+	### Go to R ###
+	### Do tests of cutoff values and call R + functions
+	### import pyRlib
 
 
 if __name__ == "__main__":
