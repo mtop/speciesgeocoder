@@ -370,6 +370,9 @@ class Result(object):
 
 class Geotiff(object):
 	def __init__(self, tiffile):
+		from osgeo import gdal
+		from lib.readGeoTiff import geoTiff
+		from lib.readGeoTiff import coordInTif
 		self.my_file = gdal.Open(tiffile)
 		self.ds = geoTiff(self.my_file)
 	
@@ -378,10 +381,10 @@ class Geotiff(object):
 		return self.elevation
 
 
-def elevationTest(lat, lon, polygon, index):
+def elevationTest(lat, lon, polygon, index, tiffList):
 	from lib.readGeoTiff import coordInTif
 	from lib.readGeoTiff import geoTiff
-	from osgeo import gdal
+#	from osgeo import gdal
 	if polygon[2] is None and polygon[3] is None:
 		return True
 	# Identify the correct tif file 
@@ -408,7 +411,7 @@ def elevationTest(lat, lon, polygon, index):
 #		ds = geoTiff(my_file)
 #		elevation = int(ds.elevation(float(lon), float(lat)))
 
-		if correct_file in getiffs:
+		if correct_file in tiffList:
 			correct_file.get_elevation(lon, lat)
 		else:
 			new_tiff = Geotiff(correct_file)
@@ -428,7 +431,7 @@ def elevationTest(lat, lon, polygon, index):
 	
 def main():
 	# Create list to store the geotif objects in.
-	getiffs = []
+	tiffList = []
 	done = 0
 	# Read the locality data and test if the coordinates 
 	# are located in any of the polygons.
@@ -461,7 +464,7 @@ def main():
 
 						# Test if elevation files are available.
 						if args.tif:
-							if elevationTest(locality[1], locality[2], polygon, index) == True:
+							if elevationTest(locality[1], locality[2], polygon, index, tiffList) == True:
 								# Store the result
 								result.setResult(locality[0], polygon[0])		
 						else:
@@ -471,7 +474,7 @@ def main():
 					# locality[0] = species name, locality[1] = longitude, locality[2] =  latitude
 					if pointInPolygon(polygon[1], locality[1], locality[2]) == True:
 						if args.tif:
-							if elevationTest(locality[2], locality[1], polygon, index) == True:
+							if elevationTest(locality[2], locality[1], polygon, index, tiffList) == True:
 								result.setResult(locality[0], polygon[0])
 	
 	if args.gbif:
