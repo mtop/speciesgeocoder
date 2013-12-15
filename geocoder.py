@@ -31,10 +31,13 @@ import argparse
 import sys
 from lib.exceptions import *
 
-parser = argparse.ArgumentParser()
-parser.add_argument("-p", "--polygons", help="Path to file containing polygon coordinates")
-parser.add_argument("-l", "--localities", help="Path to file containing species locality data")
-parser.add_argument("-g", "--gbif", help="Path to file containing species locality data downloaded from GBIF")
+parser = argparse.ArgumentParser(prog="speciesgeocoder")
+locality_group = parser.add_mutually_exclusive_group(required=True)
+polygon_group = parser.add_mutually_exclusive_group(required=True)
+polygon_group.add_argument("-p", "--polygons", help="Path to file containing polygon coordinates")
+polygon_group.add_argument("-s", "--shape", help="Set path to shape file containing polygons")
+locality_group.add_argument("-l", "--localities", help="Path to file containing species locality data")
+locality_group.add_argument("-g", "--gbif", help="Path to file containing species locality data downloaded from GBIF")
 parser.add_argument("-t", "--tif", help="Path to geotiff file(s)", nargs="*")
 parser.add_argument("--plots", help="Produce graphical output illustrating coexistance, distribution etc.", action="store_true", default="True")
 #parser.add_argument("-o", "--out", help="Name of optional output file. Output is sent to STDOUT by default")
