@@ -34,17 +34,17 @@ from lib.exceptions import *
 parser = argparse.ArgumentParser(prog="speciesgeocoder")
 locality_group = parser.add_mutually_exclusive_group(required=True)
 polygon_group = parser.add_mutually_exclusive_group(required=True)
-polygon_group.add_argument("-p", "--polygons", help="Path to file containing polygon coordinates")
+polygon_group.add_argument("-p", "--polygons", help="Set path to file containing polygon coordinates")
 polygon_group.add_argument("-s", "--shape", help="Set path to shape file containing polygons")
-locality_group.add_argument("-l", "--localities", help="Path to file containing species locality data")
-locality_group.add_argument("-g", "--gbif", help="Path to file containing species locality data downloaded from GBIF")
-parser.add_argument("-t", "--tif", help="Path to geotiff file(s)", nargs="*")
+locality_group.add_argument("-l", "--localities", help="Set path to file containing species locality data")
+locality_group.add_argument("-g", "--gbif", help="Set path to file containing species locality data downloaded from GBIF")
+parser.add_argument("-t", "--tif", help="Set path to geotiff file(s)", nargs="*")
 parser.add_argument("--plots", help="Produce graphical output illustrating coexistance, distribution etc.", action="store_true", default="True")
 #parser.add_argument("-o", "--out", help="Name of optional output file. Output is sent to STDOUT by default")
-parser.add_argument("-v", "--verbose", action="store_true", help="Also report the number of times a species is found in a particular polygon")
+parser.add_argument("-v", "--verbose", action="store_true", help="Report how many times a species is found in each polygon")
 parser.add_argument("-b", "--binomial", action="store_true", help="Treats first two words in species names as genus name and species epithet. Use with care as this option is LIKELY TO LEAD TO ERRONEOUS RESULTS if names in input data are not in binomial form.")
 parser.add_argument("-n", "--number", help="Minimum number of occurences in a polygon. The number of excluded localities will be reported by default", nargs="*")
-parser.add_argument("--test", help="Test if the imput data is in the right format", action="store_true")
+parser.add_argument("--test", help="Test if the input data is in the right format", action="store_true")
 args = parser.parse_args()
 
 
@@ -57,8 +57,13 @@ class Polygons(object):
 			self.setPolygonNames(polygon[0])
 
 	def getPolygons(self):
-		f = open(self.polygonFile, "rU")
-		lines = f.readlines()
+		try:
+			f = open(self.polygonFile, "rU")
+			lines = f.readlines()
+		except IOError:
+			print "No such file \'%s\'" % self.polygonFile
+			sys.exit(0)
+
 		for line in lines:
 			low = None
 			high = None
@@ -125,8 +130,13 @@ class MyLocalities(Localities):
 			self.setSpeciesNames(name[0])
 
 	def getLocalities(self):
-		f = open(self.localityFile, "rU")
-		lines = f.readlines()
+		try:
+			f = open(self.localityFile, "rU")
+			lines = f.readlines()
+		except IOError:
+			print "No such file \'%s\'" % self.localityFile
+			sys.exit(0)
+
 		for line in lines:
 			if not line:
 				break
@@ -188,8 +198,13 @@ class GbifLocalities(Localities):
 			self.setSpeciesNames(name[0])
 
 	def getLocalities(self):
-		f = open(self.gbifFile, "rU")
-		lines = f.readlines()
+		try:
+			f = open(self.gbifFile, "rU")
+			lines = f.readlines()
+		except IOError:
+			print "No such file \'%s\'" % self.polygonFile
+			sys.exit(0)
+
 		for line in lines:
 			# Make sure the record has both lat. and long. data.
 			if len(line.split("\t")[5]) > 0 and len(line.split("\t")[6]) > 0:
