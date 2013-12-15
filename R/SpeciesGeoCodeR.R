@@ -1,8 +1,8 @@
 # dependencies
-install.packages("maptools")
-install.packages("maps")
-install.packages("mapdata")
-install.packages("raster")
+# install.packages("maptools")
+# install.packages("maps")
+# install.packages("mapdata")
+# install.packages("raster")
 
 library(maptools)
 library(maps)
@@ -110,13 +110,18 @@ ReadPoints<- function(x, y) {
     stop(paste("Wrong polygon input coordinates. Contains longitude values outside possible range in row:",
                rownames(polycord[polycord[,3] < -90,]),"\n"))
   }
+  cat("Reading in polygon coordinates. \n")
   poly <- Cord2Polygon(polycord)
+  cat("Done \n")
+  cat("Reading in point coordinates. \n")
   coordi <- coords[, c(2, 3)]
   coordi2 <- as.matrix(coordi)
+  cat("Done \n")
   res <- list(identifier = coords[, 1], species_coordinates = coordi, 
               polygons = poly)
   class(res) <- "spgeoIN"
   return(res)
+  
 }
 
 PipSamp <- function(x){
@@ -128,7 +133,9 @@ PipSamp <- function(x){
   occ <- SpatialPoints(x$species_coordinates[, c(1, 2)])
   pp <- x$polygons#[i]
   proj4string(occ) <- proj4string(pp) <- "+proj=longlat +datum=WGS84"
+  cat("Performing point in polygon test \n")
   pip <- over(occ, pp)
+  cat("Done \n")
   pip <- data.frame(x$identifier, pip)
   colnames(pip) <- c("identifier", "homepolygon")
   for(i in 1:length(names(x$polygons))){
@@ -164,6 +171,7 @@ PointInPolygon <- function(x, y){
 
 SpSumH <- function(x){
   if (class(x)[1] == "spgeodataframe"){
+    cat("Calculating species occurences per polygon \n")
     liste <- levels(x$homepolygon)
     spec_sum <- data.frame(identifier = levels(x$identifier))
     for(i in 1:length(liste)){
@@ -171,6 +179,7 @@ SpSumH <- function(x){
       kk <- aggregate(pp$homepolygon, by = list(pp$identifier), length)
       names(kk) <- c("identifier", liste[i])
       spec_sum <- merge(spec_sum, kk, all = T)
+      cat(paste("Calculating species occurences for polygon: ", i, "/", length(liste),": ",liste[i],"\n", sep = ""))
     }
     spec_sum[is.na(spec_sum)] <- 0
     return(spec_sum)
@@ -185,6 +194,7 @@ SpSum <- function(x){
 }
 
 SpPerPolH <- function(x){
+  cat("Calculating species number per polygon. \n")  
   numpoly <- length(names(x)[-1])
   pp <- x[, -1]
   pp[pp > 0] <- 1
@@ -195,6 +205,7 @@ SpPerPolH <- function(x){
     names(num_sp_poly) <- names(x)[2]
   }
   return(num_sp_poly)
+  cat("Done")
 }
 
 SpPerPol <- function(x){
@@ -227,6 +238,7 @@ CoExClassH <- function(x){
   numpol <- length(names(dat))
   coemat <- data.frame(matrix(NA, nrow = spnum, ncol = spnum))
   for(j in 1:spnum){
+    cat(paste("Calculate coexistence pattern for species: ", j, "/", spnum, " ", dat$identifier[j], "\n", sep = ""))
     sco <- data.frame(dat$identifier)
     for(i in 2:length(names(dat))){
       if (dat[j, i] ==  0) {
@@ -283,11 +295,10 @@ SpGeoCodH <- function(x){
     bb <- x$species_coordinates[as.numeric(rownames(nc)), ]
     miss <- data.frame(identifier, bb)
     names(miss) <- c("identifier","XCOOR","YCOOR")
-    coex <- CoExClassH(spsum) 
     
     out <- list(identifier_in = x$identifier, species_coordinates_in = x$species_coordinates, polygons = x$polygons, 
                 sample_table = kkk, spec_table = spsum, polygon_table = sppol, 
-                not_classified_samples = miss, coexistence_classified = coex)
+                not_classified_samples = miss, coexistence_classified = "NA")
     class(out) <- "spgeoOUT"
     return(out)    
   }else{
@@ -489,7 +500,7 @@ GetPythonIn <- function(coordinates, polygon, sampletable, speciestable){
   spectab <- as.data.frame(speciestable)
   poly <- Cord2Polygon(polygon)
   polytab <- SpPerPolH(spectab)
-  coex <- CoExClassH(spectab)
+  #coex <- CoExClassH(spectab)
   
   nc <- subset(samtab, is.na(samtab$homepolygon))
   identifier <- idi[as.numeric(rownames(nc))]
@@ -499,7 +510,7 @@ GetPythonIn <- function(coordinates, polygon, sampletable, speciestable){
   
   outo <- list(identifier_in = idi, species_coordinates_in = coords, polygons = poly, 
                sample_table = , spec_table = spectab, polygon_table = poltab, 
-               not_classified_samples = noclass, coexistence_classified = coex)
+               not_classified_samples = noclass, coexistence_classified = "NA")
   class(outo) <- "spgeoOUT"
   return(outo)  
 }
@@ -512,10 +523,15 @@ GetPythonIn <- function(coordinates, polygon, sampletable, speciestable){
 
 WriteTablesSpGeo <- function(x, ...){
   if (class(x) ==  "spgeoOUT"){
+    cat("Writing sample table: sample_classification_to_polygon.txt. \n")
     write.table(x$sample_table, file = "sample_classification_to_polygon.txt", sep = "\t", ...)
+    cat("Writing species occurence table: species_occurences_per_polygon.txt. \n")
     write.table(x$spec_table, file = "species_occurences_per_polygon.txt", sep =  "\t", ...)
+    cat("Writing species number per polygon table: speciesnumber_per_polygon.txt. \n")
     write.table(x$polygon_table, file = "speciesnumber_per_polygon.txt", sep = "\t", ...)
+    cat("Writing table of unclassified samples: unclassified samples.txt. \n")
     write.table(x$not_classified_samples, file = "unclassified samples.txt", sep = "\t", ...)
+    cat("Writing coexistence tables: species_coexistence_matrix.txt. \n")
     write.table(x$coexistence_classified, file = "species_coexistence_matrix.txt", sep = "\t", ...)
   }else{
     stop("This function is only defined for class spgeoOUT")
@@ -558,6 +574,7 @@ BarChartSpec <- function(x, mode = c("percent", "total"), plotout = F, ...){
     leng <-  length(liste)
     par(mar = c(10, 4, 3, 3))
     for(i in 1:leng){
+      cat(paste("Creating barchart for species ", i, "/", leng, ": ", liste[i], "\n", sep = ""))
       spsub <- as.matrix(subset(x$spec_table, x$spec_table$identifier ==  liste[i])[, 2:leng2])
       if (sum(spsub) > 0){
         barplot(spsub, las = 2, ylim = c(0, (max(spsub) + max(spsub) / 10)), 
@@ -582,6 +599,7 @@ BarChartSpec <- function(x, mode = c("percent", "total"), plotout = F, ...){
     leng2 <- length(colnames(percent2))
     par(mar = c(10, 4, 3, 3))
     for(i in 1:leng){
+      cat(paste("Creating barchart for species ", i, "/", leng, ": ", liste[i], "\n", sep = ""))
       if (anzpoly > 1){
         spsub <- as.matrix(subset(percent2, percent2$identifier ==  liste[i])[, 2:leng2])
       }else{
@@ -607,6 +625,7 @@ BarChartPoly <- function(x, plotout = F, ...){
   leng <- length(liste)
   par(mar = c(15, 4, 3, 3))
   for(i in 2:leng){
+    cat(paste("Creating barchart for polygon ", i, "/", leng, ": ", liste[i], "\n", sep = ""))
     subs <-subset(x$spec_table, x$spec_table[, i] > 0)
     datsubs <- subs[order(subs[, i]),]
     barplot(datsubs[, i], names.arg = datsubs$identifier, 
@@ -644,6 +663,7 @@ HeatPlotCoEx <- function(x, ...){
     par(mar =  c(0, 10, 10, 0))
     plot(0, xlim = c(0, xmax - 1), ylim = c(0, ymax) , type = "n", axes = F, xlab = "", ylab = "")
     for(j in 2:xmax ){
+      cat(paste("Ploting coexistence for species ", j, "/", xmax, ": ", colnames(dat)[j],"\n", sep = ""))
       for(i in 1:ymax){
         if (i ==  (j - 1)){
           rect(j - 2, numer[i] - 1 , j - 1, numer[i], col = "black" )
@@ -834,6 +854,7 @@ MapPerPoly <- function(x, plotout = FALSE){
     stop("This function is only defined for class spgeoOUT")
   }
   for(i in 1:length(names(x$polygons))){
+    cat(paste("Creating map for polygon", i,"/",length(names(x$polygons)), ": ", names(x$polygons)[i], "\n",sep = ""))
     chopo <- names(x$polygons)[i]
     xmax <- min(max(bbox(x$polygons[i])[1, 2]) + 5,180)
     xmin <- max(min(bbox(x$polygons[i])[1, 1]) - 5, -180)
@@ -845,16 +866,15 @@ MapPerPoly <- function(x, plotout = FALSE){
     subpo <- subset(po, po$homepolygon ==  chopo)
     
     subpo <- subpo[order(subpo$identifier), ]  
-    colorh <- unique(subpo$identifier)
-    lcolorh <- length(colorh)
-    rain <- rainbow(lcolorh)
-    for(j in 1:length(subpo$identifier)){
-      subpo$color[j] <- which(colorh ==  subpo$identifier[j])
-    }
     
-    ypos <- vector(length = lcolorh)
+    liste <- unique(subpo$identifier)
+    leng <- length(liste)
+
+    rain <- rainbow(leng)
+    ypos <- vector(length = leng)
     yled <- (ymax - ymin) * 0.025
-    for(k in 1:lcolorh){
+    cat("2")
+    for(k in 1:leng){
       ypos[k]<- ymax - yled * k
     }
     
@@ -866,28 +886,33 @@ MapPerPoly <- function(x, plotout = FALSE){
     box("plot")
     title(chopo)
     plot(x$polygons[i], col = "grey60", add = T)
-    points(subpo[,3], subpo[,4], 
-           cex = 0.7, pch = 3 , col = rain[subpo$color])
+    for(j in 1:leng){
+      subsub <- subset(subpo,subpo$identifier == liste[j]) 
+    points(subsub[,3], subsub[,4], 
+           cex = 0.7, pch = 3 , col = rain[j])
+    cat(paste("Adding to polygon ", names(x$polygons)[i], " species ", j, "/", leng, ": ", liste[j],"\n", sep = ""))
+    }
     #legend
+    cat("Adding legend \n")
     par(mar = c(3, 0, 3, 0), ask = F)
     plot(c(1, 50), c(1, 50), type = "n", axes = F)
-    if(lcolorh == 0){
+    if(leng == 0){
       yset <- 25
       xset <- 1}
-    if (lcolorh ==  1){
+    if (leng ==  1){
       yset <- 25
-      xset <- rep(4, lcolorh)
+      xset <- rep(4, leng)
     }
-    if(lcolorh >  1){
-      yset <- rev(sort(c(seq(25, 25 + max(ceiling(lcolorh/2) - 1, 0)), 
-                         seq(24, 24 - lcolorh/2 + 1))))
-      xset <- rep(4, lcolorh)
+    if(leng >  1){
+      yset <- rev(sort(c(seq(25, 25 + max(ceiling(leng/2) - 1, 0)), 
+                         seq(24, 24 - leng/2 + 1))))
+      xset <- rep(4, leng)
     }
     points(xset-2, yset, pch =  3, col = rain)
-    if(lcolorh == 0){
+    if(leng == 0){
       text(xset, yset, labels = "No species found in this polygon", adj = 0)
     }else{
-      text(xset, yset, labels =  colorh, adj = 0, xpd = T)
+      text(xset, yset, labels =  liste, adj = 0, xpd = T)
       rect(min(xset) - 4, min(yset) -1, 50 + 1, max(yset) + 1, xpd = T)
     }
     
@@ -908,6 +933,7 @@ MapPerSpecies <- function(x, moreborders = F, plotout = FALSE, ...){
   
   
   for(i in 1:length(liste)){
+    cat(paste("Mapping species:", i, "/", length(liste), ": ", liste[i], "\n",sep = ""))
     kk <- subset(dat, dat$identifier ==  liste[i])
     inside <- CropPointPolygon(data.frame(XCOOR = kk$XCOOR, YCOOR = kk$YCOOR), x$polygons, 
                                outside = F)
@@ -952,13 +978,16 @@ MapAll <- function(x, polyg, moreborders = F, ...){
       ymax <- min(ymax +10, 90)
       ymin <- max(ymin -10,-90)
     }
+    cat("Creating map of all samples. \n")
     map ("world", xlim = c(xmin, xmax), ylim = c(ymin, ymax))
     axis(1)
     axis(2)
     box("plot")
     title("All samples")
     if (moreborders ==  T) {plot(wrld_simpl, add = T)}
+    cat("Adding polygons. \n")
     plot(x$polygons, col = "grey60", add = T, ...)
+    cat("Adding sample points. \n")
     points(x$species_coordinates_in[, 1], x$species_coordinates_in[, 2], 
            cex = 0.7, pch = 3 , col = "blue", ...)
   }
@@ -1009,12 +1038,15 @@ MapUnclassified <- function(x, moreborders = F, ...){
     ymax <- min(max(dat$YCOOR) + 2, 90)
     ymin <- max(min(dat$YCOOR) - 2, -90)
     
+    cat("Creating map of unclassified samples. \n")
     map ("world", xlim = c(xmin, xmax), ylim = c(ymin, ymax), ...)
     axis(1)
     axis(2)
-    title("Samples not classified to polygons")
+    title("Samples not classified to polygons \n")
     if (moreborders == T) {plot(wrld_simpl, add = T)}
+    cat("Adding polygons")
     plot(x$polygons, col = "grey60", add = T, ...)
+    cat("adding sample points. \n")
     points(dat$XCOOR, dat$YCOOR, 
            cex = 0.7, pch = 3 , col = "red", ...)
     box("plot")
@@ -1022,6 +1054,7 @@ MapUnclassified <- function(x, moreborders = F, ...){
 }  
 
 OutMapAll <- function(x, ...){
+  cat("Creating overview map: map_samples_overview.pdf. \n")
   pdf(file = "map_samples_overview.pdf", paper = "a4r", onefile = T, ...)
   MapAll(x, ...)
   MapUnclassified(x, ...)
@@ -1029,36 +1062,42 @@ OutMapAll <- function(x, ...){
 }
 
 OutMapPerPoly <- function(x){
+  cat("Creating map per polygon: map_samples_per_polygon.pdf. \n")
   pdf(file = "map_samples_per_polygon.pdf", paper = "a4r", onefile = T)
   MapPerPoly(x, plotout = T)
   dev.off()
 }
 
 OutMapPerSpecies <- function(x){
+  cat("Creating map per species: map_samples_per_species.pdf. \n")
   pdf(file = "map_samples_per_species.pdf", paper = "a4r", onefile = T)
   MapPerSpecies(x, plotout = T)
   dev.off()
 }
 
 OutBarChartSpec <- function(x, ...){
+  cat("Creating barchart per species: barchart_per_species.pdf. \n")
   pdf(file = "barchart_per_species.pdf", paper = "a4r", onefile = T)
   BarChartSpec(x, plotout = T, mode = "percent", ...)
   dev.off()
 }
 
 OutBarChartPoly <- function(x, ...){
+  cat("Creating barchart per polygon: barchart_per_polygon.pdf. \n")
   pdf(file = "barchart_per_polygon.pdf", paper = "a4r", onefile = T)
   BarChartPoly(x, plotout = T, cex.axis = .8, ...)
   dev.off()
 }
 
 OutHeatCoEx <- function(x, ...){
+  cat("Creating coexistence heatplot: heatplot_coexistence.pdf. \n")
   pdf(file = "heatplot_coexistence.pdf", paper = "a4r", onefile = T)
   HeatPlotCoEx(x, ...)
   dev.off()
 }
 
 OutPlotSpPoly <- function(x, ...){
+  cat("Creating species per polygon barchart: number_of_species_per_polygon.pdf. \n")
   pdf(file = "number_of_species_per_polygon.pdf", paper = "a4r", onefile = T)
   PlotSpPoly(x, ...)
   dev.off()
@@ -1069,12 +1108,21 @@ PlotOutSpGeo <- function(x, ...){
   OutBarChartPoly(x, ...)
   OutBarChartSpec(x, ...)
   OutMapAll(x, ...)
-  OutMapPerPoly(x, ...)
   OutMapPerSpecies(x, ...)
-  OutHeatCoEx(x, ...)
+  OutMapPerPoly(x, ...)
 }
 
 SpeciesGeoCoder <- function(x, y, ...){
+  ini <- ReadPoints(x, y, ...)
+  outo <- SpGeoCodH(ini, ...)
+  outo <- CoExClass(outo, ...)
+  
+  WriteTablesSpGeo(outo, ...)
+  PlotOutSpGeo(outo, ...)
+  OutHeatCoEx(outo, ...)
+}
+
+SpeciesGeoCoderlarge <- function(x, y, ...){
   ini <- ReadPoints(x, y, ...)
   outo <- SpGeoCodH(ini, ...)
   
