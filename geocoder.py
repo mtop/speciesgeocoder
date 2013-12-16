@@ -61,8 +61,7 @@ class Polygons(object):
 			f = open(self.polygonFile, "rU")
 			lines = f.readlines()
 		except IOError:
-			print "No such file \'%s\'" % self.polygonFile
-			sys.exit(0)
+			sys.exit("[ Error ] No such file \'%s\'" % self.polygonFile)
 
 		for line in lines:
 			low = None
@@ -134,8 +133,7 @@ class MyLocalities(Localities):
 			f = open(self.localityFile, "rU")
 			lines = f.readlines()
 		except IOError:
-			print "No such file \'%s\'" % self.localityFile
-			sys.exit(0)
+			sys.exit("[ Error ] No such file \'%s\'" % self.localityFile)
 
 		for line in lines:
 			if not line:
@@ -160,8 +158,9 @@ class MyLocalities(Localities):
 				latitude = splitline[1]
 				longitude = splitline[2]
 			except IndexError:
-				print >> sys.stderr, "\n[ Error ] The locality data file is not in tab delimited text format.\n"
-				sys.exit(1)
+				sys.exit('[ Error ] The locality data file is not in tab delimited text format')
+#				print >> sys.stderr, "\n[ Error ] The locality data file is not in tab delimited text format.\n"
+#				sys.exit(1)
 			yield species.replace("  ", " "), latitude, longitude
 	
 	def getCoOrder(self):
@@ -202,8 +201,7 @@ class GbifLocalities(Localities):
 			f = open(self.gbifFile, "rU")
 			lines = f.readlines()
 		except IOError:
-			print "No such file \'%s\'" % self.polygonFile
-			sys.exit(0)
+			sys.exit("[ Error ] No such file \'%s\'" % self.polygonFile)
 
 		for line in lines:
 			# Make sure the record has both lat. and long. data.
@@ -242,11 +240,11 @@ def pointInPolygon(poly, x, y):
 	try:
 		x = float(x)
 	except:
-		print >> sys.stderr, "[ Warning ] x is not a number"
+		sys.stderr.write('[ Warning ] x is not a number')
 	try:
 		y = float(y)
 	except:
-		print >> sys.stderr, "[ Warning ] y is not a number"
+		sys.stderr.write('[ Warning ] y is not a number')
 	n = len(poly)
 	inside = False
 	p1x,p1y = poly[0].split(',')
