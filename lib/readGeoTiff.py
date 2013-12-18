@@ -111,8 +111,12 @@ def indexTiffs(infiles):
 	# Create a dictionary of avaialble geotiff 
 	# files with coordinate data as values.
 	# "infiles" is a list of geotiff file names.
+	done = 0
 	for tif in infiles:
-		if ".tif" in tif:				# Remove later on.
+		done += 1
+		progress = (float(done)/len(infiles))*100
+		sys.stderr.write("Indexing tiff files: {0:.0f}%     \r".format(progress))
+		if ".tif" in tif:					# Remove later on.
 			my_file = gdal.Open(tif)
 			tifObj = geoTiff(my_file)
 			tifFiles[tif] = []
@@ -121,9 +125,10 @@ def indexTiffs(infiles):
 			# Extract maxX
 			tifFiles[tif].append(tifObj.maxx())		# [1]
 			# Extract minY
-			tifFiles[tif].append(tifObj.miny())     # [2]
+			tifFiles[tif].append(tifObj.miny())     	# [2]
 			# Extract maxY
 			tifFiles[tif].append(tifObj.maxy())		# [3]
+	sys.stderr.write("\n")
 	return tifFiles						
 
 def coordInTif(lon, lat, tifFiles):
