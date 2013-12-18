@@ -43,7 +43,7 @@ parser.add_argument("--plots", help="Produce graphical output illustrating coexi
 #parser.add_argument("-o", "--out", help="Name of optional output file. Output is sent to STDOUT by default")
 parser.add_argument("-v", "--verbose", action="store_true", help="Report how many times a species is found in each polygon")
 parser.add_argument("-b", "--binomial", action="store_true", help="Treats first two words in species names as genus name and species epithet. Use with care as this option is LIKELY TO LEAD TO ERRONEOUS RESULTS if names in input data are not in binomial form.")
-parser.add_argument("-n", "--number", help="Set the minimum number of occurrences (localities) needed for considering a species to be present in a polygon", nargs="1")
+parser.add_argument("-n", "--number", help="Set the minimum number of occurrences (localities) needed for considering a species to be present in a polygon", nargs="*")
 parser.add_argument("--test", help="Test if the input data is in the right format", action="store_true")
 args = parser.parse_args()
 
