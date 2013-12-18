@@ -389,6 +389,7 @@ def elevationTest(lat, lon, polygon, index, tiffList):
 		else:
 			new_tiff = Geotiff(correct_file)
 			elevation = new_tiff.get_elevation(lon, lat)
+			tiffList.append(new_tiff)			# NEW NEW NEW
 		if not polygon[2]:
 			low = -1000				# A really low elevation.
 		else:
