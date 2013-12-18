@@ -242,11 +242,11 @@ def pointInPolygon(poly, x, y):
 	try:
 		x = float(x)
 	except:
-		print >> sys.stderr, "[ Warning ] x is not a number"
+		sys.stderr.write("[ Warning ] \'%s\' is not a number\n" % x)
 	try:
 		y = float(y)
 	except:
-		print >> sys.stderr, "[ Warning ] y is not a number"
+		sys.stderr.write("[ Warning ] \'%s\' is not a number\n" % y)
 	n = len(poly)
 	inside = False
 	p1x,p1y = poly[0].split(',')
@@ -454,7 +454,7 @@ def main():
 			# Print progress report to STDERR (Thanks Martin Zackrisson for code snippet)
 			done += 1
 			progress = (done/float(numLoc))*100
-			sys.stderr.write("Progress: {0:.0f}%     \r".format(progress))
+			sys.stderr.write("Point in polygon test: {0:.0f}%     \r".format(progress))
 			# ... and for each polygon ...
 			for polygon in polygons.getPolygons():
 				# ... test if the locality record is found in the polygon.
