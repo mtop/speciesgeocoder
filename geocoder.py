@@ -362,8 +362,8 @@ class Geotiff(object):
 
 
 def elevationTest(lat, lon, polygon, index, tiffList):
-	from lib.readGeoTiff import coordInTif
-	from lib.readGeoTiff import geoTiff
+	from lib.readGeoTiff import coordInTif			# Kan nog plockas bort
+	from lib.readGeoTiff import geoTiff			# Kan nog plockas bort
 	if polygon[2] is None and polygon[3] is None:
 		return True
 	# Identify the correct tif file 
@@ -381,7 +381,10 @@ def elevationTest(lat, lon, polygon, index, tiffList):
 
 		# First check if an object with the file name 
 		# has already been created.
+#		print correct_file					# This part needs some work!
+#		print tiffList
 		if correct_file in tiffList:
+#			print "Correcct file found in tiff list!"
 			correct_file.get_elevation(lon, lat)
 		else:
 			new_tiff = Geotiff(correct_file)
