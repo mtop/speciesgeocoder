@@ -19,14 +19,6 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-### TODO ###
-#
-# Check that in-data is in the right format.
-# Remove "_" characters from species names. - DONE
-# Add option to only regard "Genus" and "species epithet" parts of species names. - DONE
-#
-############
-
 import argparse
 import sys
 from lib.exceptions import *
@@ -134,7 +126,6 @@ class MyLocalities(Localities):
 			lines = f.readlines()
 		except IOError:
 			sys.exit("[ Error ] No such file \'%s\'" % self.localityFile)
-
 		for line in lines:
 			if not line:
 				break
@@ -152,15 +143,13 @@ class MyLocalities(Localities):
 			if args.binomial:
 				species = self.getBinomialName(splitline[0])
 			else:
-				species = splitline[0].strip()  # + ' ' + splitline[2]
+				species = splitline[0].strip()
 			self.setSpeciesNames(species)
 			try:
 				latitude = splitline[1]
 				longitude = splitline[2]
 			except IndexError:
 				sys.exit('[ Error ] The locality data file is not in tab delimited text format')
-#				print >> sys.stderr, "\n[ Error ] The locality data file is not in tab delimited text format.\n"
-#				sys.exit(1)
 			yield species.replace("  ", " "), latitude, longitude
 	
 	def getCoOrder(self):
@@ -181,11 +170,6 @@ class MyLocalities(Localities):
 		for i in self.getLocalities():
 			nr += 1
 		return nr
-
-	def getProgress(self, done):
-		progress = (done/float(self.getQuant()))*100
-		sys.stderr.write("Progress: {0:.0f}%     \r".format(progress))
-		
 
 class GbifLocalities(Localities):
 	# Object that contains the locality data in the form
@@ -229,14 +213,12 @@ class GbifLocalities(Localities):
 		return self.speciesNames
 
 
-
 def pointInPolygon(poly, x, y):
 	# Returns "True" if a point is inside a given polygon. 
 	# Othewise returns "False". The polygon is a list of 
 	# Longitude/Latitude (x,y) pairs.
 	# Code modified from  http://www.ariel.com.au/a/python-point-int-poly.html
 	# and alos described at http://geospatialpython.com/2011/01/point-in-polygon.html
-	
 	try:
 		x = float(x)
 	except:
@@ -382,7 +364,6 @@ class Geotiff(object):
 def elevationTest(lat, lon, polygon, index, tiffList):
 	from lib.readGeoTiff import coordInTif
 	from lib.readGeoTiff import geoTiff
-#	from osgeo import gdal
 	if polygon[2] is None and polygon[3] is None:
 		return True
 	# Identify the correct tif file 
@@ -390,39 +371,27 @@ def elevationTest(lat, lon, polygon, index, tiffList):
 	# The following two lines of code can be usefull if one 
 	# wants to disregard the elevation limits if no elevation 
 	# data is available for a particular area.
-#	print polygon[2]
+
 #	if not correct_file and polygon[2] == None:
 #		return True	
-
 	if correct_file:
+		# Create an instance of a "geotif" object
+		# This object will be stored in memory (and 
+		# hopefully reduce computation time).
 
-		###############################################
-		### Create an instance of a "geotif" object ###
-		###############################################
-		### This object will be stored in memory, and 
-		### hopefully reduce computation time
-		###
-		### First check if an object with the file name 
-		### has already been created.
-
-#		my_file = gdal.Open(correct_file)
-#		ds = geoTiff(my_file)
-#		elevation = int(ds.elevation(float(lon), float(lat)))
-
+		# First check if an object with the file name 
+		# has already been created.
 		if correct_file in tiffList:
 			correct_file.get_elevation(lon, lat)
 		else:
 			new_tiff = Geotiff(correct_file)
 			elevation = new_tiff.get_elevation(lon, lat)
-
-		###############################################
-
 		if not polygon[2]:
 			low = -1000				# A really low elevation.
 		else:
 			low = int(polygon[2])
 		if not polygon[3]:
-			high = -1000			# A really low elevation.
+			high = -1000				# A really low elevation.
 		else:
 			high = int(polygon[3])
 		return (low < elevation and elevation < high)
@@ -444,10 +413,6 @@ def main():
 		localities = MyLocalities()
 		numLoc = localities.getQuant()
 		result.setSpeciesNames(localities)
-
-#		print localities.getQuant()
-#		return
-
 		for locality in localities.getLocalities():
 			# Print progress report to STDERR (Thanks Martin Zackrisson for code snippet)
 			done += 1
