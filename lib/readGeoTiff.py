@@ -72,6 +72,10 @@ class geoTiff(object):
 		while (self.MINX + (col * self.gt[1])) < lon:
 			col += 1
 		return self.ds.ReadAsArray()[col][row]
+	
+	def gdal_elevation(self, lon, lat):
+		import subprocess.call as call
+		call([self, lon, lat])
 
 	def test(self, lon, lat):
 		row = 1
@@ -160,9 +164,9 @@ if __name__ == "__main__":
 #	print dir(my_file)
 #	print ""
 #	print dir(ds)
-	print "Corners: ", ds.corners()
-	print "GetGeoTransform: ", my_file.GetGeoTransform()
-	ds.test(float(63), float(63))							# Result: 107, 146, 36 as expected
+#	print "Corners: ", ds.corners()
+#	print "GetGeoTransform: ", my_file.GetGeoTransform()
+#	ds.test(float(63), float(63))							# Result: 107, 146, 36 as expected
 #	ds.test_2(9559, 4366)
 #	ds.test_2(2,400,3)			# Testat Max [0]: 2 [1]: 361
 #	print "Value 1-1: ", ds.elevation(float(18.448362), float(57.496642))
@@ -174,8 +178,8 @@ if __name__ == "__main__":
 #	print "GetGeoTransform: ", my_file.GetGeoTransform()		# (-180.03879301265735, 0.018939867494837094, 0.0, 83.678805953060021, 0.0, -0.018939867494837094)
 #	print my_file.GetMetadataItem(1,1)							# Crash
 
-#	lat = 57.6627998352
-#	lon = 18.346200943
+	lat = 57.6627998352
+	lon = 18.346200943
 #
 #	### Identify the correct file, given the lat/long coordinates and a set of geotiff files.
 #	tifIndex = indexTiffs(infiles)
@@ -183,6 +187,6 @@ if __name__ == "__main__":
 #
 #	### Test elevation extraction given long/lat coordinates and one geotiff file.
 #	if correct_file:
-#		my_file = gdal.Open(correct_file)
-#		ds = geoTiff(my_file)
-#		print ds.elevation(float(lon), float(lat))
+#	my_file = gdal.Open(correct_file)
+#	ds = geoTiff(my_file)
+	print ds.elevation(float(lon), float(lat))
