@@ -52,7 +52,7 @@ class Geotiff(object):
 		return "MinX: ", self.minx(), "MaxX: ", self.maxx(), "MinY: ", self.miny(), "MaxY: ", self.maxy()
 
 	def get_elevation(self, lon, lat):
-		elevation = subprocess.check_output(["gdallocationinfo", "-valonly", self.tiffile, lon, lat])
+		elevation = subprocess.check_output(["gdallocationinfo", "-valonly", "-wgs84", self.tiffile, lon, lat])
 		return int(elevation)	
 
 	
