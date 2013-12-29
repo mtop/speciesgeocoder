@@ -20,21 +20,17 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from osgeo import gdal
-import random
 import sys
 import subprocess
 
-infiles = sys.argv[1:]
-
-tifFiles = {}
-
-class geoTiff(object):
+class Geotiff(object):
 	# GeoTiff object
-	def __init__(self, ds):
-		self.width = ds.RasterXSize
-		self.height = ds.RasterYSize
-		self.gt = ds.GetGeoTransform()
-		self.ds = ds
+	def __init__(self, tiffile):
+		self.tiffile = tiffile
+		my_file = gdal.Open(self.tiffile)
+		self.width = my_file.RasterXSize
+		self.height = my_file.RasterYSize
+		self.gt = my_file.GetGeoTransform()
 		self.MINX = self.gt[0]
 		self.MINY = self.gt[3] + self.width*self.gt[4] + self.height*self.gt[5]
 		self.MAXX = self.gt[0] + self.width*self.gt[1] + self.height*self.gt[2]
@@ -53,84 +49,32 @@ class geoTiff(object):
 		return self.MAXY
 
 	def corners(self):
-		return "MinX: ", ds.minx(), "MaxX: ", ds.maxx(), "MinY: ", ds.miny(), "MaxY: ", ds.maxy()
+		return "MinX: ", self.minx(), "MaxX: ", self.maxx(), "MinY: ", self.miny(), "MaxY: ", self.maxy()
+
+	def get_elevation(self, lon, lat):
+		elevation = subprocess.check_output(["gdallocationinfo", "-valonly", self.tiffile, lon, lat])
+		return int(elevation)	
 
 	
-	def random(self):	
-		lon, lat = random.randrange(int(self.MINX), int(self.MAXX)), random.randrange(int(self.MINY), int(self.MAXY))
-#		return self.elevation(lon, lat)
-
-#	def elevation(self, lon, lat):
-#		# self.MAXY + (row * self.gt[5]) together with
-#		# self.MINX + (col * self.gt[1]) referes to the 
-#		# top right corner of the tif image.
-#		# returns the elevation given the Lat/long input
-#		row = 1
-#		while (self.MAXY + (row * self.gt[5])) < lat:
-#			row += 1
-##			print row									# Devel.
-#		col = 1
-#		while (self.MINX + (col * self.gt[1])) < lon:
-#			col += 1
-#		return self.ds.ReadAsArray()[col][row]
-#	
-#	def gdal_elevation(self, lon, lat):
-#		import subprocess.call as call
-#		call([self, lon, lat])
-
-	def test(self, lon, lat):
-		row = 1
-		while (self.MAXY + (row * self.gt[5])) > lat:
-#			print "MaxY: ", self.MAXY
-#			print "Row: ", row
-#			print "Lat: ", lat
-			row += 1
-		print "Row: ", row
-		col = 1
-
-#		print "MinX: ", self.MINX
-#		print "Col: ", col
-#		print "Long: ", lon
-#		print "Test: ", (self.MINX + (col * self.gt[1]))
-
-		while (self.MINX + (col * self.gt[1])) < lon:
-#			print "Test lon: ", (self.MINX + (col * self.gt[1]))
-#			print "MinY: ", self.MINY
-#			print "Col: ", col
-#			print "Long: ", lon
-			col += 1
-		print "Col: ", col
-#		print self.ds.ReadAsArray()[0][col][row]
-#		print self.ds.ReadAsArray()[0][row][col]
-#		print self.ds.ReadAsArray()[1][row][col]
-#		print self.ds.ReadAsArray()[2][row][col]
-#		print self.ds.ReadAsArray().shape				# Works
-		print self.ds.ReadAsArray()[0:3, row, col]
-
-	def test_2(self, col, row, i):
-		print self.ds.ReadAsArray()[col][row][i]
-		
-
-
 def indexTiffs(infiles):
 	# Create a dictionary of avaialble geotiff 
 	# files with coordinate data as values.
 	# "infiles" is a list of geotiff file names.
+	tifFiles = {}
 	done = 0
 	for tif in infiles:
 		done += 1
 		progress = (float(done)/len(infiles))*100
 		sys.stderr.write("Indexing tiff files: {0:.0f}%     \r".format(progress))
 		if ".tif" in tif:					# Remove later on.
-			my_file = gdal.Open(tif)
-			tifObj = geoTiff(my_file)
+			tifObj = Geotiff(tif)
 			tifFiles[tif] = []
 			# Extract minX
 			tifFiles[tif].append(tifObj.minx())		# [0]
 			# Extract maxX
 			tifFiles[tif].append(tifObj.maxx())		# [1]
 			# Extract minY
-			tifFiles[tif].append(tifObj.miny())     	# [2]
+			tifFiles[tif].append(tifObj.miny())     # [2]
 			# Extract maxY
 			tifFiles[tif].append(tifObj.maxy())		# [3]
 	sys.stderr.write("\n")
@@ -145,37 +89,11 @@ def coordInTif(lon, lat, tifFiles):
 
 
 if __name__ == "__main__":
-	# 57.496642,18.448362 are the coordinates for Roma, Gotland.
-	# 57.6627998352, 18.346200943 are the coordinates for Visby airport.
 
 	my_file = gdal.Open(sys.argv[1])	
-	ds = geoTiff(my_file)
-#	print dir(my_file)
-#	print ""
-#	print dir(ds)
-#	print "Corners: ", ds.corners()
-#	print "GetGeoTransform: ", my_file.GetGeoTransform()
-#	ds.test(float(63), float(63))							# Result: 107, 146, 36 as expected
-#	ds.test_2(9559, 4366)
-#	ds.test_2(2,400,3)			# Testat Max [0]: 2 [1]: 361
-#	print "Value 1-1: ", ds.elevation(float(18.448362), float(57.496642))
-#	print "Value 1-1: ", ds.elevation(float(-1), float(-1))						# Crash
-#	print "Metadata: ", my_file.GetMetadata()					# Metadata: {}
-#	print "Metadata_list: ", my_file.GetMetadata_List()			# None
-#	print "As array: ", my_file.ReadAsArray()					# OK
-#	print "Length of array: ", len(my_file.ReadAsArray())		# Length is 3.
-#	print "GetGeoTransform: ", my_file.GetGeoTransform()		# (-180.03879301265735, 0.018939867494837094, 0.0, 83.678805953060021, 0.0, -0.018939867494837094)
-#	print my_file.GetMetadataItem(1,1)							# Crash
+	ds = Geotiff(my_file)
 
 	lat = 57.6627998352
 	lon = 18.346200943
-#
-#	### Identify the correct file, given the lat/long coordinates and a set of geotiff files.
-#	tifIndex = indexTiffs(infiles)
-#	correct_file = coordInTif(lon, lat, tifIndex)
-#
-#	### Test elevation extraction given long/lat coordinates and one geotiff file.
-#	if correct_file:
-#	my_file = gdal.Open(correct_file)
-#	ds = geoTiff(my_file)
+
 	print ds.elevation(float(lon), float(lat))
