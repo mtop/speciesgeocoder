@@ -80,10 +80,10 @@ def indexTiffs(infiles):
 	sys.stderr.write("\n")
 	return tifFiles						
 
-def coordInTif(lon, lat, tifFiles):
-	for tif in tifFiles:
+def coordInTif(lon, lat, index):
+	for tif in index:					
 		# Test if coordinates are found within the range of the tiff file.
-		if tifFiles[tif][2] < lat and lat < tifFiles[tif][3] and tifFiles[tif][0] < lon and lon < tifFiles[tif][1]:
+		if index[tif][2] < lat and lat < index[tif][3] and index[tif][0] < lon and lon < index[tif][1]:
 			return tif
 	
 
