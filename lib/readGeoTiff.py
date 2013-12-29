@@ -22,6 +22,7 @@
 from osgeo import gdal
 import random
 import sys
+import subprocess
 
 infiles = sys.argv[1:]
 
@@ -59,23 +60,23 @@ class geoTiff(object):
 		lon, lat = random.randrange(int(self.MINX), int(self.MAXX)), random.randrange(int(self.MINY), int(self.MAXY))
 #		return self.elevation(lon, lat)
 
-	def elevation(self, lon, lat):
-		# self.MAXY + (row * self.gt[5]) together with
-		# self.MINX + (col * self.gt[1]) referes to the 
-		# top right corner of the tif image.
-		# returns the elevation given the Lat/long input
-		row = 1
-		while (self.MAXY + (row * self.gt[5])) < lat:
-			row += 1
-#			print row									# Devel.
-		col = 1
-		while (self.MINX + (col * self.gt[1])) < lon:
-			col += 1
-		return self.ds.ReadAsArray()[col][row]
-	
-	def gdal_elevation(self, lon, lat):
-		import subprocess.call as call
-		call([self, lon, lat])
+#	def elevation(self, lon, lat):
+#		# self.MAXY + (row * self.gt[5]) together with
+#		# self.MINX + (col * self.gt[1]) referes to the 
+#		# top right corner of the tif image.
+#		# returns the elevation given the Lat/long input
+#		row = 1
+#		while (self.MAXY + (row * self.gt[5])) < lat:
+#			row += 1
+##			print row									# Devel.
+#		col = 1
+#		while (self.MINX + (col * self.gt[1])) < lon:
+#			col += 1
+#		return self.ds.ReadAsArray()[col][row]
+#	
+#	def gdal_elevation(self, lon, lat):
+#		import subprocess.call as call
+#		call([self, lon, lat])
 
 	def test(self, lon, lat):
 		row = 1
@@ -137,18 +138,6 @@ def indexTiffs(infiles):
 
 def coordInTif(lon, lat, tifFiles):
 	for tif in tifFiles:
-#		print "Tif-file: ", tif
-#		print "Long: ", lon
-#		print "Lat: ", lat
-#		print "MinX: ", tifFiles[tif][0]
-#		print "MaxX: ", tifFiles[tif][1]
-#		print "MinY: ", tifFiles[tif][2]
-#		print "MaxY: ", tifFiles[tif][3]
-#		print tifFiles[tif][2] < lat
-#		print lat < tifFiles[tif][3]
-#		print tifFiles[tif][0] < lon
-#		print lon < tifFiles[tif][1]
-#		print ""
 		# Test if coordinates are found within the range of the tiff file.
 		if tifFiles[tif][2] < lat and lat < tifFiles[tif][3] and tifFiles[tif][0] < lon and lon < tifFiles[tif][1]:
 			return tif
