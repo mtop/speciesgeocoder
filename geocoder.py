@@ -349,26 +349,10 @@ class Result(object):
 			string += "1"
 		return string
 
-class Geotiff(object):
-	def __init__(self, tiffile):
-		from osgeo import gdal
-		from lib.readGeoTiff import geoTiff
-		from lib.readGeoTiff import coordInTif
-		self.tiffile = tiffile
-		self.my_file = gdal.Open(tiffile)
-		self.ds = geoTiff(self.my_file)
-	
-#	def get_elevation(self, lon, lat):
-#		self.elevation = int(self.ds.elevation(float(lon), float(lat)))
-#		return self.elevation
-	def get_elevation(self, lon, lat):
-		elevation = subprocess.check_output(["gdallocationinfo", "-valonly", self.tiffile, lon, lat])
-		return int(elevation)
-
-
 
 def elevationTest(lat, lon, polygon, index, tiffList):
 	from lib.readGeoTiff import coordInTif	
+	from lib.readGeoTiff import Geotiff
 	if polygon[2] is None and polygon[3] is None:
 		return True
 	# Identify the correct tif file 
@@ -385,7 +369,7 @@ def elevationTest(lat, lon, polygon, index, tiffList):
 		elevation = new_tiff.get_elevation(lon, lat)
 
 		if not polygon[2]:
-			low = -1000				# A really low elevation.
+			low = -1000					# A really low elevation.
 		else:
 			low = int(polygon[2])
 		if not polygon[3]:
