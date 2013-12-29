@@ -22,6 +22,7 @@
 import argparse
 import sys
 from lib.exceptions import *
+import subprocess
 
 parser = argparse.ArgumentParser(prog="speciesgeocoder")
 locality_group = parser.add_mutually_exclusive_group(required=True)
@@ -353,17 +354,21 @@ class Geotiff(object):
 		from osgeo import gdal
 		from lib.readGeoTiff import geoTiff
 		from lib.readGeoTiff import coordInTif
+		self.tiffile = tiffile
 		self.my_file = gdal.Open(tiffile)
 		self.ds = geoTiff(self.my_file)
 	
+#	def get_elevation(self, lon, lat):
+#		self.elevation = int(self.ds.elevation(float(lon), float(lat)))
+#		return self.elevation
 	def get_elevation(self, lon, lat):
-		self.elevation = int(self.ds.elevation(float(lon), float(lat)))
-		return self.elevation
+		elevation = subprocess.check_output(["gdallocationinfo", "-valonly", self.tiffile, lon, lat])
+		return int(elevation)
+
 
 
 def elevationTest(lat, lon, polygon, index, tiffList):
-	from lib.readGeoTiff import coordInTif			# Kan nog plockas bort
-	from lib.readGeoTiff import geoTiff			# Kan nog plockas bort
+	from lib.readGeoTiff import coordInTif	
 	if polygon[2] is None and polygon[3] is None:
 		return True
 	# Identify the correct tif file 
@@ -375,21 +380,10 @@ def elevationTest(lat, lon, polygon, index, tiffList):
 #	if not correct_file and polygon[2] == None:
 #		return True	
 	if correct_file:
-		# Create an instance of a "geotif" object
-		# This object will be stored in memory (and 
-		# hopefully reduce computation time).
 
-		# First check if an object with the file name 
-		# has already been created.
-#		print correct_file					# This part needs some work!
-#		print tiffList
-		if correct_file in tiffList:
-#			print "Correcct file found in tiff list!"
-			correct_file.get_elevation(lon, lat)
-		else:
-			new_tiff = Geotiff(correct_file)
-			elevation = new_tiff.get_elevation(lon, lat)
-			tiffList.append(new_tiff)			# NEW NEW NEW
+		new_tiff = Geotiff(correct_file)
+		elevation = new_tiff.get_elevation(lon, lat)
+
 		if not polygon[2]:
 			low = -1000				# A really low elevation.
 		else:
@@ -404,14 +398,14 @@ def main():
 	# Create list to store the geotif objects in.
 	tiffList = []
 	done = 0
-	# Read the locality data and test if the coordinates 
-	# are located in any of the polygons.
 	polygons = Polygons()
 	result = Result(polygons)
 	# Index the geotiff files if appropriate.
 	if args.tif:
 		from lib.readGeoTiff import indexTiffs
 		index = indexTiffs(args.tif)
+	# Read the locality data and test if the coordinates
+	# are located in any of the polygons.
 	# For each locality record ...
 	if args.localities:
 		localities = MyLocalities()
