@@ -362,7 +362,7 @@ class Geotiff(object):
 #		self.elevation = int(self.ds.elevation(float(lon), float(lat)))
 #		return self.elevation
 	def get_elevation(self, lon, lat):
-		elevation = subprocess.check_output(["gdallocationinfo", "-valonly", self.tiffile, lon, lat])
+		elevation = subprocess.check_output(["bin/gdallocationinfo_%s" % sys.platform, "-valonly", self.tiffile, lon, lat])
 		return int(elevation)
 
 
