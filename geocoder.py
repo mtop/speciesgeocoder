@@ -350,7 +350,7 @@ class Result(object):
 		return string
 
 
-def elevationTest(lat, lon, polygon, index, tiffList):
+def elevationTest(lat, lon, polygon, index):
 	from lib.readGeoTiff import coordInTif	
 	from lib.readGeoTiff import Geotiff
 	if polygon[2] is None and polygon[3] is None:
@@ -380,7 +380,6 @@ def elevationTest(lat, lon, polygon, index, tiffList):
 	
 def main():
 	# Create list to store the geotif objects in.
-	tiffList = []
 	done = 0
 	polygons = Polygons()
 	result = Result(polygons)
@@ -409,7 +408,7 @@ def main():
 
 						# Test if elevation files are available.
 						if args.tif:
-							if elevationTest(locality[1], locality[2], polygon, index, tiffList) == True:
+							if elevationTest(locality[1], locality[2], polygon, index) == True:
 								# Store the result
 								result.setResult(locality[0], polygon[0])		
 						else:
@@ -419,7 +418,7 @@ def main():
 					# locality[0] = species name, locality[1] = longitude, locality[2] =  latitude
 					if pointInPolygon(polygon[1], locality[1], locality[2]) == True:
 						if args.tif:
-							if elevationTest(locality[2], locality[1], polygon, index, tiffList) == True:
+							if elevationTest(locality[2], locality[1], polygon, index) == True:
 								result.setResult(locality[0], polygon[0])
 	
 	if args.gbif:
