@@ -11,3 +11,5 @@ OSX
 #	export PATH=$PATH:/Library/Frameworks/GDAL.framework/Programs
 #	export PYTHONPATH=$PYTHONPATH:/Library/Frameworks/GDAL.framework/Versions/1.10/Python/2.7/site-packages
 
+	# Install cython
+	easy_install cython
