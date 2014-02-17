@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# OSX Mavric
+# OSX Mavricks
 python ./geocoder.py $*
 
 #/Library/Frameworks/Python.framework/Versions/Current/bin/python ./geocoder.py $*
