@@ -552,15 +552,20 @@ WWFpoly2point <- function(x, ...){
   return(out)
 }
 
-GetPythonIn <- function(coordinates, polygon, sampletable, speciestable){
+GetPythonIn <- function(inpt){
   
-  idi <- coordinates[, 1]
-  coords <- as.matrix(coordinates[, c(2, 3)])
-  samtab <- as.data.frame(sampletable)
-  spectab <- as.data.frame(speciestable)
-  poly <- Cord2Polygon(polygon)
+  coord <- read.table(inpt[1],header = T, sep = "\t")
+  idi <- coord[, 1]
+  coords <- as.matrix(coord[, c(2, 3)])
+  
+  polyg <- read.table(inpt[2], header = T, sep = "\t")
+  poly <- Cord2Polygon(polyg)
+  
+  samtab <- read.table(inpt[3], header = T, sep = "\t")
+  
+  spectab <- read.table(inpt[4], header = T, sep = "\t")
+  
   polytab <- SpPerPolH(spectab)
-  #coex <- CoExClassH(spectab)
   
   nc <- subset(samtab, is.na(samtab$homepolygon))
   identifier <- idi[as.numeric(rownames(nc))]

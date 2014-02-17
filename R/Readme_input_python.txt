@@ -4,7 +4,9 @@ setwd("path of the working directory") # Where the source file is and the output
 |
 source("speciesgeocodeR.R") # I could not figure out how to avoid the explicit use of these two functions
 |
-dummy <- GetPythonIn(coordinates, polygon, sampletable, speciestable)  # Gather data from python into format / class expected by other functions 
+inpt <- c("Rcoordinates.txt","Rpolygons.txt","Rsampletable.txt","Rspeciestable.txt") #create vector with input-file names
+|
+dummy <- GetPythonIn(inpt)  # Gather data from python into format / class expected by other functions 
 
 Rcoordinates.txt =	a table of the input point coordinates, with three tab 
 					delimited columns in the following order: 
