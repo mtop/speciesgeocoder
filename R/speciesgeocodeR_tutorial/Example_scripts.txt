@@ -1,0 +1,41 @@
+############################################################################################
+#Example 1 Run speciesgecoder standard
+############################################################################################
+
+setwd("YOUR WOKINGDIRECTORY PATH") # this sets the directory, where R loads and saves files, e.g. "C:\\USer\\Desktop\\data"
+source("speciesgeocodeR.R") # this loads the speciesgeocodeR package, the speciesgeocodeR.R file must be in the working director
+
+SpeciesGeoCoder("SPECIESDATA", "POLYGONDATA",  graphs = T, coex = F) #This runs a standard speciesgeocoder analysis with graphical output, the inputfiles must be in the working directory, e.g "point_data.txt", "polygon_data.txt"
+
+############################################################################################
+#Example 2 Run speciesgecoder standard with conversion of input polygons
+############################################################################################
+
+setwd("YOUR WOKINGDIRECTORY PATH") # this sets the directory, where R loads and saves files, e.g. "C:\\USer\\Desktop\\data"
+source("speciesgeocodeR.R") # this loads the speciesgeocodeR package, the speciesgeocodeR.R file must be in the working directory
+
+poly <- ConvertPoly("POLYGON INPUTFILE") # this loads a textfile with polygons in QGIS or speciesgeocoder-python format and converts them for the use with speciesgeocodeR in R, name e.g. "polygon_coordinates.txt"
+write.table(poly, "POLYGON OUTPUTFILE", row.names = F,  sep = "\t") # This writes the new outputfile to the working directory
+
+SpeciesGeoCoder("SPECIESDATA FILE", "POLYGONDATA FILE",  graphs = T, coex = F) #This runs a standard speciesgeocoder analysis with graphical output, the inputfiles must be in the working directory, e.g "point_data.txt", "polygon_data.txt"
+
+
+
+############################################################################################
+#Example 3 Run speciesgeocoder with WWF trerrestrial ecoregions as input polygons
+############################################################################################
+
+setwd("YOUR WOKINGDIRECTORY PATH") # this sets the directory, where R loads and saves files, e.g. "C:\\USer\\Desktop\\data"
+source("speciesgeocodeR.R") # this loads the speciesgeocodeR package, the speciesgeocodeR.R file must be in the working directory
+
+wwf <- readShapeSpatial("WWF SHAPE FILE") # this reads in the wwf shape file from your working directory. YOu can download the file from WWF (see the link in the tutorial) and then extract it to your working directory.
+WWFnam(wwf)} #  This function displays all possible names you can choose for the name argument in WWFpick(). You might want to scroll upm, the list of ecoregions is very long.
+poly <- WWFpick(wwf, name  = "FOCUS REGION", scale = "FOCUS SCALE") # This picks the polygons of your region of interest from the WWF shape object. NAme is the name of the ECOREGIOn (or BIOME or REALM, depending on the "scale" argument) and produces an polygon input object for speciesGeoCoder(). You can also chose a vector of names (e.g c("Afrotropics","NEotropics")). The scale argument defines the scale ("REALM","BIOME","ECOREGION").
+
+SpeciesGeoCoder("SPECIESDATA FILE", poly,  graphs = T, coex = F, wwf = T, scale = "FOCUS SCALE") #This runs a standard speciesgeocoder analysis with graphical output, the point inputfile must be in the working directory, e.g "point_data.txt", the polygonsinput is the poly object created in the step before. Please note that the scale argument is somewhat different from the scale argument of WWFpick. Here it sets summary level. If you chose REALM with WWFpick() you probably want to choose "BIOME" here.
+
+############################################################################################
+Commented script for step-by-step use of functions
+############################################################################################
+
+-_-

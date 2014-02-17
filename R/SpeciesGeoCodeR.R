@@ -1,13 +1,18 @@
 # dependencies
-# install.packages("maptools")
-# install.packages("maps")
-# install.packages("mapdata")
-# install.packages("raster")
+pkload <- function(x)
+{
+  if (!require(x,character.only = TRUE))
+  {
+    install.packages(x,dep=TRUE)
+    if(!require(x,character.only = TRUE)) stop("Package not found")
+  }
+}
 
-library(maptools)
-library(maps)
-library(mapdata)
-library(raster)
+pkload("rgeos")
+pkload("maptools")
+pkload("maps")
+pkload("mapdata")
+#pkload("raster")
 
 data(wrld_simpl)
 
@@ -71,7 +76,46 @@ Cord2Polygon <- function(x){
 ReadPoints<- function(x, y) {   
   res <- list()
   coords <- read.table(x, sep = "\t", header = T)
-  polycord <- read.table(y, sep = "\t", header = T)
+    
+  if(class(y) != "SpatialPolygonsDataFrame")
+  {
+    cat("Reading in polygon coordinates. \n")
+    polycord <- read.table(y, sep = "\t", header = T)
+    if (dim(polycord)[2] !=  3){
+      stop(paste("Wrong input format: \n", 
+                 "Inputfile for polygons must be a tab-delimited text file with three columns", sep  = ""))
+    }
+    if (!is.numeric(polycord[, 2]) || !is.numeric(polycord[, 3])){
+      stop(paste("Wrong input format: \n", 
+                 "Input polygon coordinates (columns 2 and 3) must be numeric.", sep  = ""))
+    }
+    if (!is.character(polycord[, 1]) && !is.factor(polycord[, 1])){
+      warning("Polygon identifier (column 1) should be a string or a factor.")
+    }
+    if(max(polycord[, 2]) > 180){
+      stop(paste("Wrong polygon input coordinates. Contains longitude values outside possible range in row:",
+                 rownames(polycord[polycord[,2] > 180,]),"\n"))
+    }
+    if(min(polycord[, 2]) < -180){
+      stop(paste("Wrong polygon input coordinates. Contains longitude values outside possible range in row:",
+                 rownames(polycord[polycord[,2] < -180,]),"\n"))
+    }
+    if(max(polycord[, 3]) > 90){
+      stop(paste("Wrong polygon input coordinates. Contains longitude values outside possible range in row:",
+                 rownames(polycord[polycord[,3] > 90,]),"\n"))
+    }
+    if(min(polycord[, 3]) < -90){
+      stop(paste("Wrong polygon input coordinates. Contains longitude values outside possible range in row:",
+                 rownames(polycord[polycord[,3] < -90,]),"\n"))
+    }
+    poly <- Cord2Polygon(polycord)
+    cat("Done \n")
+  }else{
+    cat("Reading in polygon coordinates. \n")
+    poly <- y
+    cat("Done \n")
+  }
+  
   if (dim(coords)[2] !=  3){
     stop(paste("Wrong input format: \n", 
                "Inputfile for coordinates must be a tab-delimited text file with three columns", sep  = ""))
@@ -83,36 +127,7 @@ ReadPoints<- function(x, y) {
   if (!is.character(coords[, 1]) && !is.factor(coords[, 1])){
     warning("Coordinate identifier (column 1) should be a string or a factor.")
   } 
-  if (dim(polycord)[2] !=  3){
-    stop(paste("Wrong input format: \n", 
-               "Inputfile for polygons must be a tab-delimited text file with three columns", sep  = ""))
-  }
-  if (!is.numeric(polycord[, 2]) || !is.numeric(polycord[, 3])){
-    stop(paste("Wrong input format: \n", 
-               "Input polygon coordinates (columns 2 and 3) must be numeric.", sep  = ""))
-  }
-  if (!is.character(polycord[, 1]) && !is.factor(polycord[, 1])){
-    warning("Polygon identifier (column 1) should be a string or a factor.")
-  }
-  if(max(polycord[, 2]) > 180){
-    stop(paste("Wrong polygon input coordinates. Contains longitude values outside possible range in row:",
-               rownames(polycord[polycord[,2] > 180,]),"\n"))
-  }
-  if(min(polycord[, 2]) < -180){
-    stop(paste("Wrong polygon input coordinates. Contains longitude values outside possible range in row:",
-               rownames(polycord[polycord[,2] < -180,]),"\n"))
-  }
-  if(max(polycord[, 3]) > 90){
-    stop(paste("Wrong polygon input coordinates. Contains longitude values outside possible range in row:",
-               rownames(polycord[polycord[,3] > 90,]),"\n"))
-  }
-  if(min(polycord[, 3]) < -90){
-    stop(paste("Wrong polygon input coordinates. Contains longitude values outside possible range in row:",
-               rownames(polycord[polycord[,3] < -90,]),"\n"))
-  }
-  cat("Reading in polygon coordinates. \n")
-  poly <- Cord2Polygon(polycord)
-  cat("Done \n")
+ 
   cat("Reading in point coordinates. \n")
   coordi <- coords[, c(2, 3)]
   coordi2 <- as.matrix(coordi)
@@ -129,21 +144,45 @@ PipSamp <- function(x){
     stop(paste ("Function is only defined for class spgeoIN.\n", 
                 "Use ReadPoints() to produce correct input format.", sep = ""))
   }
-  liste <- levels(x$identifier)
   occ <- SpatialPoints(x$species_coordinates[, c(1, 2)])
-  pp <- x$polygons#[i]
-  proj4string(occ) <- proj4string(pp) <- "+proj=longlat +datum=WGS84"
-  cat("Performing point in polygon test \n")
-  pip <- over(occ, pp)
-  cat("Done \n")
-  pip <- data.frame(x$identifier, pip)
-  colnames(pip) <- c("identifier", "homepolygon")
-  for(i in 1:length(names(x$polygons))){
-    pip$homepolygon[pip$homepolygon ==  i] <- names(x$polygons)[i] 
+    
+  if(class(x$polygons) == "SpatialPolygonsDataFrame")
+  {
+    liste <- unique(x$polygons$ECO_NAME)
+    bid <- data.frame(x$identifier,rep(NA,length(x$identifier)))
+    
+    for(i in 1:length(liste))
+    {
+      b <- subset(x$polygons,x$polygons$ECO_NAME == liste[i])
+      aaa <-SpatialPolygons(slot(b,"polygons"))
+      proj4string(aaa) <- proj4string(occ) <- "+proj=longlat +datum=WGS84"
+      rr <- over(occ,aaa)
+      rr[rr>0] <- as.character(liste[i])
+      if(length(which(rr != "NA")) != 0){
+        bid[which(rr != "NA"),2] <- rr[which(rr != "NA")] 
+      }
+    }
+    names(bid) <- c("identifier", "homepolygon")
+    bid$homepolygon <-  as.factor(bid$homepolygon)
+    class(bid) <- c("spgeodataframe", "data.frame")
+    return(bid)
+    
+  }else{
+#     liste <- levels(x$identifier)
+    pp <- x$polygons#[i]
+    proj4string(occ) <- proj4string(pp) <- "+proj=longlat +datum=WGS84"
+    cat("Performing point in polygon test \n")
+    pip <- over(occ, pp)
+    cat("Done \n")
+    pip <- data.frame(x$identifier, pip)
+    colnames(pip) <- c("identifier", "homepolygon")
+    for(i in 1:length(names(x$polygons))){
+      pip$homepolygon[pip$homepolygon ==  i] <- names(x$polygons)[i] 
+    }
+    pip$homepolygon <- as.factor(pip$homepolygon)
+    class(pip) <- c("spgeodataframe", "data.frame")
+    return(pip)
   }
-  pip$homepolygon <- as.factor(pip$homepolygon)
-  class(pip) <- c("spgeodataframe", "data.frame")
-  return(pip)
 }
 
 PointInPolygon <- function(x, y){
@@ -170,22 +209,24 @@ PointInPolygon <- function(x, y){
 }
 
 SpSumH <- function(x){
-  if (class(x)[1] == "spgeodataframe"){
     cat("Calculating species occurences per polygon \n")
     liste <- levels(x$homepolygon)
-    spec_sum <- data.frame(identifier = levels(x$identifier))
-    for(i in 1:length(liste)){
-      pp <- subset(x, x$homepolygon ==  liste[i])
-      kk <- aggregate(pp$homepolygon, by = list(pp$identifier), length)
-      names(kk) <- c("identifier", liste[i])
-      spec_sum <- merge(spec_sum, kk, all = T)
-      cat(paste("Calculating species occurences for polygon: ", i, "/", length(liste),": ",liste[i],"\n", sep = ""))
+    if(length(liste) == 0){
+      spec_sum <- NULL
+    }else{
+      spec_sum <- data.frame(identifier = levels(x$identifier))
+      for(i in 1:length(liste)){
+        pp <- subset(x, x$homepolygon ==  liste[i])
+      
+        kk <- aggregate(pp$homepolygon, by = list(pp$identifier), length)
+        names(kk) <- c("identifier", liste[i])
+        spec_sum <- merge(spec_sum, kk, all = T)
+        cat(paste("Calculating species occurences for polygon: ", i, "/", length(liste),": ",liste[i],"\n", sep = ""))
+      }
+      spec_sum[is.na(spec_sum)] <- 0
     }
-    spec_sum[is.na(spec_sum)] <- 0
     return(spec_sum)
-  }else{
-    stop("This function is only defined for class spgeodataframe")
-  }
+    cat("Done \n")
 }
 
 SpSum <- function(x){
@@ -194,15 +235,19 @@ SpSum <- function(x){
 }
 
 SpPerPolH <- function(x){
-  cat("Calculating species number per polygon. \n")  
+  cat("Calculating species number per polygon. \n") 
   numpoly <- length(names(x)[-1])
-  pp <- x[, -1]
-  pp[pp > 0] <- 1
-  if (numpoly > 1){
-    num_sp_poly <- colSums(pp)
+  if(numpoly == 0){
+    num_sp_poly <- NULL
   }else{
-    num_sp_poly <- sum(pp)
-    names(num_sp_poly) <- names(x)[2]
+    pp <- x[, -1]
+    pp[pp > 0] <- 1
+    if (numpoly > 1){
+      num_sp_poly <- data.frame(t(colSums(pp)))
+    }else{
+      num_sp_poly <- data.frame(sum(pp))
+      names(num_sp_poly) <- names(x)[2]
+    }
   }
   return(num_sp_poly)
   cat("Done")
@@ -217,60 +262,64 @@ SpPerPol <- function(x){
 
 CoExClassH <- function(x){
   dat <- x
-  if (!is.data.frame(x)){
-    stop("Function only defined for class data.frame.")
-  }
-  if ("identifier" %in% names(dat) ==  F){
-    if (T %in% sapply(dat, is.factor)){
-      id <- sapply(dat, is.factor)
-      old <- names(dat)[id == T]
-      names(dat)[id == T] <- "identifier"
-      warning(paste("No species identifier found in input object. \n", "Column <", old, "> was used as identifier", sep = ""))
+  if(length(dim(dat)) == 0){
+    coemat <- "NULL"
+  }else{
+    if (!is.data.frame(x)){
+      stop("Function only defined for class data.frame.")
     }
-    if (T %in% sapply(dat, is.character)){
-      id <- sapply(dat, character)
-      old <- names(dat)[id == T]
-      names(dat)[id == T] <- "identifier"
-      warning(paste("No species identifier found in input object. \n", "Column <", old, "> was used as identifier", sep = ""))
-    }
-  }
-  spnum <- length(dat$identifier)
-  numpol <- length(names(dat))
-  coemat <- data.frame(matrix(NA, nrow = spnum, ncol = spnum))
-  for(j in 1:spnum){
-    cat(paste("Calculate coexistence pattern for species: ", j, "/", spnum, " ", dat$identifier[j], "\n", sep = ""))
-    sco <- data.frame(dat$identifier)
-    for(i in 2:length(names(dat))){
-      if (dat[j, i] ==  0) {
-        poly<- rep(0, spnum)
-        sco <- cbind(sco, poly)
+    if ("identifier" %in% names(dat) ==  F){
+      if (T %in% sapply(dat, is.factor)){
+        id <- sapply(dat, is.factor)
+        old <- names(dat)[id == T]
+        names(dat)[id == T] <- "identifier"
+        warning(paste("No species identifier found in input object. \n", "Column <", old, "> was used as identifier", sep = ""))
       }
-      if (dat[j, i] > 0){
-        scoh <- dat[, i]
-        if (numpol > 2){
-          totocc <- rowSums(dat[j, -1])  
-        }else{
-          totocc <- dat[j, -1]
+      if (T %in% sapply(dat, is.character)){
+        id <- sapply(dat, character)
+        old <- names(dat)[id == T]
+        names(dat)[id == T] <- "identifier"
+        warning(paste("No species identifier found in input object. \n", "Column <", old, "> was used as identifier", sep = ""))
+      }
+    }
+    spnum <- length(dat$identifier)
+    numpol <- length(names(dat))
+    coemat <- data.frame(matrix(NA, nrow = spnum, ncol = spnum))
+    for(j in 1:spnum){
+      cat(paste("Calculate coexistence pattern for species: ", j, "/", spnum, " ", dat$identifier[j], "\n", sep = ""))
+      sco <- data.frame(dat$identifier)
+      for(i in 2:length(names(dat))){
+        if (dat[j, i] ==  0) {
+          poly<- rep(0, spnum)
+          sco <- cbind(sco, poly)
         }
-        for(k in 1 : length(scoh))
-          if (scoh[k] > 0){
-            scoh[k] <- dat[j, i]/totocc *100
+        if (dat[j, i] > 0){
+          scoh <- dat[, i]
+          if (numpol > 2){
+            totocc <- rowSums(dat[j, -1])  
           }else{
-            scoh[k] <- 0
+            totocc <- dat[j, -1]
           }
-        sco <- cbind(sco, scoh)
+          for(k in 1 : length(scoh))
+            if (scoh[k] > 0){
+              scoh[k] <- dat[j, i]/totocc *100
+            }else{
+             scoh[k] <- 0
+            }
+          sco <- cbind(sco, scoh)
+        }
+      }
+      if (numpol >2){
+        coex <- rowSums(sco[, -1])
+        coemat[j, ] <- coex
+      }else{
+        coex <- sco[, -1]
+        coemat[j, ] <- coex 
       }
     }
-    if (numpol >2){
-      coex <- rowSums(sco[, -1])
-      coemat[j, ] <- coex
-    }else{
-      coex <- sco[, -1]
-      coemat[j, ] <- coex 
-    }
+    coemat<- cbind(dat$identifier, coemat)
+    names(coemat) <- c("identifier", as.character(dat$identifier))
   }
-  coemat<- cbind(dat$identifier, coemat)
-  names(coemat) <- c("identifier", as.character(dat$identifier))
   return(coemat)
 }
 
@@ -288,7 +337,18 @@ SpGeoCodH <- function(x){
   if (class(x) ==  "spgeoIN"){
     kkk <- PipSamp(x)
     spsum <- SpSumH(kkk)
+    
+    if(length(spsum) == 0)
+      {
+      namco <- c("identifier", names(x$polygons))
+      fill <- matrix(0, nrow = length(unique(kkk$identifier)), ncol = length(names(x$polygons)))
+      fill <- data.frame(fill)
+      spsum <- data.frame(cbind(as.character(unique(kkk$identifier)),fill))
+      names(spsum) <- namco   
+      }
+    
     sppol <- SpPerPolH(spsum)
+    
     
     nc <- subset(kkk, is.na(kkk$homepolygon))
     identifier <- x$identifier[as.numeric(rownames(nc))]
@@ -355,7 +415,6 @@ CropPointCountry <- function(x, y){
   }
 }
 
-#Add point ID here
 CropPointPolygon <- function(points, polygon, outside = F){
   testid<- points
   if(is.character(points[,1]) || is.factor(points[,1])){
@@ -380,8 +439,8 @@ CropPointPolygon <- function(points, polygon, outside = F){
 }
 
 WWFnam <- function(x) {
-  indrealm <- cbind(c("Australasia", "Antacrtic", 
-                      "Afrotropis", "IndoMalay", 
+  indrealm <- cbind(c("Australasia", "Antarctic", 
+                      "Afrotropics", "IndoMalay", 
                       "Neartic", "Neotropics", 
                       "Oceania", "Palearctic"), 
                     c("AA", "AN", "AT", "IM", "NA", "NT", "OC", "PA"))
@@ -403,7 +462,7 @@ WWFnam <- function(x) {
                        "Mangroves"), c(1:14))
   biom <- indbiome[which(indbiome[, 2] %in% x$BIOME), 1]
   
-  ecoregion <- unique(x$ECO_NAME)
+  ecoregion <- sort(unique(x$ECO_NAME))
   
   pp <- list(REALMS = rea, BIOMES = biom, ECOREGIONS = ecoregion)
   return(pp)
@@ -425,7 +484,7 @@ WWFpick <- function(x, name, scale = c("REALM", "BIOME", "ECOREGION")){
                  "Check spelling. See WWFnam() for a list of available options.\n", err, "\n", sep = ""))
     }
     index <- indrealm[which(indrealm[, 1] %in% name), 2]
-    dat <- subset(x, x$REALM ==  index)
+    dat <- subset(x, x$REALM %in% index)
   }
   if (scale[1] ==  "BIOME"){
     indbiom <- cbind(c( "Tropical and Subtropical Moist Broadleaf Forests", 
@@ -450,7 +509,7 @@ WWFpick <- function(x, name, scale = c("REALM", "BIOME", "ECOREGION")){
                  "Check spelling. See WWFnam() for a list of available options. \n", err, "\n", sep = ""))
     }
     index <- which(indbiom[, 1] %in% name)
-    dat <- subset(x, x$BIOME ==  index)
+    dat <- subset(x, x$BIOME %in% index)
     
   }
   if (scale[1] ==  "ECOREGION"){
@@ -461,7 +520,7 @@ WWFpick <- function(x, name, scale = c("REALM", "BIOME", "ECOREGION")){
       stop(paste("Wrong input value. The following ecoregions were not found. \n", 
                  "Check spelling. See WWFnam() for a list of available options. \n", err, "\n", sep = ""))
     }
-    dat <- subset(x, x$ECO_NAME ==  name)
+    dat <- subset(x, x$ECO_NAME %in%  name)
   }
   return(dat) 
 }
@@ -471,6 +530,7 @@ WWFconvert <- function(x){
   len <- length(liste)
   pointlist <- data.frame(NULL)
   for(i in 1:len){
+    cat(paste("Converting polygon ", i, "/", len, ": ", liste[i], "\n", sep = ""))
     bb <- subset(x, x$ECO_NAME ==  liste[i])
     polybb <- slot(bb, "polygons")
     out <- data.frame(NULL)
@@ -515,11 +575,107 @@ GetPythonIn <- function(coordinates, polygon, sampletable, speciestable){
   return(outo)  
 }
 
+ConvertPoly <- function(x){
+  x <- read.table(x,sep = "\t")
+
+  out2 <- vector()
+  
+  for(j in 1:dim(x)[1]){
+    aa <-as.character(x[j,])
+    ff <- t(aa)
+    bb <- unlist(strsplit(ff[1], split = ":"))
+    bb <-c(bb[1], unlist(strsplit(bb[2], split = " ")))
+    
+    out <- vector()
+    
+    for(i in 2:length(bb)){
+      dd <- c(bb[1], unlist(strsplit(as.character(bb[i]), split = ",")))
+      out <- rbind(out, dd)
+    }
+    out2 <-rbind(out2,out)
+  }
+  
+  colnames(out2) <- c("identifier", "XCOOR", "YCOOR")
+  rownames(out2) <- NULL
+  out2 <- as.data.frame(out2)
+  return(out2)
+}
+
+clust <- function(x, shape, scale){
+  cat(paste("Clustering information on", scale, "\n", sep = " "))
+  if(scale != "ECOREGION"){
+    nam <- unique(data.frame(as.character(shape$ECO_NAME),shape$BIOME,as.character(shape$REALM), stringsAsFactors = F))
+    names(nam) <- c("ecoregion", "biome", "realm")
+    
+    indrealm <- cbind(c("Australasia", "Antarctic", 
+                        "Afrotropics", "IndoMalay", 
+                        "Neartic", "Neotropics", 
+                        "Oceania", "Palearctic"), 
+                      c("AA", "AN", "AT", "IM", "NA", "NT", "OC", "PA"))
+    
+    indbiome <- cbind(c( "Tropical and Subtropical Moist Broadleaf Forests", 
+                         "Tropical and Subtropical Dry Broadleaf Forests", 
+                         "Tropical and Subtropical Coniferous Forests", 
+                         "Temperate Broadleaf and Mixed Forests", 
+                         "Temperate Conifer Forests", 
+                         "Boreal Forests/Taiga", 
+                         "Tropical and Subtropical Grasslands and Savannas and Shrublands", 
+                         "Temperate Grasslands and Savannas and Shrublands", 
+                         "Flooded Grasslands and Savannas", 
+                         "Montane Grasslands and Shrublands", 
+                         "Tundra", 
+                         "Mediterranean Forests, Woodlands and Scrub", 
+                         "Deserts and Xeric Shrublands", 
+                         "Mangroves"), c(1:14))
+    for(i in 1: dim(indbiome)[1])
+    {
+      nam$biome[nam$biome == indbiome[i,2]] <- indbiome[i,1]
+    }
+    for(i in 1: dim(indrealm)[1])
+    {
+      nam$realm[nam$realm == indrealm[i,2]] <- indrealm[i,1]
+    }
+    
+    if(scale == "BIOME")
+    {
+      ppp <- as.character(x$sample_table$homepolygon)
+      for(i in 1:length(nam$ecoregion))
+      {
+        ppp[ppp == nam$ecoregion[i]] <- nam$biome[i]
+      }
+    }
+    if(scale == "REALM")
+    {
+      ppp <- as.character(x$sample_table$homepolygon)  
+      for(i in 1:length(nam$ecoregion))
+      {
+        ppp[ppp == nam$ecoregion[i]] <- nam$realm[i]
+      }
+    }
+    
+    ppp <- as.factor(ppp)
+    x$sample_table$homepolygon <-ppp
+    
+    x$spec_table <- SpSumH(x$sample_table)
+    
+    
+    if(length(x$spec_table) == 0)
+    {
+      namco <- c("identifier", names(x$polygons))
+      fill <- matrix(0, nrow = length(unique(x$sample_table)), ncol = length(names(x$polygons)))
+      fill <- data.frame(fill)
+      x$spec_table <- data.frame(cbind(as.character(unique(x$sample_table$identifier)),fill))
+      names(x$spec_table) <- namco   
+    }       
+    x$polygon_table <- SpPerPolH(x$spec_table)      
+  }
+  cat("Done \n")
+  return(x)
+}
+
 ############################################################################################
 #output functions
 ############################################################################################
-
-# NexusOut <- function(x){} #write this function
 
 WriteTablesSpGeo <- function(x, ...){
   if (class(x) ==  "spgeoOUT"){
@@ -543,20 +699,14 @@ PlotSpPoly <- function(x, ...){
     num <- length(names(x$polygon_table))
     dat <- sort(x$polygon_table)
     counter <- num/10
-    #     if (counter < 1){
+         if (length(x$polygon_table) != 0){
     par(mar = c(10, 4, 2, 2))
-    barplot(dat, 
+    barplot(as.matrix(dat[1,]), 
             ylim = c(0, round((max(dat) + max(dat)/4), 0)), 
             ylab = "Number of Species per Polygon", las = 2, )# ...)
-    #     }else{
-    #       sets <- seq(1, (ceiling(num/10) *10)+1, by = 10)
-    #       par(mar = c(10, 4, 2, 2))
-    #       for(i in 1:num){
-    #       barplot(x$polygon_table[sets[i], sets[i+1]], 
-    #             ylim = c(0, round((max(x$polygon_table) + max(x$polygon_table)/4), 0)), 
-    #             ylab = "Number of Species per Polygon", las = 2, ...)
-    #       }
-    #     }
+         }else{
+    cat("No point in any polygon")  
+           }
   }
   else{
     stop("This function is only defined for class <spgeoOUT>")
@@ -567,53 +717,57 @@ BarChartSpec <- function(x, mode = c("percent", "total"), plotout = F, ...){
   match.arg(mode)
   if (!class(x) ==  "spgeoOUT" && !class(x) ==  "spgeoH"){
     stop("This function is only defined for class spgeoOUT")
-  }  
-  if (plotout ==  FALSE){par(ask = T)}
-  if (mode[1] ==  "total"){
-    liste <- x$spec_table$identifier
-    leng <-  length(liste)
-    par(mar = c(10, 4, 3, 3))
-    for(i in 1:leng){
-      cat(paste("Creating barchart for species ", i, "/", leng, ": ", liste[i], "\n", sep = ""))
-      spsub <- as.matrix(subset(x$spec_table, x$spec_table$identifier ==  liste[i])[, 2:leng2])
-      if (sum(spsub) > 0){
-        barplot(spsub, las = 2, ylim = c(0, (max(spsub) + max(spsub) / 10)), 
-                ylab = "Number of occurrences" , ...)
-        title(liste[i])
-      }
-    }
   }
-  if (mode[1] ==  "percent"){
-    percent <- x$spec_table[, -1]
-    anzpoly <-length(names(x$spec_table)[-1]) 
-    if (anzpoly > 1){
-      percent2  <- percent / rowSums(percent) * 100
-    }else{
-      percent2  <- percent / sum(percent) * 100
+  if(length(x$spec_table) == 0){
+    cat("No point was found inside the given polygons")
+  }else{
+    if (plotout ==  FALSE){par(ask = T)}
+    if (mode[1] ==  "total"){
+      liste <- x$spec_table$identifier
+      leng <-  length(liste)
+      par(mar = c(10, 4, 3, 3))
+      for(i in 1:leng){
+        cat(paste("Creating barchart for species ", i, "/", leng, ": ", liste[i], "\n", sep = ""))
+        spsub <- as.matrix(subset(x$spec_table, x$spec_table$identifier ==  liste[i])[, 2:leng2])
+        if (sum(spsub) > 0){
+          barplot(spsub, las = 2, ylim = c(0, (max(spsub) + max(spsub) / 10)), 
+                  ylab = "Number of occurrences" , ...)
+          title(liste[i])
+        }
+      }
     }
-    percent2[percent2 ==  "NaN"] <- 0
-    percent2 <- data.frame(identifier = x$spec_table[, 1], percent2)
-    
-    liste <- x$spec_table$identifier
-    leng <-  length(liste)
-    leng2 <- length(colnames(percent2))
-    par(mar = c(10, 4, 3, 3))
-    for(i in 1:leng){
-      cat(paste("Creating barchart for species ", i, "/", leng, ": ", liste[i], "\n", sep = ""))
+    if (mode[1] ==  "percent"){
+      percent <- x$spec_table[, -1]
+      anzpoly <-length(names(x$spec_table)[-1]) 
       if (anzpoly > 1){
-        spsub <- as.matrix(subset(percent2, percent2$identifier ==  liste[i])[, 2:leng2])
+        percent2  <- percent / rowSums(percent) * 100
       }else{
-        spsub <- as.matrix(percent2[percent2$identifier ==  liste[i], ][, 2:leng2])
-        names(spsub) <- names(x$spec_table)[-1]
+        percent2  <- percent / sum(percent) * 100
       }
-      if (sum(spsub) > 0){
-        barplot(spsub, las = 2, ylim = c(0, (max(spsub) + max(spsub) / 10)), 
-                ylab = "Percent of occurrences", names.arg = names(spsub), ...)
-        title(liste[i])
+      percent2[percent2 ==  "NaN"] <- 0
+      percent2 <- data.frame(identifier = x$spec_table[, 1], percent2)
+    
+      liste <- x$spec_table$identifier
+      leng <-  length(liste)
+      leng2 <- length(colnames(percent2))
+      par(mar = c(10, 4, 3, 3))
+      for(i in 1:leng){
+        cat(paste("Creating barchart for species ", i, "/", leng, ": ", liste[i], "\n", sep = ""))
+        if (anzpoly > 1){
+          spsub <- as.matrix(subset(percent2, percent2$identifier ==  liste[i])[, 2:leng2])
+        }else{
+          spsub <- as.matrix(percent2[percent2$identifier ==  liste[i], ][, 2:leng2])
+          names(spsub) <- names(x$spec_table)[-1]
+        }
+        if (sum(spsub) > 0){
+          barplot(spsub, las = 2, ylim = c(0, (max(spsub) + max(spsub) / 10)), 
+                  ylab = "Percent of occurrences", names.arg = names(spsub), ...)
+          title(liste[i])
+        }
       }
-    }
-  }  
-  par(ask = F)
+    }  
+    par(ask = F)
+  }
 }
 
 BarChartPoly <- function(x, plotout = F, ...){
@@ -624,15 +778,26 @@ BarChartPoly <- function(x, plotout = F, ...){
   liste <- names(x$spec_table)
   leng <- length(liste)
   par(mar = c(15, 4, 3, 3))
-  for(i in 2:leng){
-    cat(paste("Creating barchart for polygon ", i, "/", leng, ": ", liste[i], "\n", sep = ""))
-    subs <-subset(x$spec_table, x$spec_table[, i] > 0)
-    datsubs <- subs[order(subs[, i]),]
-    barplot(datsubs[, i], names.arg = datsubs$identifier, 
-            las = 2, ylab = "Number of occurences",cex.names = .7, ...)
-    title(liste[i])
+  if(length(names(x$spec_table)) == 0){
+    cat("No point fell in any polygon")
+  }else{
+    for(i in 2:leng){
+      cat(paste("Creating barchart for polygon ", i-1, "/", leng, ": ", liste[i], "\n", sep = ""))
+      subs <-subset(x$spec_table, x$spec_table[, i] > 0)
+      datsubs <- subs[order(subs[, i]),]
+      if(dim(subs)[1] == 0){
+        plot(1:10,1:10,type = "n", xlab = "", ylab = "Number of occurences", )
+        text(3,6, labels = "No species occurred in this polygon.", adj = 0)
+        title(liste[i])
+      }else{
+       barplot(datsubs[, i], names.arg = datsubs$identifier, 
+               las = 2, ylab = "Number of occurences",cex.names = .7)#, ...)
+       title(liste[i])
+      }
+    }
   }
   par(ask = F)
+
 }
 
 HeatPlotCoEx <- function(x, ...){
@@ -696,174 +861,92 @@ HeatPlotCoEx <- function(x, ...){
   }
 }
 
-Mapping <- function(x, pdataf, mode = c("dataset", "spgeoOUT"), 
-                    pointmode = c("all", "classified"), 
-                    scale = c("auto_extent", "extent", "world", "country"), 
-                    name, xmin, xmax, ymin, ymax, ...) {
-  match.arg(scale)
-  match.arg(mode)
-  match.arg(pointmode)
-  if (scale[1] ==  "extent" && xmin < -180 ||
-        scale[1] ==  "extent" && xmax > 180 || 
-        scale[1] ==  "extent" && ymin < -90 || 
-        scale[1] ==  "extent" && ymax > 90){
-    stop("Boundary coordinates, must be between -180 and 180 for longitude and \n between -90 and 90 for lat")
-  }
-  if (mode[1] ==  "dataset" && class(x) ==  "spgeoOUT"){
-    mode <- "spgeoOUT"
-    warning("Mode was set to spgeoOUT due to input class")
-  }
-  if (mode[1] ==  "dataset" && class(x) !=  "SpatialPolygons"){
-    stop("For mode <dataset> x must be an object of class <SpatialPolygons>.")
-  }
-  if (mode[1] ==  "dataset" && class(pdataf) !=  "data.frame"){
-    stop("For mode <dataset> pdataf must be an object of class <data.frame>.
-         Columns must be: <identifier>, <YCOOR>, <XCOOR>")
-  }
-  
-  if (mode[1] ==  "dataset"){
-    polyg <- x
-    notclass <- pdataf
-  }
-  if (mode[1] ==  "spgeoOUT"){
-    if (class(x) !=  "spgeoOUT"){
-      warning("Mode <spgeoOUT> is only defined for class <spgeoOUT>. \n Use mode = <dataset> for datasets")
-    }else{
-      if (pointmode[1] ==  "all"){
-        pdataf <- data.frame(x$identifier_in, x$species_coordinates_in)
-        names(pdataf) <- c("identifier", "YCOOR", "XCOOR")
-      }
-      if (pointmode[1] ==  "classified"){
-        sub <- subset(x$sample_table, is.na(x$sample_table[, 2]) ==  F)
-        pdataf <- data.frame(identifier = x$identifier_in, x$species_coordinates_in)
-        pdataf <- pdataf[rownames(sub), ]
-      }
-    }
-    polyg <- x$polygons
-    notclass <- x$not_classified_samples
-  }
-  data(wrld_simpl)
-  dev.off()
-  ma <- map("world")
-  plot.new()
-  additions <- wrld_simpl$NAME[which(wrld_simpl$NAME %in% ma$names ==  FALSE)]
-  additionsplot <-  subset(wrld_simpl, wrld_simpl$NAME %in% additions)
-  
-  par(mar = c(2, 2, 2, 2), ...)
-  
-  if (scale[1] ==  "world"){
-    map("world")
-    axis(1)
-    axis(2)
-    box("plot")
-    plot(additionsplot, add  = T)
-    plot(polyg, col = "grey60", add = T)
-    points(pdataf$XCOOR, pdataf$YCOOR, 
-           cex = 0.7, pch = 3 , col = "red")
-  }
-  if (scale[1] ==  "country"){
-    spell <- which((name %in% ma$name) == FALSE &&
-                     (name %in% wrld_simpl$NAME) ==  FALSE)
-    if (length(spell) > 0){
-      cat("The following names were not found in the dataset: \n Please check spelling:\n", 
-          name[spell], "\n")
-    }
-    len <- length(name)
-    if (name %in% ma$name){
-      if (len ==  1){
-        pointcrop <- as.data.frame(CropPointCountry(pdataf, name))
-        names(pointcrop) <- c("XCOOR", "YCOOR")
-        if (name ==  "USA"){
-          map("world", regions = name, xlim = c(-180, -50), ylim = c(20, 75))
-          
-        }else{
-          map("world", regions = name)
-        }
-        axis(1)
-        axis(2)
-        box("plot")
-        plot(polyg, col = "grey60", add = T)
-        points(pointcrop$XCOOR, pointcrop$YCOOR, 
-               cex = 0.7, pch = 3 , col = "red")
-      }
-      if (len > 1){
-        pointcrop <- as.data.frame(CropPointCountry(pdataf, name))
-        names(pointcrop) <- c("XCOOR", "YCOOR")
-        map("world", regions = name)
-        axis(1)
-        axis(2)
-        box("plot")
-        plot(polyg, col = "grey60", add = T)
-        points(pointcrop$XCOOR, pointcrop$YCOOR, 
-               cex = 0.7, pch = 3 , col = "red")
-      }
-    }else{
-      if (len ==  1){
-        if (name ==  "Russia"){
-          map("world", regions = "USSR", xlim = c(20, 180), type =  "n")
-          plot(subset(wrld_simpl, wrld_simpl$NAME ==  name), add = T)
-        }else{
-          pointcrop <- as.data.frame(CropPointCountry(pdataf, name))
-          names(pointcrop) <- c("XCOOR", "YCOOR")
-          plot(subset(wrld_simpl, wrld_simpl$NAME ==  name))
-        }
-        axis(1)
-        axis(2)
-        box("plot")
-        plot(polyg, col = "grey60", add = T)
-        points(pointcrop$XCOOR, pointcrop$YCOOR, 
-               cex = 0.7, pch = 3 , col = "red")
-      }
-    }
-    if (len > 1){
-      pointcrop <- as.data.frame(CropPointCountry(pdataf, name))
-      names(pointcrop) <- c("XCOOR", "YCOOR")
-      plot(subset(wrld_simpl, wrld_simpl$NAME ==  name))
-      plot(polyg, col = "grey60", add = T)
-      points(pointcrop$XCOOR, pointcrop$YCOOR, 
-             cex = 0.7, pch = 3 , col = "red")
-    }
-  }
-  if (scale[1] ==  "extent"){
-    map("world", xlim = c(xmin, xmax), ylim = c(ymin, ymax))
-    axis(1)
-    axis(2)
-    box("plot")
-    plot(polyg, col = "grey60", add = T)
-    points(pdataf$XCOOR, pdataf$YCOOR, 
-           cex = 0.7, pch = 3 , col = "red")
-  }
-  if (scale[1] ==  "auto_extent"){
-    xmax <- max(bbox(polyg)[1, 2], max(notclass$XCOOR))
-    xmin <- min(bbox(polyg)[1, 1], min(notclass$XCOOR))
-    ymax <- max(bbox(polyg)[2, 2], max(notclass$YCOOR))
-    ymin <- min(bbox(polyg)[2, 1], min(notclass$YCOOR))
-    
-    map("world", xlim = c(xmin, xmax), ylim = c(ymin, ymax))
-    axis(1)
-    axis(2)
-    box("plot")
-    plot(polyg, col = "grey60", add = T)
-    points(pdataf$XCOOR, pdataf$YCOOR, 
-           cex = 0.7, pch = 3 , col = "red")
-  }
-  }
-
-MapPerPoly <- function(x, plotout = FALSE){
+MapPerPoly <- function(x, scale, plotout = FALSE){
   if (!class(x) ==  "spgeoOUT"){
     stop("This function is only defined for class spgeoOUT")
   }
-  for(i in 1:length(names(x$polygons))){
-    cat(paste("Creating map for polygon", i,"/",length(names(x$polygons)), ": ", names(x$polygons)[i], "\n",sep = ""))
-    chopo <- names(x$polygons)[i]
-    xmax <- min(max(bbox(x$polygons[i])[1, 2]) + 5,180)
-    xmin <- max(min(bbox(x$polygons[i])[1, 1]) - 5, -180)
-    ymax <- min(max(bbox(x$polygons[i])[2, 2]) + 5, 90)
-    ymin <- max(min(bbox(x$polygons[i])[2, 1]) - 5,-90)
-    
-    
+  dum <- x$polygons
+  if(class(dum) == "SpatialPolygonsDataFrame")
+    {
+     if(scale == "ECOREGION"){liste1 <- liste2 <- unique(dum$ECO_NAME)}
+     if(scale == "BIOME")
+     {
+       liste1  <- liste2 <- unique(dum$BIOME)
+       indbiome <- cbind(c( "Tropical and Subtropical Moist Broadleaf Forests", 
+                            "Tropical and Subtropical Dry Broadleaf Forests", 
+                            "Tropical and Subtropical Coniferous Forests", 
+                            "Temperate Broadleaf and Mixed Forests", 
+                            "Temperate Conifer Forests", 
+                            "Boreal Forests/Taiga", 
+                            "Tropical and Subtropical Grasslands and Savannas and Shrublands", 
+                            "Temperate Grasslands and Savannas and Shrublands", 
+                            "Flooded Grasslands and Savannas", 
+                            "Montane Grasslands and Shrublands", 
+                            "Tundra", 
+                            "Mediterranean Forests, Woodlands and Scrub", 
+                            "Deserts and Xeric Shrublands", 
+                            "Mangroves"), c(1:14))
+       for(i in 1: dim(indbiome)[1])
+       {
+         liste1[liste1 == indbiome[i,2]] <- indbiome[i,1]
+       }
+     }
+     if(scale == "REALM")
+     {
+       liste1  <- liste2 <- as.character(unique(dum$REALM))
+       indrealm <- cbind(c("Australasia", "Antarctic", 
+                           "Afrotropics", "IndoMalay", 
+                           "Neartic", "Neotropics", 
+                           "Oceania", "Palearctic"), 
+                         c("AA", "AN", "AT", "IM", "NA", "NT", "OC", "PA"))
+       for(i in 1: dim(indrealm)[1])
+       {
+         liste1[liste1 == indrealm[i,2]] <- indrealm[i,1]
+       }
+     }   
+     len <- length(liste1)
+  }else{
+    len <- length(names(dum))
+  }
+    for(i in 1:len){
+      if(class(dum) == "SpatialPolygonsDataFrame"){
+        cat(paste("Creating map for polygon ", i,"/",length(liste1), ": ", liste1[i], "\n",sep = ""))
+        chopo <- liste1[i]
+        if(scale == "ECOREGION")
+        {
+          xmax <- min(max(bbox(subset(dum,dum$ECO_NAME == liste1[i]))[1, 2]) + 5, 180)
+          xmin <- max(min(bbox(subset(dum,dum$ECO_NAME == liste1[i]))[1, 1]) - 5, -180)
+          ymax <- min(max(bbox(subset(dum,dum$ECO_NAME == liste1[i]))[2, 2]) + 5, 90)
+          ymin <- max(min(bbox(subset(dum,dum$ECO_NAME == liste1[i]))[2, 1]) - 5, -90)
+        }
+        if(scale == "BIOME")
+        {
+          xmax <- min(max(bbox(subset(dum,dum$BIOME == liste2[i]))[1, 2]) + 5, 180)
+          xmin <- max(min(bbox(subset(dum,dum$BIOME == liste2[i]))[1, 1]) - 5, -180)
+          ymax <- min(max(bbox(subset(dum,dum$BIOME == liste2[i]))[2, 2]) + 5, 90)
+          ymin <- max(min(bbox(subset(dum,dum$BIOME == liste2[i]))[2, 1]) - 5, -90)
+        }
+        if(scale == "REALM")
+        {
+          xmax <- min(max(bbox(subset(dum,dum$REALM == liste2[i]))[1, 2]) + 5, 180)
+          xmin <- max(min(bbox(subset(dum,dum$REALM == liste2[i]))[1, 1]) - 5, -180)
+          ymax <- min(max(bbox(subset(dum,dum$REALM == liste2[i]))[2, 2]) + 5, 90)
+          ymin <- max(min(bbox(subset(dum,dum$REALM == liste2[i]))[2, 1]) - 5, -90)
+        }
+          
+       }else{
+        cat(paste("Creating map for polygon ", i,"/",length(names(dum)), ": ", names(dum)[i], "\n",sep = ""))
+        chopo <- names(dum)[i]
+
+        xmax <- min(max(bbox(x$polygons[i])[1, 2]) + 5, 180)
+        xmin <- max(min(bbox(x$polygons[i])[1, 1]) - 5, -180)
+        ymax <- min(max(bbox(x$polygons[i])[2, 2]) + 5, 90)
+        ymin <- max(min(bbox(x$polygons[i])[2, 1]) - 5, -90)
+       }
+      
+        
     po <- data.frame(x$sample_table, x$species_coordinates_in)
-    subpo <- subset(po, po$homepolygon ==  chopo)
+    subpo <- subset(po, as.character(po$homepolygon) ==  as.character(chopo))
     
     subpo <- subpo[order(subpo$identifier), ]  
     
@@ -873,25 +956,31 @@ MapPerPoly <- function(x, plotout = FALSE){
     rain <- rainbow(leng)
     ypos <- vector(length = leng)
     yled <- (ymax - ymin) * 0.025
-    cat("2")
     for(k in 1:leng){
       ypos[k]<- ymax - yled * k
     }
     
-    layout(matrix(c(1, 1, 1, 2, 2), ncol =  5, nrow = 1))
+    layout(matrix(c(1, 1, 1, 1,1, 2, 2), ncol =  7, nrow = 1))
     par(mar = c(3, 3, 3, 0))
-    map("world", xlim = c(xmin, xmax), ylim = c(ymin, ymax))
+    te <-try(map("world", xlim = c(xmin, xmax), ylim = c(ymin, ymax)), silent = T)
+    if(class(te) == "try-error"){map("world")}
     axis(1)
     axis(2)
     box("plot")
     title(chopo)
-    plot(x$polygons[i], col = "grey60", add = T)
+    if(class(dum) == "SpatialPolygonsDataFrame")
+      {
+        if(scale == "ECOREGION"){plot(subset(dum,dum$ECO_NAME == liste2[i]), col = "grey60", add = T)}
+        if(scale == "BIOME"){plot(subset(dum,dum$BIOME == liste2[i]), col = "grey60", add = T)}
+        if(scale == "REALM"){plot(subset(dum,dum$REALM == liste2[i]), col = "grey60", add = T)}
+      }else{
+      plot(x$polygons[i], col = "grey60", add = T)
+      }
     for(j in 1:leng){
       subsub <- subset(subpo,subpo$identifier == liste[j]) 
-    points(subsub[,3], subsub[,4], 
-           cex = 0.7, pch = 3 , col = rain[j])
-    cat(paste("Adding to polygon ", names(x$polygons)[i], " species ", j, "/", leng, ": ", liste[j],"\n", sep = ""))
-    }
+      points(subsub[,3], subsub[,4], 
+             cex = 0.7, pch = 3 , col = rain[j])
+      }
     #legend
     cat("Adding legend \n")
     par(mar = c(3, 0, 3, 0), ask = F)
@@ -933,12 +1022,12 @@ MapPerSpecies <- function(x, moreborders = F, plotout = FALSE, ...){
   
   
   for(i in 1:length(liste)){
-    cat(paste("Mapping species:", i, "/", length(liste), ": ", liste[i], "\n",sep = ""))
+    cat(paste("Mapping species: ", i, "/", length(liste), ": ", liste[i], "\n",sep = ""))
     kk <- subset(dat, dat$identifier ==  liste[i])
-    inside <- CropPointPolygon(data.frame(XCOOR = kk$XCOOR, YCOOR = kk$YCOOR), x$polygons, 
-                               outside = F)
-    outside <- CropPointPolygon(data.frame(XCOOR = kk$XCOOR, YCOOR = kk$YCOOR), x$polygons, 
-                                outside = T)
+
+    inside <- kk[!is.na(kk$homepolygon),]
+    outside <- kk[is.na(kk$homepolygon),]
+    
     xmax <- min(max(dat$XCOOR) + 2, 180)
     xmin <- max(min(dat$XCOOR) - 2, -180)
     ymax <- min(max(dat$YCOOR) + 2, 90)
@@ -950,6 +1039,7 @@ MapPerSpecies <- function(x, moreborders = F, plotout = FALSE, ...){
     title(liste[i])
     if (moreborders == T) {plot(wrld_simpl, add = T)}
     plot(x$polygons, col = "grey60", add = T)
+    
     if(length(inside) > 0){
       points(inside$XCOOR, inside$YCOOR, 
              cex = 0.7, pch = 3 , col = "blue")
@@ -966,10 +1056,10 @@ MapPerSpecies <- function(x, moreborders = F, plotout = FALSE, ...){
 MapAll <- function(x, polyg, moreborders = F, ...){
   data(wrld_simpl)
   if (class(x) ==  "spgeoOUT"){
-    xmax <- min(max(x$species_coordinates_in[, 2]) + 2, 180)
-    xmin <- max(min(x$species_coordinates_in[, 2]) - 2, -180)
-    ymax <- min(max(x$species_coordinates_in[, 1]) + 2, 90)
-    ymin <- max(min(x$species_coordinates_in[, 1]) - 2, -90)
+    xmax <- min(max(x$species_coordinates_in[, 1]) + 2, 180)
+    xmin <- max(min(x$species_coordinates_in[, 1]) - 2, -180)
+    ymax <- min(max(x$species_coordinates_in[, 2]) + 2, 90)
+    ymin <- max(min(x$species_coordinates_in[, 2]) - 2, -90)
     difx <- sqrt(xmax^2 + xmin^2)
     dify <- sqrt(ymax^2 + ymin^2)  
     if(difx > 90){
@@ -986,8 +1076,8 @@ MapAll <- function(x, polyg, moreborders = F, ...){
     title("All samples")
     if (moreborders ==  T) {plot(wrld_simpl, add = T)}
     cat("Adding polygons. \n")
-    plot(x$polygons, col = "grey60", add = T, ...)
-    cat("Adding sample points. \n")
+    plot(x$polygons, col = "grey60", border = "grey40", add = T, ...)
+    cat("Adding sample points \n")
     points(x$species_coordinates_in[, 1], x$species_coordinates_in[, 2], 
            cex = 0.7, pch = 3 , col = "blue", ...)
   }
@@ -1016,9 +1106,12 @@ MapAll <- function(x, polyg, moreborders = F, ...){
     title("All samples")
     box("plot")
     if (moreborders ==  T) {plot(wrld_simpl, add = T, ...)}
-    plot(polyg, col = "grey60", add = T, ...)
+    if(class(polyg == "list"))
+
+      plot(polyg, col = "grey60", add = T, ...)
+
     points(x[, 2], x[, 1], 
-           cex = 0.7, pch = 3 , col = "blue", ...)
+           cex = 0.5, pch = 3 , col = "blue", ...)
     
   }
 }
@@ -1028,7 +1121,7 @@ MapUnclassified <- function(x, moreborders = F, ...){
     stop("This function is only defined for class spgeoOUT")
   }
   dat <- data.frame(x$not_classified_samples)
-  if (length(dat) ==  0){
+  if (dim(dat)[1] ==  0){
     plot(c(1:20), c(1:20), type  = "n", axes = F, xlab = "", ylab = "")
     text(10, 10, labels = paste("All points fell into the polygons and were classified.\n", 
                                 "No unclassified points", sep = ""))
@@ -1044,88 +1137,170 @@ MapUnclassified <- function(x, moreborders = F, ...){
     axis(2)
     title("Samples not classified to polygons \n")
     if (moreborders == T) {plot(wrld_simpl, add = T)}
-    cat("Adding polygons")
-    plot(x$polygons, col = "grey60", add = T, ...)
-    cat("adding sample points. \n")
+    cat("Adding polygons \n")
+    if(class(x$polygons) == "list"){
+      plota <- function(x){plot(x, add = T, col = "grey60", border = "grey40")}
+      lapply(x$polygons, plota)
+    }else{
+      plot(x$polygons, col = "grey60", border = "grey40", add = T, ...)
+    }
+    cat("Adding sample points \n")
     points(dat$XCOOR, dat$YCOOR, 
-           cex = 0.7, pch = 3 , col = "red", ...)
+           cex = 0.5, pch = 3 , col = "red", ...)
     box("plot")
   }
 }  
 
+NexusOut <- function (x, verbose = F){
+  cat("Writing Nexus file \n")
+  if(verbose == F){
+    sink("species_classification.nex")
+  }
+  if(verbose == T){
+    sink("species_classification_verbose.nex")
+  }
+  
+  cat("#NEXUS \n")
+  cat("\n")
+  cat("Begin data; \n")
+  cat(paste("\tDimensions ntax=",dim(x$spec_table)[1], 
+            " nchar=", dim(x$spec_table)[2] - 1,";", sep = ""))
+  cat("\n")
+  cat("\tFormat datatype=standard symbols=\"01\" gap=-;")
+  cat("\n")
+  cat("\tCHARSTATELABELS")
+  cat("\n")
+  if(length(x$spec_table) == 0){
+    cat("No point fell in any of the polygons specified")
+    sink(NULL)
+  }else{
+  aa <- names(x$spec_table)[-1]
+  bb <- seq(1,length(aa))
+  
+  cat(paste("\t", bb[-length(bb)], " ",aa[-length(aa)], ",\n", sep = ""))
+  cat("\t", paste(bb[length(bb)], " ", aa[length(aa)], ";\n", sep = ""))
+  cat("\n")
+  cat("\tMatrix\n")
+  
+  dd <- as.matrix(x$spec_table[,-1])
+  dd[dd > 0] <- 1
+  
+  if(dim(dd)[2] >1)
+  {
+  dd <- data.frame(dd)
+  dd$x <- apply(dd[, names(dd)], 1, paste, collapse = "")
+  }else{
+    dd <- data.frame(dd,x = dd)
+  }
+  ff <- gsub(" ", "_",x$spec_table[,1])
+  
+  if(verbose == F)
+  {
+    ee <- paste(ff, "\t" ,dd$x, "\n",sep = "")
+    cat(ee)
+  }
+  if(verbose == T){
+    gg <- vector()
+    jj <-x$spec_table[,-1]
+    for( i in 1:dim(jj)[2])
+    {
+      hh <- paste(dd[,i],"[", jj[,i],"]", sep = "")
+      gg <- data.frame(cbind(gg, hh))
+    } 
+    gg$x <- apply(gg[, names(gg)], 1, paste, collapse = "")
+    ee <- paste(ff, "\t", gg$x, "\n", sep = "")
+    cat(ee)
+  }
+  cat("\t;\n")
+  cat("End;")
+  sink(NULL)
+  }
+  cat("Done")
+}
+
 OutMapAll <- function(x, ...){
   cat("Creating overview map: map_samples_overview.pdf. \n")
-  pdf(file = "map_samples_overview.pdf", paper = "a4r", onefile = T, ...)
+  pdf(file = "map_samples_overview.pdf", paper = "special", width = 10.7, height = 7.2, onefile = T, ...)
   MapAll(x, ...)
   MapUnclassified(x, ...)
   dev.off()
 }
 
-OutMapPerPoly <- function(x){
+OutMapPerPoly <- function(x, ...){
   cat("Creating map per polygon: map_samples_per_polygon.pdf. \n")
-  pdf(file = "map_samples_per_polygon.pdf", paper = "a4r", onefile = T)
-  MapPerPoly(x, plotout = T)
+  pdf(file = "map_samples_per_polygon.pdf", paper = "special", width = 10.7, height = 7.2, onefile = T)
+  MapPerPoly(x,scale = scale, plotout = T)
   dev.off()
 }
 
 OutMapPerSpecies <- function(x){
   cat("Creating map per species: map_samples_per_species.pdf. \n")
-  pdf(file = "map_samples_per_species.pdf", paper = "a4r", onefile = T)
+  pdf(file = "map_samples_per_species.pdf",paper = "special", width = 10.7, height = 7.2, onefile = T)
   MapPerSpecies(x, plotout = T)
   dev.off()
 }
 
 OutBarChartSpec <- function(x, ...){
   cat("Creating barchart per species: barchart_per_species.pdf. \n")
-  pdf(file = "barchart_per_species.pdf", paper = "a4r", onefile = T)
+  pdf(file = "barchart_per_species.pdf", paper = "special", width = 10.7, height = 7.2, onefile = T)
   BarChartSpec(x, plotout = T, mode = "percent", ...)
   dev.off()
 }
 
 OutBarChartPoly <- function(x, ...){
   cat("Creating barchart per polygon: barchart_per_polygon.pdf. \n")
-  pdf(file = "barchart_per_polygon.pdf", paper = "a4r", onefile = T)
+  pdf(file = "barchart_per_polygon.pdf",paper = "special", width = 10.7, height = 7.2, onefile = T)
   BarChartPoly(x, plotout = T, cex.axis = .8, ...)
   dev.off()
 }
 
 OutHeatCoEx <- function(x, ...){
   cat("Creating coexistence heatplot: heatplot_coexistence.pdf. \n")
-  pdf(file = "heatplot_coexistence.pdf", paper = "a4r", onefile = T)
+  pdf(file = "heatplot_coexistence.pdf",paper = "special", width = 10.7, height = 7.2, onefile = T)
   HeatPlotCoEx(x, ...)
   dev.off()
 }
 
 OutPlotSpPoly <- function(x, ...){
   cat("Creating species per polygon barchart: number_of_species_per_polygon.pdf. \n")
-  pdf(file = "number_of_species_per_polygon.pdf", paper = "a4r", onefile = T)
+  pdf(file = "number_of_species_per_polygon.pdf",paper = "special", width = 10.7, height = 7.2, onefile = T)
   PlotSpPoly(x, ...)
   dev.off()
 }
 
-PlotOutSpGeo <- function(x, ...){
-  OutPlotSpPoly(x, ...)
-  OutBarChartPoly(x, ...)
-  OutBarChartSpec(x, ...)
-  OutMapAll(x, ...)
-  OutMapPerSpecies(x, ...)
-  OutMapPerPoly(x, ...)
-}
-
-SpeciesGeoCoder <- function(x, y, ...){
-  ini <- ReadPoints(x, y, ...)
-  outo <- SpGeoCodH(ini, ...)
-  outo <- CoExClass(outo, ...)
+SpeciesGeoCoder <- function(x, y, coex = F, graphs = T, wwf = F, scale, ...){
+  ini <- ReadPoints(x, y)
   
-  WriteTablesSpGeo(outo, ...)
-  PlotOutSpGeo(outo, ...)
-  OutHeatCoEx(outo, ...)
-}
+  outo <- SpGeoCodH(ini)
 
-SpeciesGeoCoderlarge <- function(x, y, ...){
-  ini <- ReadPoints(x, y, ...)
-  outo <- SpGeoCodH(ini, ...)
+  if(wwf == T){
+    
+    outo <- clust(outo, shape = y,scale = scale)
+  }
+    
+  WriteTablesSpGeo(outo)
+  NexusOut(outo,...)
+    
+  if(graphs == T && wwf == F){
+    OutPlotSpPoly(outo, ...)
+    OutBarChartPoly(outo, ...)
+    OutBarChartSpec(outo, ...)
+    OutMapAll(outo, ...)
+    OutMapPerSpecies(outo, ...)
+    OutMapPerPoly(outo, ...)
+  }
+  if(graphs == T && wwf == T){
+    OutPlotSpPoly(outo, ...)
+    OutBarChartPoly(outo, ...)
+    OutBarChartSpec(outo, ...)
+    OutMapAll(outo, ...)
+    OutMapPerSpecies(outo, ...)
+    OutMapPerPoly(outo, scale = scale, ...)
+  }
   
-  WriteTablesSpGeo(outo, ...)
-  PlotOutSpGeo(outo, ...)
+  if(coex == T)
+    {
+    outo <- CoExClass(outo)
+    OutHeatCoEx(outo)
+    }
 }

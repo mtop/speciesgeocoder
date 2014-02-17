@@ -1,0 +1,54 @@
+"elapsed"
+"occurences_datapoints10_R.txt_polygons_polygons_R_10.txt"	1.882
+"elapsed"
+"occurences_datapoints100_R.txt_polygons_polygons_R_10.txt"	2.057
+"elapsed"
+"occurences_datapoints1000_R.txt_polygons_polygons_R_10.txt"	1.817
+"elapsed"
+"occurences_datapoints10000_R.txt_polygons_polygons_R_10.txt"	2.488
+"elapsed"
+"occurences_datapoints100000_R.txt_polygons_polygons_R_10.txt"	13.215
+"elapsed"
+"occurences_datapoints1000000_R.txt_polygons_polygons_R_10.txt"	95.919
+"elapsed"
+"occurences_datapoints10000000_R.txt_polygons_polygons_R_10.txt"	971.753
+"elapsed"
+"occurences_datapoints10_R.txt_polygons_polygons_R_100.txt"	9.02300000000014
+"elapsed"
+"occurences_datapoints100_R.txt_polygons_polygons_R_100.txt"	9.58300000000008
+"elapsed"
+"occurences_datapoints1000_R.txt_polygons_polygons_R_100.txt"	9.51800000000003
+"elapsed"
+"occurences_datapoints10000_R.txt_polygons_polygons_R_100.txt"	12.3059999999998
+"elapsed"
+"occurences_datapoints100000_R.txt_polygons_polygons_R_100.txt"	34.2429999999999
+"elapsed"
+"occurences_datapoints1000000_R.txt_polygons_polygons_R_100.txt"	257.369
+"elapsed"
+"occurences_datapoints10000000_R.txt_polygons_polygons_R_100.txt"	2578.918
+"elapsed"
+"occurences_datapoints10_R.txt_polygons_polygons_R_1000.txt"	113.2
+"elapsed"
+"occurences_datapoints100_R.txt_polygons_polygons_R_1000.txt"	110.496
+"elapsed"
+"occurences_datapoints1000_R.txt_polygons_polygons_R_1000.txt"	197.229
+"elapsed"
+"occurences_datapoints10000_R.txt_polygons_polygons_R_1000.txt"	214.809999999999
+"elapsed"
+"occurences_datapoints100000_R.txt_polygons_polygons_R_1000.txt"	387.344
+"elapsed"
+"occurences_datapoints1000000_R.txt_polygons_polygons_R_1000.txt"	2220.817
+"elapsed"
+"occurences_datapoints10000000_R.txt_polygons_polygons_R_1000.txt"	18764.045
+"elapsed"
+"occurences_datapoints10_R.txt_polygons_polygons_R_10000.txt"	3044.874
+"elapsed"
+"occurences_datapoints100_R.txt_polygons_polygons_R_10000.txt"	3131.753
+"elapsed"
+"occurences_datapoints1000_R.txt_polygons_polygons_R_10000.txt"	3179.342
+"elapsed"
+"occurences_datapoints10000_R.txt_polygons_polygons_R_10000.txt"	13561.986
+"elapsed"
+"occurences_datapoints100000_R.txt_polygons_polygons_R_10000.txt"	15230.736
+"elapsed"
+"occurences_datapoints1000000_R.txt_polygons_polygons_R_10000.txt"	35939.905
