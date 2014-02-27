@@ -387,7 +387,11 @@ def main():
 	# Index the geotiff files if appropriate.
 	if args.tif:
 		from lib.readGeoTiff import indexTiffs
-		index = indexTiffs(args.tif)
+		try:
+			index = indexTiffs(args.tif)
+		except AttributeError:
+			sys.exit("[ Error ] No such file \'%s\'" % args.tif[0])
+			
 	# Read the locality data and test if the coordinates
 	# are located in any of the polygons.
 	# For each locality record ...
@@ -451,19 +455,19 @@ def main():
 	sys.stderr.write("\n")
 	result.printNexus()
 
-	if args.plot == True:
-	### Go to R ###
-	### Do tests of cutoff values and call R + functions
-	### import rpy2
-	try:
-		import rpy2.robjects as ro
-	except:
-		sys.exit("[ Error ] rpy2 is not installed. Ploting the result will not be possible")
-	
-	# Write data to files that R can read.
-	for line in readlines():
-
-	ro.r('source("R/SpeciesGeoCodeR.R")')
+#	if args.plot == True:
+#	### Go to R ###
+#	### Do tests of cutoff values and call R + functions
+#	### import rpy2
+#		try:
+#			import rpy2.robjects as ro
+#		except:
+#			sys.exit("[ Error ] rpy2 is not installed. Ploting the result will not be possible")
+#		
+#		# Write data to files that R can read.
+#		for line in readlines():
+#	
+#		ro.r('source("R/SpeciesGeoCodeR.R")')
 
 
 
