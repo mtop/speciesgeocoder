@@ -32,7 +32,7 @@ polygon_group.add_argument("-s", "--shape", help="Set path to shape file contain
 locality_group.add_argument("-l", "--localities", help="Set path to file containing species locality data")
 locality_group.add_argument("-g", "--gbif", help="Set path to file containing species locality data downloaded from GBIF")
 parser.add_argument("-t", "--tif", help="Set path to geotiff file(s)", nargs="*")
-parser.add_argument("--plots", help="Produce graphical output illustrating coexistance, distribution etc.", action="store_true", default="True")
+parser.add_argument("--plot", help="Produce graphical output illustrating coexistance, distribution etc.", action="store_true", default="False")
 #parser.add_argument("-o", "--out", help="Name of optional output file. Output is sent to STDOUT by default")
 parser.add_argument("-v", "--verbose", action="store_true", help="Report how many times a species is found in each polygon")
 parser.add_argument("-b", "--binomial", action="store_true", help="Treats first two words in species names as genus name and species epithet. Use with care as this option is LIKELY TO LEAD TO ERRONEOUS RESULTS if names in input data are not in binomial form.")
@@ -387,7 +387,11 @@ def main():
 	# Index the geotiff files if appropriate.
 	if args.tif:
 		from lib.readGeoTiff import indexTiffs
-		index = indexTiffs(args.tif)
+		try:
+			index = indexTiffs(args.tif)
+		except AttributeError:
+			sys.exit("[ Error ] No such file \'%s\'" % args.tif[0])
+			
 	# Read the locality data and test if the coordinates
 	# are located in any of the polygons.
 	# For each locality record ...
@@ -450,10 +454,24 @@ def main():
 						
 	sys.stderr.write("\n")
 	result.printNexus()
-	
-	### Go to R ###
-	### Do tests of cutoff values and call R + functions
-	### import pyRlib
+
+#	if args.plot == True:
+#	### Go to R ###
+#	### Do tests of cutoff values and call R + functions
+#	### import rpy2
+#		try:
+#			import rpy2.robjects as ro
+#		except:
+#			sys.exit("[ Error ] rpy2 is not installed. Ploting the result will not be possible")
+#		
+#		# Write data to files that R can read.
+#		for line in readlines():
+#	
+#		ro.r('source("R/SpeciesGeoCodeR.R")')
+
+
+
+
 
 
 if __name__ == "__main__":
