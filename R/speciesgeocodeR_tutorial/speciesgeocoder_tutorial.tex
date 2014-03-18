@@ -9,7 +9,6 @@
 
 \renewcommand{\familydefault}{\sfdefault}
 
-\newenvironment{ppl}{\fontfamily{ppl}\selectfont}{\par}
 
 \parskip 12pt
 \parindent 0pt
@@ -35,29 +34,37 @@
 
 \normalsize
 
-\textbf{Abstract} The purpose of this manual is to provide easy-to-use instructions for the speciesgeocodeR package for R beginners, and to explain the functionality of the package to more advanced users. The specisgeocodeR package is a collection of R functions designed to link geographical point coordinates with geographical polygons. It is a tool especially suited for biogeographical and ecological questions, i.e the distribution of specimen and species in geographic regions. Based on a list of point coordinates (specimen occurences) and a list of points building the polygons (geographical areas) speciesgeocodeR handles the classification geographic points to geographical areas (point in polygon test) and runs multiple statistical analyses to summarize the results. This includes a nexus file to use the results as direct input for biogeographic analysis linked with phylogenetic trees, as well as summary tables, -graphs and geographical maps. Chapter one of this manual specifies the input-file format, chapter two provides a 3-step tutorial to run a standard analysis, chapter three describes how to use the WWF ecoregions as input polygons and chapter four describes the standard outputfiles. Chapter five is a step-by-step commented script for the use of single functions, chapter six contains a discription of all function in the package and chapter seven shows results of benchmarking tests to give an idea of the computational time needed depending on the size of the dataset. SpeciesgeocodeR is the R implication of the python speciesgeocoder program \citep{XXX}.
-
+\textbf{Abstract}  SpecisgeocodeR is an R package collection functions designed for the exploration of species occurences datasets, especially linking geographical point coordinates with geographical polygons. It is a tool especially suited for biogeographical and ecological questions, as the distribution of specimen and species to multiple biomes. Based on a list of point coordinates (specimen occurences) and a list of points building the polygons (geographical areas) speciesgeocodeR handles the classification geographic points to geographical areas (point in polygon test) and runs multiple statistical analyses to summarize the results. An easy-to use wraper function allows the run of a standard analysis with only 3 commands, making the package especially suited for R beginnners. The standard output includes a nexus file to use the results as direct input for biogeographic analysis linked with phylogenetic trees, as well as summary tables, -graphs and geographical maps. Further functionalities include the direct use of the WWF Ecoregions and Biomes as input-polygons,calculating a co-occurence matrix, producing diversity and abundance rasters from point occurences and diversity map colourcoding species diversity.
 
 \end{titlepage}
 
 \tableofcontents
 
-\chapter{Input files}
+\chapter{Introduction}
 
-All results produced with speciesgeocodeR are based on two input files that can easily be generated using freely available textformatting and GIS software: a list of sample coordinates (e.g. GPS-coordinates of specimen, herafter called ``speciesdata") and a list of polygon points (e.g biomes or national park borders, herafter called ``polygondata"). The package is designed and tested for small-scale (e.g. radiocolar data in combination with national park borders) and large scale (e.g global distribuiton of all birds to biomes) analyses. As an additional feature speciesgeocodeR allows the use of the WWF- Realm/Biome/Eoregion classification as input polygons (see chapter 3).
+Ecological, biogeographical, evolutionary research or conservation related studies often include questions on the spatial distribution of individuals or species. Point-occurence information based on field collected gps data, georeferenced collection specimens or radio-collar reportings are nowadys one of the major sources of this data. For many analyses the relation of point-occurences with geographical areas, such as continents, ecoregions, biomes or country and nationalpark borders are of high interest. The large amount of point-occurence data now available for many taxa (easily reaching tens of thousands up to millions of singel datapoints) as well as the common use of multiple geographical areas for large-scale analysis renders the manual relation between occurence points and areas a increasingly hopless excercise.
 
-\textit{Input}-files: The two input files are required to be tab-delimited .txt files with three columns each. For both files, column names must be: �identifier�, �XCOOR�, YCOOR�. In case of the speciesdata the first column contains the species name (or individual name), the second column contains the longitude coordinates (as decimal degrees, e.g. 59.867 for East, or -59.867 for West) and the third column contains latitude coordinates (as decimal degrees, e.g. 59.867 for North, or -59.867 for South). The polygondata should be in the same format: each row represents the coordinates of one polygon corner. The first column contains the polygon identifier, the second one the longitude coordinates, the third one the latitude coordinates. It is important that the coordinates of the first and the last point of each polygon are identical. You can easily export such a file from any GIS program (e.g. QGIS: \url{http://www.qgis.org/en/site/}). If you use  polygondata exported from QGIS or formated for the python version of speciesgeocoder you can use the ConvertPoly() function to convert the format.
+SpeciesgeocodeR is an R package containing a set of functions to explore the relation of point (occurence points) and polygon (geographic areas) data. This also includes and summarizing and preparing the data for further analyses. One main focus of the package is to provide an easy-to-use wrapper function which allows the performance of a standard analysis for absolut R beginners. Based on only two input files in text format the standard output of such an analysis includes a classification of each sample to each polygon in nexus and table format as well as a set of tables and graphs, summarizing the number of species and occurences for each polygon and species. Furthermore occurence maps are created for every species and polygon of the input dataset. Further functionalities of the package include the calculation and visualization of a co-occurence matrix, the direct use of the WWF terrestrial ecoregions as input areas, the creation of rasterized diveristy and abundace maps as wel as the production of maps color-coding species diversity per area.
+
+The purpose of this tutorial is to provide easy-to-use instructions for the speciesgeocodeR package for R beginners, and to explain the functionality of the package to more advanced users. Chapter \ref{input} of this tutorial specifies the input-file format, chapter \ref{allinone} provides a 3-step tutorial to run a standard analysis, chapter  \ref{wwf} describes how to use the WWF ecoregions as input polygons and chapter  \ref{output} describes the standard outputfiles. Chapter \ref{further} provides examples for the additional functions of the package. Chapter \ref{functions} contains a discription of all function in the package and chapter \ref{benchmark} shows results of benchmarking tests to give an idea of the computational time needed depending on the size of the dataset used. Explanatory text is set in standard font, code examples are set in \texttt{teletypefont}.  All example scripts are also provided as text-files with the package, so that the code can be copied directly from there into the R console. Athough speciesgeocoder is explicitly designed for R-beginners some basic experience in using the R interface is surely helpful. If you have know experience with R you might want to have a look at \citet{Crwaly2000} or use the python version of Speciesgeocoder \citep{XXX} instead.
+
+\chapter{Input files} \label{input}
+
+Most analyses possible with speciesgeocodeR are based on two input files. These can easily be generated using freely available textformatting and GIS software: a list of sample coordinates (e.g. GPS-coordinates of specimen, herafter called ``speciesdata") and a list of polygon points (e.g biomes or national park borders, herafter called ``polygondata"). The package is designed and tested for small-scale (e.g. radio-colar data in combination with national park borders) and large scale (e.g global distribuiton of all birds to biomes) analyses. As an additional feature speciesgeocodeR allows the direct use of the WWF- Realm/Biome/Eoregion classification as input polygons . If you want to use the WWF classification, or create a diversity grid, no separate input polygon file is needed. (see chapters \ref{wwf} and \ref{further})
+
+\textit{Input}-files: The two input files are required to be tab-delimited .txt files with three columns each. For both files, column names must be: �identifier�, �XCOOR�, YCOOR�. In case of the speciesdata the first column contains the species name (or individual name), the second column contains the longitude coordinates (as decimal degrees, e.g. 59.867 for East, or -59.867 for West) and the third column contains latitude coordinates (as decimal degrees, e.g. 59.867 for North, or -59.867 for South). The polygondata should be in the same format: each row represents the coordinates of one polygon corner. The first column contains the polygon identifier, the second one the longitude coordinates, the third one the latitude coordinates. It is important that the coordinates of the first and the last point of each polygon are identical. Example input files are provided with the package (in the example\_files folder). You can easily export such a file from any GIS program (e.g. QGIS: \url{http://www.qgis.org/en/site/}). If you use  polygondata exported from QGIS or formated for the python version of speciesgeocoder you can use the ConvertPoly() function to convert the format.
 
 When preparing the input files please make sure:
 \begin{enumerate}
 \item that the order of the columns and the column headers are correct (``identifier", ``XCOOR", ``YCOOR")
 \item that your coordinates conform with the limits of the coordinate system (XCOOR between -180 and 180; YCOOR between -90 and 90)
-\item that for each polygon in the polygon data the first and last point have identical coordinates.
+\item that for each polygon in the polygondata the first and last point have identical coordinates.
 \end{enumerate}
 
-\chapter{All-in-one: the quick and easy way}
+\chapter{SpeciesGeoCoder all-in-one: the quick and easy way} \label{allinone}
 
-You can run a standard speciesgeocoder analysis with only three commands. The following paragraph will give a simple tutorial for R beginners. Two example scripts (hereafter called \#1 and \#2) are given at the end of the chapter. The example files are also provided in a .txt file with the package, so if you are unfamiliar with the R environment, you can just copy the Example code from there to the R consol (do not forget to change the paths given in capitals). If you are interested in a step by step process or in the use of single functions refer to chapters five and six. The \#numbers refer to codelines in the example scripts:
+
+You can run a standard speciesgeocoder analysis with only three commands. The following paragraph will give a simple tutorial for R beginners. The example code shown here is also provided as text file with the package so if you are unfamiliar with the R environment, you can just copy the example code from there to the R console (the capitalized pharses corespond to your filnenames and must be changed accordingly). We will use a distribution dataset from a genus of Rosaceae from Mats Töpel (???) as example dataset.. If you are interested in a step by step process or in the use of single functions refer to chapters five and six. The \#numbers refer to codelines in the example scripts:
 
 \begin{enumerate}
 
@@ -65,73 +72,53 @@ You can run a standard speciesgeocoder analysis with only three commands. The fo
 
 \item Start R
 
-\item Tell R where to find the input files and save the outputfiles (\#1.1). You must put the exact path of the folder in the quotation marks. If you use mac (or linux) use / instead of \textbackslash \textbackslash.
+\item Tell R where to find the input files and save the outputfiles (\#1.1). You must put the exact path (e.g. ``C:\textbackslash \textbackslash Desktop\textbackslash \textbackslash data'') of the folder in the quotation marks. If you use mac (or linux) use / instead of \textbackslash \textbackslash.
+
+\texttt{setwd(``YOUR WOKINGDIRECTORY PATH'')}
 
 \item Load the functions of the speciesgeocoder package into your R session (\#1.2)
 
-\item{Execute the SpeciesGeoCoder() function with the names of your two input files as arguments (\#1.3). Depending on the size of your dataset (especially the number of polygons) this might take a while. The �graphs� argument controls if graphical output is produced (default = T), the``coex"' argument defines if a coexistence matrix for all species in each polygon is produced (default = F, this is only recommended for datasets with small to medium size species number, as it is computationally very expensive)}
+\texttt{source(``speciesgeocodeR.R'')}
+
+\item{Execute the SpeciesGeoCoder() function with the names of your two input files as arguments (e.g ``point\_coordinates.txt'', ``polygon\_coordinates.txt''). Depending on the size of your dataset (especially the number of polygons) this might take a while. The �graphs� argument controls if graphical output is produced (default = T), the``coex"' argument defines if a coexistence matrix for all species in each polygon is produced (default = F, this is only recommended for datasets with small to medium size species number, as it is computationally very intense)}
+
+\texttt{SpeciesGeoCoder(``SPECIESDATA'', ``POLYGONDATA'',  graphs = T, coex = F)}
 
 \item{Done! Close R, the outputfiles are in your working directory. Summary tables are saved as tab-delimited .txt files, graphs and maps as .pdf files. If problems occur, check your input-files or try using one of the example datasets delivered with the package. If this does not help, you might want to use the step-by-step procedure described in chapter five.}
 
 \item{If your polygondata input file is exported from QGIS and/or is formated for use with the python version of speciesgeocodeR, you can use the ConvertPoly() function to convert it to a format suitable for use with speciegeocodeR (\#2)}
 
+\texttt{setwd(``YOUR WOKINGDIRECTORY PATH'')}\\
+\texttt{source(``speciesgeocodeR.R'')}\\
+\texttt{poly \textless- ConvertPoly(``POLYGOND INPUTFILE'')}\\
+\texttt{write.table(poly, ``polygon\_coordinates.txt'', row.names = F,  sep = ``\textbackslash t'')}\\
+\texttt{SpeciesGeoCoder(``SPECIESDATA'', ``POLYGONDATA'',  graphs = T, coex = F)}
 \end{enumerate}
 
-\textbf{Example \#1}\\
-\vspace{-0.5cm}
-\begin{table}[h]
-\resizebox{\textwidth}{!}{
-\begin{tabular}{l l p{6cm}}
-\textbf{Line} &\textbf{Code} &  \textbf{Explanation}\\
+\chapter{Using the WWF Realms/Biomes/Ecoregions as input polygons} \label{wwf}
 
-1.1 & \textit{setwd(``YOUR WOKINGDIRECTORY PATH'')}  & Define where to load and save files, e.g. ``C:\textbackslash \textbackslash Desktop\textbackslash \textbackslash data'' \\
-1.2 & \textit{source(``speciesgeocodeR.R'')} & load the speciesgeocodeR package\\
-1.3 & \textit{SpeciesGeoCoder(``SPECIESDATA'', ``POLYGONDATA'',  graphs = T, coex = F) } & run SpeciesGeoCoder(), e.g ``point\_coordinates.txt'', ``polygon\_coordinates.txt'' \\
-\end{tabular}}
-\end{table}
+The map of the terrestrial ecoregions of the world provided as by the WWf \citet{WWF}, is a commonly used tool for biogeographical analyses. If you want to classify the samples in your dataset to these ecoregions, you can directly use them as input-polygons for speciesgeocodeR. To do so, just use the WWFload() function which will download the a shape file from the WWF homepage.  You can use the object created by this function directly as input for SpeciesGeoCoder(). When you run SpeciesGeoCodeR() with WWF input polygons you must specify two additional arguments: ``wwf = T'' and scale =``FOCUS SCALE''. The scale arguments defines the scale at which the results will be displayed in the output. This must be one of the following strings``ECOREGION'', ``BIOME'', ``REALM''). If scale = ``BIOME'' the species numbers will be summarized per biome: 
 
-\textbf{Example \#2}\\
-\vspace{-0.5cm}
-\begin{table}[h]
-\resizebox{\textwidth}{!}{
-\begin{tabular}{l l p{6cm}}
-\textbf{Line} &\textbf{Code} &  \textbf{Explanation}\\
+\texttt{setwd(``YOUR WOKINGDIRECTORY PATH'')}\\
+\texttt{source(``speciesgeocodeR.R'')}\\
+\texttt{wwf \textless- WWFload()}\\
+\texttt{SpeciesGeoCoder(``SPECIESDATA'', wwf,  graphs = T, coex = F, wwf = T, scale = "BIOME")}
 
-2.1 & \textit{setwd(``YOUR WOKINGDIRECTORY PATH'') } &  Define where to load and save files, e.g. ``C:\textbackslash \textbackslash Desktop\textbackslash \textbackslash data''  \\
-2.2 & \textit{source(``speciesgeocodeR.R'') } &  load the speciesgeocodeR package\\
-2.3 & \textit{poly \textless- ConvertPoly(``POLYGOND INPUTFILE'')} &  load and convert your polygon file\\
-2.4 & \textit{write.table(poly, ``polygon\_coordinates.txt'', row.names = F,  sep = ``\textbackslash t'')} & write the new input-file \\
-2.5 & \textit{SpeciesGeoCoder(``SPECIESDATA'', ``POLYGONDATA'',  graphs = T, coex = F) } & run SpeciesGeoCoder(), e.g ``point\_coordinates.txt'', ``polygon\_coordinates.txt'' \\
-\end{tabular}}
-\end{table}
+If you only want to use a subset of the global WWF dataset, you can use WWFnam() to display all possible ecoregions or biomes and WWFpick()  to create a subset of the global dataset. The WWFpick function needs two additional arguments: scale  = the scale of the region you want to pick (this oes not need to be the same as the scale argument used later in the SpeciesGeoCoder() function); this must be one of the following strings ``ECOREGION'', ``BIOME'' or ``REALM'';  name = The name(s) of the ecoregion, biome or realm you want to pick, e.g. ``Afrotropics''. This can also be a vector of multiple elements of one scale e.g. c(``Afrotropics'', ``Neotropics''), but must correspond to the scale indicated by the scales argument. You can use the WWFpick() function for an overview of available regions on each scale.
 
-\chapter{Using the WWF Realms/Biomes/Ecoregions as input polygons}
-You can use speciesgeocodeR to produce the input polygons for your analysis directly from the global WWF definition of terrestrial Ecoregions (and Realms and Biomes, \citet{WWF}). To do so, download the source files (e.g. from \url{https://worldwildlife.org/publications/terrestrial-ecoregions-of-the-world}) and extract them to your working directory. After you loaded them into R (\#3.3), you can use the WWFpick() function to create the polygon input object for SpeciesGeoCoder() (\#3.4). To use it run SpeciesGeoCoder()  with a normal input table for the pointdata and with the object containing result of WWFpick() as polygondata (\#3.5). The WWFpick() function needs three input objects (\#3.4). When you run SpeciesGeoCodeR() with WWF input polygons you must specify to additional arguments; ``wwf = T'' and scale =``FOCUS SCALE''. The scale arguments defines the scale of clustering of the results (this must be one of``ECOREGION'', ``BIOME'', ``REALM'', \#3.5):
+\texttt{WWFnam(wwf)}\\
+\texttt{poly \textless- WWFpick(wwf,  scale = ``BIOME'', name  = ``Afrotropics'')}\\
+\texttt{SpeciesGeoCoder(``SPECIESDATA'', poly,  graphs = T, coex = F, wwf = T, scale = " BIOME") }
 
-\begin{enumerate}
-\item{The WWF shape file stored in an R object, ``wwf'' in the example}
-\item{The name of the region of interest. Depending on the scale this for example could be ``Neotropics'', ``Temperate Conifer Forests'' or ``Ethiopian montane moorlands''. It must be a character string included in the scale specified in ``scale''. You can use the WWFnam() function on the shape file object to display all names available (\#3.6). Vectors of names are also possible, e.g. c(``Neotropis'', ``Afrotropis'') or "all" (giving all polygons for the specified scale)}
-\item{The scale of interest. This must be one of the following ``REALM'', ``BIOME'', ``ECOREGION''.}
-\end{enumerate}
-\newpage
+If you have trouble with the WWFload() function you can also download and unzip the files manually  (e.g. from\\
+ \url{https://worldwildlife.org/publications/terrestrial-ecoregions-of-the-world}\\
+ and copy them in your working directory. Then you can load them into R as following
 
-\textbf{Example \# 3  WWF terrestrial ecoregions as input polygon}\\
-\vspace{-0.5cm}
-\begin{table}[h]
+\texttt{setwd(``YOUR WOKINGDIRECTORY PATH'')}\\
+\texttt{source(``speciesgeocodeR.R'')}\\
+\texttt{wwf \textless- readShapeSpatial( ``wwf\_terr\_ecos.shp'')}
 
-\resizebox{\textwidth}{!}{
-\begin{tabular}{l l p{6cm}}
-\textbf{Line} &\textbf{Code} &  \textbf{Explanation}\\
-3.1 & \textit{setwd(``YOUR WOKINGDIRECTORY PATH'')} &   e.g. C:\textbackslash \textbackslash User\textbackslash \textbackslash Desktop \\
-3.2 & \textit{source(``speciesgeocodeR.R'')} &  load the speciegeocodeR package \\
-3.3 & \textit{wwf \textless- readShapeSpatial(``NAME OF THE SHAPE FILE'')} &  load the WWF shape, name e.g ``wwf\_terr\_ecos.shp''  \\
-3.6 & \textit{WWFnam(wwf)} &  Display the area names available for WWFpick()\\
-3.4 & \textit{poly \textless- WWFpick(wwf, name  = ``FOCUS REGION'', scale = ``FOCUS SCALE'')} &  pick the polygons of interest, e.g name = ``Neotropics'', scale = ``REALM''\\
-3.5 & \textit{SpeciesGeoCoder(``SPECIESDATA'', poly,  graphs = T, coex = F, wwf = T, scale = "FOCUS SCALE FOR CLUSTERING") } & run SpeciesGeoCoder(), e.g ``point\_coordinates.txt'', ``polygon\_coordinates.txt''  \\
-\end{tabular}}
-\end{table}
-
-\chapter{Output-file description}
+\chapter{Output-file description} \label{output}
 
 With the ``graphs'' and ``coex'' options swiched on, SpeciesGeoCoder() produces 13 outputfiles (1 nexus file, 5 summary tables, 3 barcharts, 3 maps and 1 heatplot). By default all files are saved to the working directory defined before the analysis (\#1.1). The summary tables are tab delimited .txt files and all graphics and maps are put out as .pdf files. Depending on the size of you dataset, some of the graphical representations might not be adequate. \\
 \\
@@ -160,10 +147,24 @@ This is a table summarizing the number of species for each polygon.\\
 \textbf{Unclassified\_samples.txt}\\
 This file contains a map showing all samples that could not be clssified to any of the input polygons.\\
 
-\chapter{Step-by-step: Specific output files}
-This is to be written if necessary
+\chapter{Further functionalities} \label{further}
+\section{Calculating a co-existence matrix}
+Understanding coexitence patterns is a crucial aspect of ecology and biogeography. Based on the two inputfiles used in the previous chaptres (or one inputfile and the wwf ecoregions) speciesgeocodeR also the calculation of a coexistence matrix and its visulatisation as a levelplot. This can be done in two different ways:
 
-\chapter{Function description}
+\begin{enumerate}
+\item{When running a normal analysis by setting coex = T in the SpeciesGeoCoder function. IN this case the matrix is saved as .txt file in the working directory and the levelplot (only for datasets \textless 40 species) is saved as .pdf in the working directory.  However, this is only recommended for small datasets, as the computation might take a long time. This can also be combined with the use of the wwf ecoregions as shown in chapter 3.}
+
+\texttt{setwd(``YOUR WOKINGDIRECTORY PATH'')}\\
+\texttt{source(``speciesgeocodeR.R'')}\\
+\texttt{SpeciesGeoCoder(``SPECIESDATA'', ``POLYGONDATA'',  graphs = T, coex = T)}
+
+\item{To be more time-efficient the coexistence matrix calculation can be addressed directly without the wrapper function.}
+\end{enumerate}
+
+\section{Mapping diversity in polygons}
+\section{Diversity and abundance grids}
+
+\chapter{Function description} \label{functions}
 \textbf{BarChartPoly(x, plotout, \dots)}
 \textit{Input:} x = a object of class spgeoOUT, plotout = logical indicating if the function will be viewed in the R graphics device or passed to another output function, default is false
 \textit{Function:} this function gives out one bar chart per input polygon showing the number of occurrences for each species in this polygon.
@@ -360,7 +361,7 @@ Uses output of pipSamp to give out a dataframe of number of species occurrences 
 \textit{Function:} combines WWFpick() and WWFconvert(). Produces a list of points defining the realm, biome or ecoregion defined in the input.\\
 \textit{Output:} data.frame, 3 columns, identifier,XCOOR,YCOOR\\
 
-\chapter{Benchmarking}
+\chapter{Benchmarking} \label{benchmark}
 
 \centering
 \includegraphics[width=0.9\textwidth]{figures/bm_no_graphics.eps}\\
