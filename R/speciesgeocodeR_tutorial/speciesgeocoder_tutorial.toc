@@ -1,7 +1,11 @@
-\contentsline {chapter}{\numberline {1}Input files}{3}{chapter.1}
-\contentsline {chapter}{\numberline {2}All-in-one: the quick and easy way}{4}{chapter.2}
-\contentsline {chapter}{\numberline {3}Using the WWF Realms/Biomes/Ecoregions as input polygons}{6}{chapter.3}
-\contentsline {chapter}{\numberline {4}Output-file description}{8}{chapter.4}
-\contentsline {chapter}{\numberline {5}Step-by-step: Specific output files}{10}{chapter.5}
-\contentsline {chapter}{\numberline {6}Function description}{11}{chapter.6}
-\contentsline {chapter}{\numberline {7}Benchmarking}{20}{chapter.7}
+\contentsline {chapter}{\numberline {1}Introduction}{3}{chapter.1}
+\contentsline {chapter}{\numberline {2}Input files}{5}{chapter.2}
+\contentsline {chapter}{\numberline {3}SpeciesGeoCoder all-in-one: the quick and easy way}{6}{chapter.3}
+\contentsline {chapter}{\numberline {4}Using the WWF Realms/Biomes/Ecoregions as input polygons}{8}{chapter.4}
+\contentsline {chapter}{\numberline {5}Output-file description}{10}{chapter.5}
+\contentsline {chapter}{\numberline {6}Further functionalities}{12}{chapter.6}
+\contentsline {section}{\numberline {6.1}Calculating a co-existence matrix}{12}{section.6.1}
+\contentsline {section}{\numberline {6.2}Mapping diversity in polygons}{12}{section.6.2}
+\contentsline {section}{\numberline {6.3}Diversity and abundance grids}{12}{section.6.3}
+\contentsline {chapter}{\numberline {7}Function description}{13}{chapter.7}
+\contentsline {chapter}{\numberline {8}Benchmarking}{22}{chapter.8}

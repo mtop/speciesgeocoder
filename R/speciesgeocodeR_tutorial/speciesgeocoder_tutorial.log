@@ -1,8 +1,10 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (MiKTeX 2.9) (preloaded format=pdflatex 2013.10.16)  17 FEB 2014 10:16
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (MiKTeX 2.9) (preloaded format=pdflatex 2013.10.16)  18 MAR 2014 12:48
 entering extended mode
-**C:/Users/xzizal/Dropbox/speciesgeocodeR_tutorial/speciesgeocoder_tutorial.tex
+**C:/Users/xzizal/Desktop/GitHub/geocoder/R/speciesgeocodeR_tutorial/speciesgeo
+coder_tutorial.tex
 
-(C:/Users/xzizal/Dropbox/speciesgeocodeR_tutorial/speciesgeocoder_tutorial.tex
+(C:/Users/xzizal/Desktop/GitHub/geocoder/R/speciesgeocodeR_tutorial/speciesgeoc
+oder_tutorial.tex
 LaTeX2e <2011/06/27>
 Babel <v3.8m> and hyphenation patterns for english, afrikaans, ancientgreek, ar
 abic, armenian, assamese, basque, bengali, bokmal, bulgarian, catalan, coptic, 
@@ -308,22 +310,24 @@ Package caption Info: KOMA-Script document class.
 \c@ContinuedFloat=\count104
 Package caption Info: hyperref package is loaded.
 )
-(C:\Users\xzizal\Dropbox\speciesgeocodeR_tutorial\speciesgeocoder_tutorial.aux)
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Try loading font information for OT1+phv on input line 21.
+(C:\Users\xzizal\Desktop\GitHub\geocoder\R\speciesgeocodeR_tutorial\speciesgeoc
+oder_tutorial.aux)
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Try loading font information for OT1+phv on input line 20.
+
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\psnfss\ot1phv.fd"
 File: ot1phv.fd 2001/06/04 scalable font definitions for OT1/phv.
 )
@@ -362,7 +366,7 @@ File: ot1phv.fd 2001/06/04 scalable font definitions for OT1/phv.
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 \AtBeginShipoutBox=\box27
-Package hyperref Info: Link coloring OFF on input line 21.
+Package hyperref Info: Link coloring OFF on input line 20.
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\hyperref\nameref.sty"
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
 
@@ -371,13 +375,16 @@ Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
 \c@section@level=\count105
 )
-LaTeX Info: Redefining \ref on input line 21.
-LaTeX Info: Redefining \pageref on input line 21.
-LaTeX Info: Redefining \nameref on input line 21.
+LaTeX Info: Redefining \ref on input line 20.
+LaTeX Info: Redefining \pageref on input line 20.
+LaTeX Info: Redefining \nameref on input line 20.
 
-(C:\Users\xzizal\Dropbox\speciesgeocodeR_tutorial\speciesgeocoder_tutorial.out)
-(C:\Users\xzizal\Dropbox\speciesgeocodeR_tutorial\speciesgeocoder_tutorial.out)
+(C:\Users\xzizal\Desktop\GitHub\geocoder\R\speciesgeocodeR_tutorial\speciesgeoc
+oder_tutorial.out)
+(C:\Users\xzizal\Desktop\GitHub\geocoder\R\speciesgeocodeR_tutorial\speciesgeoc
+oder_tutorial.out)
 \@outlinefile=\write3
+
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\context\base\supp-pdf.mkii"
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count106
@@ -395,142 +402,119 @@ LaTeX Info: Redefining \nameref on input line 21.
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
 LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <20.74> not available
-(Font)              Font shape `OT1/phv/b/n' tried instead on input line 28.
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 27.
 LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <10.95> not available
-(Font)              Font shape `OT1/phv/b/n' tried instead on input line 38.
-
-
-Package natbib Warning: Citation `XXX' on page 1 undefined on input line 38.
-
-[1
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 37.
+ [1
 
 
 
 {C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}]
-(C:\Users\xzizal\Dropbox\speciesgeocodeR_tutorial\speciesgeocoder_tutorial.toc)
+(C:\Users\xzizal\Desktop\GitHub\geocoder\R\speciesgeocodeR_tutorial\speciesgeoc
+oder_tutorial.toc
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <10.95> on input line 7.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 7.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 7.
+)
 \tf@toc=\write4
-[2
+ [2
 
 ]
 Chapter 1.
-LaTeX Font Info:    Font shape `OT1/phv/m/it' in size <10.95> not available
-(Font)              Font shape `OT1/phv/m/sl' tried instead on input line 49.
-Missing character: There is no ï in font phvr7t!
-Missing character: There is no ¿ in font phvr7t!
-Missing character: There is no ½ in font phvr7t!
-Missing character: There is no ï in font phvr7t!
-Missing character: There is no ¿ in font phvr7t!
-Missing character: There is no ½ in font phvr7t!
-Missing character: There is no ï in font phvr7t!
-Missing character: There is no ¿ in font phvr7t!
-Missing character: There is no ½ in font phvr7t!
-Missing character: There is no ï in font phvr7t!
-Missing character: There is no ¿ in font phvr7t!
-Missing character: There is no ½ in font phvr7t!
-Missing character: There is no ï in font phvr7t!
-Missing character: There is no ¿ in font phvr7t!
-Missing character: There is no ½ in font phvr7t!
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <10.95> on input line 49.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 49.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 49.
+
+Package natbib Warning: Citation `Crwaly2000' on page 3 undefined on input line
+ 49.
+
+
+Package natbib Warning: Citation `XXX' on page 3 undefined on input line 49.
+
 [3
 
-]
+] [4]
 Chapter 2.
-LaTeX Font Info:    Try loading font information for OMS+phv on input line 68.
+LaTeX Font Info:    Font shape `OT1/phv/m/it' in size <10.95> not available
+(Font)              Font shape `OT1/phv/m/sl' tried instead on input line 55.
+Missing character: There is no ï in font phvr7t!
+Missing character: There is no ¿ in font phvr7t!
+Missing character: There is no ½ in font phvr7t!
+Missing character: There is no ï in font phvr7t!
+Missing character: There is no ¿ in font phvr7t!
+Missing character: There is no ½ in font phvr7t!
+Missing character: There is no ï in font phvr7t!
+Missing character: There is no ¿ in font phvr7t!
+Missing character: There is no ½ in font phvr7t!
+Missing character: There is no ï in font phvr7t!
+Missing character: There is no ¿ in font phvr7t!
+Missing character: There is no ½ in font phvr7t!
+Missing character: There is no ï in font phvr7t!
+Missing character: There is no ¿ in font phvr7t!
+Missing character: There is no ½ in font phvr7t!
+[5
+
+]
+Chapter 3.
+Missing character: There is no Ã in font phvr7t!
+Missing character: There is no ¶ in font phvr7t!
+LaTeX Font Info:    Try loading font information for OMS+phv on input line 75.
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\psnfss\omsphv.fd"
 File: omsphv.fd 
 )
 LaTeX Font Info:    Font shape `OMS/phv/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 68.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 75.
 Missing character: There is no ï in font phvr7t!
 Missing character: There is no ¿ in font phvr7t!
 Missing character: There is no ½ in font phvr7t!
 Missing character: There is no ï in font phvr7t!
 Missing character: There is no ¿ in font phvr7t!
 Missing character: There is no ½ in font phvr7t!
- [4
+ [6
 
 ]
-Underfull \hbox (badness 1087) in paragraph at lines 90--90
-[]\OT1/phv/m/n/10.95 load the species-geocodeR pack-
- []
+LaTeX Font Info:    Try loading font information for OML+cmtt on input line 93.
+
+LaTeX Font Info:    No file OMLcmtt.fd. on input line 93.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 90--90
-[]\OT1/phv/m/n/10.95 run Species-GeoCoder(), e.g
- []
+LaTeX Font Warning: Font shape `OML/cmtt/m/n' undefined
+(Font)              using `OML/cmm/m/it' instead
+(Font)              for symbol `textless' on input line 93.
+
+LaTeX Font Info:    Try loading font information for OMS+cmtt on input line 94.
+
+LaTeX Font Info:    No file OMScmtt.fd. on input line 94.
+
+LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
+(Font)              using `OMS/cmsy/m/n' instead
+(Font)              for symbol `textbackslash' on input line 94.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 90--90
-\OT1/phv/m/n/10.95 ``point[]coordinates.txt'', ``poly-
- []
-
-
-Underfull \hbox (badness 1087) in paragraph at lines 105--105
-[]\OT1/phv/m/n/10.95 load the species-geocodeR pack-
- []
-
-LaTeX Font Info:    Try loading font information for OML+phv on input line 105.
-
-("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\psnfss\omlphv.fd"
-File: omlphv.fd 
-)
-LaTeX Font Info:    Font shape `OML/phv/m/it' in size <10.95> not available
-(Font)              Font shape `OML/cmm/m/it' tried instead on input line 105.
-LaTeX Font Info:    Font shape `OMS/phv/m/it' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 105.
-
-Underfull \hbox (badness 10000) in paragraph at lines 105--105
-[]\OT1/phv/m/n/10.95 run Species-GeoCoder(), e.g
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 105--105
-\OT1/phv/m/n/10.95 ``point[]coordinates.txt'', ``poly-
- []
-
-[5]
-Chapter 3.
-
-Package natbib Warning: Citation `WWF' on page 6 undefined on input line 109.
-
-
-Overfull \hbox (122.82893pt too wide) in paragraph at lines 109--110
-\OT1/phv/m/n/10.95 load the source files (e.g. from []$\OT1/cmtt/m/n/10.95 http
-s : / / worldwildlife . org / publications / terrestrial-[]ecoregions-[]of-[]th
-e-[]world$[]\OT1/phv/m/n/10.95 )
- []
-
-[6
-
-]
-Underfull \hbox (badness 5924) in paragraph at lines 131--131
-\OT1/phv/m/n/10.95 name = ``Neotrop-ics'', scale =
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 131--131
-[]\OT1/phv/m/n/10.95 run Species-GeoCoder(), e.g
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 131--131
-\OT1/phv/m/n/10.95 ``point[]coordinates.txt'', ``poly-
+Overfull \hbox (1.39922pt too wide) in paragraph at lines 91--96
+\OT1/cmtt/m/n/10.95 write.table(poly, ``polygon[]coordinates.txt'', row.names =
+ F, sep = ``\OMS/cmsy/m/n/10.95 n\OT1/cmtt/m/n/10.95 t'') 
  []
 
 [7]
 Chapter 4.
 
-Underfull \hbox (badness 10000) in paragraph at lines 136--162
+Package natbib Warning: Citation `WWF' on page 8 undefined on input line 100.
 
+
+Overfull \hbox (33.39435pt too wide) in paragraph at lines 102--106
+\OT1/cmtt/m/n/10.95 SpeciesGeoCoder(``SPECIESDATA'', wwf, graphs = T, coex = F,
+ wwf = T, scale = "BIOME") 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 136--162
+Overfull \hbox (44.89172pt too wide) in paragraph at lines 109--112
+\OT1/cmtt/m/n/10.95 SpeciesGeoCoder(``SPECIESDATA'', poly, graphs = T, coex = F
+, wwf = T, scale = " BIOME")
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 109--112
 
  []
 
@@ -538,10 +522,33 @@ Underfull \hbox (badness 10000) in paragraph at lines 136--162
 
 ] [9]
 Chapter 5.
+
+Underfull \hbox (badness 10000) in paragraph at lines 123--149
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 123--149
+
+ []
+
 [10
 
-]
+] [11]
 Chapter 6.
+LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <14.4> not available
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 151.
+LaTeX Font Info:    Try loading font information for OML+phv on input line 155.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\psnfss\omlphv.fd"
+File: omlphv.fd 
+)
+LaTeX Font Info:    Font shape `OML/phv/m/n' in size <10.95> not available
+(Font)              Font shape `OML/cmm/m/it' tried instead on input line 155.
+ [12
+
+]
+Chapter 7.
 Missing character: There is no ï in font phvb7t!
 Missing character: There is no ¿ in font phvb7t!
 Missing character: There is no ½ in font phvb7t!
@@ -681,210 +688,210 @@ Missing character: There is no ï in font phvr7t!
 Missing character: There is no ¿ in font phvr7t!
 Missing character: There is no ½ in font phvr7t!
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Overfull \hbox (48.06288pt too wide) in paragraph at lines 167--362
+Overfull \hbox (48.06288pt too wide) in paragraph at lines 168--363
 \OT1/phv/m/sl/10.95 Input: \OT1/phv/m/n/10.95 x = .txt file con-tain-ing the in
 -for-ma-tion of species oc-cur-rence, 3 columns: iden-ti-fier,XCOOR,YCOOR;
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--362
+Underfull \hbox (badness 10000) in paragraph at lines 168--363
 
  []
 
-[11
+[13
 
-] [12] [13] [14] [15] [16] [17] [18] [19]
-Chapter 7.
+] [14] [15] [16] [17] [18] [19] [20] [21]
+Chapter 8.
 Package epstopdf Info: Source file: <figures/bm_no_graphics.eps>
 (epstopdf)                    date: 2014-02-13 18:06:22
 (epstopdf)                    size: 762350 bytes
@@ -894,15 +901,15 @@ f>
 (epstopdf)                    size: 22328 bytes
 (epstopdf)             Command: <epstopdf --outfile=figures/bm_no_graphics-eps-
 converted-to.pdf figures/bm_no_graphics.eps>
-(epstopdf)             \includegraphics on input line 366.
+(epstopdf)             \includegraphics on input line 367.
 Package epstopdf Info: Output file is already uptodate.
 
-<figures/bm_no_graphics-eps-converted-to.pdf, id=143, 533.995pt x 376.40625pt>
+<figures/bm_no_graphics-eps-converted-to.pdf, id=176, 533.995pt x 376.40625pt>
 File: figures/bm_no_graphics-eps-converted-to.pdf Graphic file (type pdf)
 
 <use figures/bm_no_graphics-eps-converted-to.pdf>
 Package pdftex.def Info: figures/bm_no_graphics-eps-converted-to.pdf used on in
-put line 366.
+put line 367.
 (pdftex.def)             Requested size: 409.71692pt x 288.8171pt.
 Package epstopdf Info: Source file: <figures/bm_graphics.eps>
 (epstopdf)                    date: 2014-02-13 17:48:04
@@ -912,44 +919,49 @@ Package epstopdf Info: Source file: <figures/bm_graphics.eps>
 (epstopdf)                    size: 22477 bytes
 (epstopdf)             Command: <epstopdf --outfile=figures/bm_graphics-eps-con
 verted-to.pdf figures/bm_graphics.eps>
-(epstopdf)             \includegraphics on input line 368.
+(epstopdf)             \includegraphics on input line 369.
 Package epstopdf Info: Output file is already uptodate.
 
-<figures/bm_graphics-eps-converted-to.pdf, id=144, 533.995pt x 376.40625pt>
+<figures/bm_graphics-eps-converted-to.pdf, id=177, 533.995pt x 376.40625pt>
 File: figures/bm_graphics-eps-converted-to.pdf Graphic file (type pdf)
 
 <use figures/bm_graphics-eps-converted-to.pdf>
 Package pdftex.def Info: figures/bm_graphics-eps-converted-to.pdf used on input
- line 368.
+ line 369.
 (pdftex.def)             Requested size: 409.71692pt x 288.8171pt.
 
 
 Package natbib Warning: There were undefined citations.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 371.
-[20
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 372.
+[22
 
- <C:/Users/xzizal/Dropbox/speciesgeocodeR_tutorial/figures/bm_no_graphics-eps-c
-onverted-to.pdf> <C:/Users/xzizal/Dropbox/speciesgeocodeR_tutorial/figures/bm_g
-raphics-eps-converted-to.pdf>]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 371.
+ <C:/Users/xzizal/Desktop/GitHub/geocoder/R/speciesgeocodeR_tutorial/figures/bm
+_no_graphics-eps-converted-to.pdf> <C:/Users/xzizal/Desktop/GitHub/geocoder/R/s
+peciesgeocodeR_tutorial/figures/bm_graphics-eps-converted-to.pdf>]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 372.
 
-(C:\Users\xzizal\Dropbox\speciesgeocodeR_tutorial\speciesgeocoder_tutorial.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 371.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 371.
+(C:\Users\xzizal\Desktop\GitHub\geocoder\R\speciesgeocodeR_tutorial\speciesgeoc
+oder_tutorial.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 372.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 372.
 Package rerunfilecheck Info: File `speciesgeocoder_tutorial.out' has not change
 d.
-(rerunfilecheck)             Checksum: 4123880B08622243797BA044D29B7059;443.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 371.
+(rerunfilecheck)             Checksum: 9D81192D28042CB4F91C578B06EDC67B;729.
+
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 372.
  ) 
 Here is how much of TeX's memory you used:
- 8207 strings out of 493921
- 128824 string characters out of 3144872
- 265991 words of memory out of 3000000
- 11386 multiletter control sequences out of 15000+200000
- 15825 words of font info for 35 fonts, out of 3000000 for 9000
+ 8234 strings out of 493921
+ 129337 string characters out of 3144872
+ 266991 words of memory out of 3000000
+ 11406 multiletter control sequences out of 15000+200000
+ 17458 words of font info for 37 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
- 40i,12n,47p,1684b,404s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 40i,6n,47p,1414b,405s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/fontname/8r.enc}<C:/Progra
 m Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program 
 Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Fi
@@ -957,9 +969,9 @@ les (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Program File
 s (x86)/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Program Files (x86)/
 MiKTeX 2.9/fonts/type1/urw/helvetic/uhvr8a.pfb><C:/Program Files (x86)/MiKTeX 2
 .9/fonts/type1/urw/helvetic/uhvro8a.pfb>
-Output written on speciesgeocoder_tutorial.pdf (20 pages, 124161 bytes).
+Output written on speciesgeocoder_tutorial.pdf (22 pages, 132242 bytes).
 PDF statistics:
- 201 PDF objects out of 1000 (max. 8388607)
- 45 named destinations out of 1000 (max. 500000)
- 67 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 234 PDF objects out of 1000 (max. 8388607)
+ 47 named destinations out of 1000 (max. 500000)
+ 99 words of extra memory for PDF output out of 10000 (max. 10000000)
 
