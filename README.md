@@ -43,3 +43,9 @@ optional arguments:
                         Minimum number of occurences in a polygon. The number
                         of excluded localities will be reported by default
   --test                Test if the imput data is in the right format
+
+# Downloading locality data (30 m. resolution)
+Download instructions: http://gdem.ersdac.jspacesystems.or.jp/feature.jsp
+Download site: http://gdem.ersdac.jspacesystems.or.jp/search.jsp
+
+

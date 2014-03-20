@@ -12,7 +12,8 @@ pkload("rgeos")
 pkload("maptools")
 pkload("maps")
 pkload("mapdata")
-#pkload("raster")
+pkload("raster")
+# pkload("utils")
 
 data(wrld_simpl)
 
@@ -41,7 +42,7 @@ Cord2Polygon <- function(x){
       pp <- Polygon(pp)
       po <- Polygons(list(pp), ID = liste[i])
       col[[i]] <- po
-      cat(paste(i,"\n"))
+#       cat(paste(i,"\n"))
     }
     polys <- SpatialPolygons(col, proj4string = CRS("+proj=longlat +datum=WGS84"))
   }else{
@@ -67,7 +68,7 @@ Cord2Polygon <- function(x){
       pp <- Polygon(pp)
       po <- Polygons(list(pp), ID = liste[i])
       col[[i]] <- po
-      cat(paste(i,"\n"))
+#       cat(paste(i,"\n"))
     } 
     polys <- SpatialPolygons(col, proj4string = CRS("+proj=longlat +datum=WGS84"))
   }
@@ -77,7 +78,15 @@ Cord2Polygon <- function(x){
 #reads in txt files from files name, tab delimited, 3 columns each, x = pointcoordinates, y polygon coordinates, add corrections for bad input files here.
 ReadPoints<- function(x, y) {   
   res <- list()
-  coords <- read.table(x, sep = "\t", header = T)
+  if(class(x) != "character" && class(x) != "data.frame"){
+    stop(paste("Function not defined for class: ", class(x), sep = ""))
+  }
+  if(class(x) == "character"){  
+    coords <- read.table(x, sep = "\t", header = T)
+  }
+  if(class(x) == "data.frame"){
+    coords <- x
+  }
     
   if(class(y) != "SpatialPolygonsDataFrame" && class(y) != "SpatialPolygons")
   {
@@ -95,20 +104,25 @@ ReadPoints<- function(x, y) {
       warning("Polygon identifier (column 1) should be a string or a factor.")
     }
     if(max(polycord[, 2]) > 180){
-      stop(paste("Wrong polygon input coordinates. Contains longitude values outside possible range in row:",
-                 rownames(polycord[polycord[,2] > 180,]),"\n"))
+      warning(paste("Check polygon input coordinates. File contains longitude values outside possible range in row:",
+                 rownames(polycord[polycord[,2] > 180,]),"\n", "Coordinates set to maximum: 180 \n", sep = ""))
+      polycord[polycord[, 2] > 180,2] <- 180
     }
     if(min(polycord[, 2]) < -180){
-      stop(paste("Wrong polygon input coordinates. Contains longitude values outside possible range in row:",
-                 rownames(polycord[polycord[,2] < -180,]),"\n"))
+      warning(paste("Check polygon input coordinates. File contains longitude values outside possible range in row: ",
+                    rownames(polycord[polycord[,2] < -180,]),"\n", "Coordinates set to minimum: -180 \n", sep = ""))
+      polycord[polycord[, 2] < -180,] <- -180
+
     }
     if(max(polycord[, 3]) > 90){
-      stop(paste("Wrong polygon input coordinates. Contains longitude values outside possible range in row:",
-                 rownames(polycord[polycord[,3] > 90,]),"\n"))
+      warning(paste("Check polygon input coordinates. File contains latitude values outside possible range in row:",
+                 rownames(polycord[polycord[,3] > 90,]),"\n", "Coordinates set to maximum: 90 \n", sep = ""))
+      polycord[polycord[, 3] > 90,3] <- 90
     }
     if(min(polycord[, 3]) < -90){
-      stop(paste("Wrong polygon input coordinates. Contains longitude values outside possible range in row:",
-                 rownames(polycord[polycord[,3] < -90,]),"\n"))
+      warning(paste("Check polygon input coordinates. File contains latitude values outside possible range in row:",
+                 rownames(polycord[polycord[,3] < -90,]),"\n", "Coordinates set to minimum: -90 \n", sep = ""))
+      polycord[polycord[, 3] < -90,3] <- -90
     }
     poly <- Cord2Polygon(polycord)
     cat("Done \n")
@@ -440,6 +454,15 @@ CropPointPolygon <- function(points, polygon, outside = F){
   return(out)
 }
 
+WWFload <- function(){
+  download.file("http://assets.worldwildlife.org/publications/15/files/original/official_teow.zip",
+  "wwf_ecoregions.zip")#?1349272619")
+  unzip("wwf_ecoregions.zip", exdir = "WWF_ecoregions")
+  file.remove("wwf_ecoregions.zip")
+  wwf <- readShapeSpatial("WWF_ecoregions\\official\\wwf_terr_ecos.shp")
+  return(wwf)
+}
+
 WWFnam <- function(x) {
   indrealm <- cbind(c("Australasia", "Antarctic", 
                       "Afrotropics", "IndoMalay", 
@@ -595,7 +618,7 @@ ConvertPoly <- function(x){
     
     out <- vector()
     
-    for(i in 2:length(bb)){
+    for(i in 3:length(bb)){
       dd <- c(bb[1], unlist(strsplit(as.character(bb[i]), split = ",")))
       out <- rbind(out, dd)
     }
@@ -1312,4 +1335,260 @@ SpeciesGeoCoder <- function(x, y, coex = F, graphs = T, wwf = F, scale, ...){
     }
 }
 
+DiversityGrid <- function(x, xlim , ylim){
+  res <- 1
+  if(xlim[1] * xlim[2] <0){
+    xwidth <- abs((xlim[2] + abs(xlim[1])) / res)
+  }else{
+    xwidth <- abs((abs(xlim[2]) - abs(xlim[1])) / res)
+  }
+  if(ylim[1] * ylim[2] <0){
+    ywidth <- abs((ylim[2] + abs(ylim[1])) / res)
+  }else{
+    ywidth <- abs((abs(ylim[2]) - abs(ylim[1])) / res)
+  }
+  dimen <- xwidth * ywidth
+  polyy <- data.frame()
+  
+  cat("Creating grid. \n")
+  
+  for(j in 0:(ywidth-1)){
+    dimen2 <- j * (xwidth) +  (1:(xwidth))
+    polyx <- data.frame()
+    ylimd <- c(ylim[2] - res * j , ylim[2] - res * (j+1))
+    
+    for(i in 0:(xwidth-1)){
+      poly <- rbind(c(xlim[1] + res * i, ylimd[2]), 
+                    c(xlim[1] + res * (i+1), ylimd[2]),
+                    c(xlim[1] + res * (i+1), ylimd[1]), 
+                    c(xlim[1] + res * i, ylimd[1]),
+                    c(xlim[1] + res * i, ylimd[2]))
+      
+      poly <- data.frame(cbind(as.character(rep(dimen2[i+1],5)),poly))
+      polyx <- rbind(polyx,poly)
+      #cat(paste(j, i, "\n"))
+    }
+    polyy <- rbind(polyy,polyx)
+  }
+  
+  names(polyy) <- c("identifier","XCOOR","YCOOR")
+  polyy$XCOOR <- as.numeric(as.character(polyy$XCOOR))
+  polyy$YCOOR <- as.numeric(as.character(polyy$YCOOR))
+  
+  cat("Done.\n")
+  
+  cat("Converting points.\n")
+  poly <- Cord2Polygon(polyy)
+  cat("Done.\n")  
+  
+  if(class(x) == "spgeoOUT"){
+    dum <- data.frame(identifier = x$identifier_in, x$species_coordinates_in)
+    x <-dum
+  }
+  
+  ini <- ReadPoints(x,poly)
+  
+  pp <- PipSamp(ini)
+  spsum <- SpSumH(pp)
+  
+  pp <- spsum[, -1]
+  pp[pp > 0] <- 1
+  test <- data.frame((colSums(pp,na.rm = F)))
+  test$identifier <- rownames(test)
+  
+  alle <- data.frame(identifier = unique(polyy$identifier))
+  alle <- merge(alle, test, all = T)
+  out <- matrix(alle[,2], ncol = xwidth, nrow = ywidth, byrow = T)
+  
+  
+  out <- raster(out, xmn = xlim[1], xmx = xlim[2], ymn = ylim[1], ymx = ylim[2])
+  projection(out)<-"+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0" 
+  return(out)
+}
 
+AbundanceGrid<- function(x, xlim , ylim){
+  res <- 1
+  if(xlim[1] * xlim[2] <0){
+    xwidth <- abs((xlim[2] + abs(xlim[1])) / res)
+  }else{
+    xwidth <- abs((abs(xlim[2]) - abs(xlim[1])) / res)
+  }
+  if(ylim[1] * ylim[2] <0){
+    ywidth <- abs((ylim[2] + abs(ylim[1])) / res)
+  }else{
+    ywidth <- abs((abs(ylim[2]) - abs(ylim[1])) / res)
+  }
+  dimen <- xwidth * ywidth
+  polyy <- data.frame()
+  
+  cat("Creating grid. \n")
+  
+  for(j in 0:(ywidth-1)){
+    dimen2 <- j * (xwidth) +  (1:(xwidth))
+    polyx <- data.frame()
+#     ylimd <- c(ylim[1] + res *j, ylim[1] + res * (j+1) )
+   ylimd <- c(ylim[2] - res * j , ylim[2] - res * (j+1))
+    
+    for(i in 0:(xwidth-1)){
+      poly <- rbind(c(xlim[1] + res * i, ylimd[2]), 
+                    c(xlim[1] + res * (i+1), ylimd[2]),
+                    c(xlim[1] + res * (i+1), ylimd[1]), 
+                    c(xlim[1] + res * i, ylimd[1]),
+                    c(xlim[1] + res * i, ylimd[2]))
+      
+      poly <- data.frame(cbind(as.character(rep(dimen2[i+1],5)),poly))
+      polyx <- rbind(polyx,poly)
+      #cat(paste(j, i, "\n"))
+    }
+    polyy <- rbind(polyy,polyx)
+  }
+  
+  names(polyy) <- c("identifier","XCOOR","YCOOR")
+  polyy$XCOOR <- as.numeric(as.character(polyy$XCOOR))
+  polyy$YCOOR <- as.numeric(as.character(polyy$YCOOR))
+  
+  cat("Done.\n")
+  
+  cat("Converting points.\n")
+  poly <- Cord2Polygon(polyy)
+  cat("Done.\n")  
+  
+  if(class(x) == "spgeoOUT"){
+    dum <- data.frame(identifier = x$identifier_in, x$species_coordinates_in)
+    x <-dum
+  }
+  
+  ini <- ReadPoints(x,poly)
+  pp <- PipSamp(ini)
+  
+  
+  sam <- aggregate(pp$identifier, by = list(pp$homepolygon), length)
+  names(sam) <- c("identifier","num") 
+  alle <- data.frame(identifier = unique(polyy$identifier))
+  alle <- merge(alle, sam, all = T)
+  out <- matrix(alle[,2], ncol = xwidth, nrow = ywidth, byrow = T)
+  
+  out <- raster(out, xmn = xlim[1], xmx = xlim[2], ymn = ylim[1], ymx = ylim[2])
+  projection(out)<-"+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0" 
+  return(out)
+}
+
+MapGrid <- function(rast){
+#   colo <- rev(heat.colors(length(getValues(rast))))
+  plot(rast) #, col = colo)
+  map("world", add = T)
+  
+}
+
+MapDiversity <- function(x, scale, leg = "continous"){
+  if (!class(x) ==  "spgeoOUT"){
+    stop("This function is only defined for class spgeoOUT")
+  }
+
+  num <- data.frame(poly = colnames(x$polygon_table),
+                    spec.num = t(x$polygon_table),  
+                    row.names = NULL, stringsAsFactors = F)
+  num$poly <- gsub("."," ", num$poly, fixed = T)
+  
+  if(scale == "CUSTOM"){
+    x$polygons <- SpatialPolygonsDataFrame(x$polygons,data.frame(names(x$polygons), row.names = names(x$polygons)))
+    names(x$polygons) <- c("ECO_NAME")
+    nam <- data.frame(ECO_NAME = x$polygons$ECO_NAME)
+    
+    polys.df <- merge(nam, num, sort = F, by.x = "ECO_NAME", by.y = "poly", all = T)
+    
+  }  
+  if(scale == "BIOME")
+  {
+    leg <- "discrete"
+    indbiom <- data.frame(string = c( "Tropical and Subtropical Moist Broadleaf Forests", 
+                        "Tropical and Subtropical Dry Broadleaf Forests", 
+                        "Tropical and Subtropical Coniferous Forests", 
+                        "Temperate Broadleaf and Mixed Forests", 
+                        "Temperate Conifer Forests", 
+                        "Boreal Forests/Taiga", 
+                        "Tropical and Subtropical Grasslands and Savannas and Shrublands", 
+                        "Temperate Grasslands and Savannas and Shrublands", 
+                        "Flooded Grasslands and Savannas", 
+                        "Montane Grasslands and Shrublands", 
+                        "Tundra", 
+                        "Mediterranean Forests, Woodlands and Scrub", 
+                        "Deserts and Xeric Shrublands", 
+                        "Mangroves"), BIOME.ID = c(1:14))
+    
+    num <- merge(num,indbiom, by.x = "poly", by.y = "string")
+    num <- num[,2:3]
+    
+    nam <- data.frame(ECO_NAME = x$polygons$ECO_NAME,BIOME_NAME = x$polygons$BIOME)#diffrent
+    polys.df <- merge(nam, num, sort = F, by.x = "BIOME_NAME", by.y = "BIOME.ID", all = T) #
+  }
+  if(scale == "ECOREGION"){
+    nam <- data.frame(ECO_NAME = x$polygons$ECO_NAME) 
+  
+    polys.df <- merge(nam, num, sort = F, by.x = "ECO_NAME", by.y = "poly", all = T)
+  }
+  
+  polys.df$spec.num[is.na(polys.df$spec.num)] <- 0
+  
+  if(leg == "continous"){
+    colo <- data.frame(num = c(0:max(polys.df$spec.num)),
+                       code = c("#FFFFFFFF", rev(heat.colors(max(polys.df$spec.num))))) 
+    
+  }else{
+    colo <- data.frame(num = c(0,sort(unique(polys.df$spec.num))),
+                     code = c("#FFFFFFFF", rev(rainbow(length(unique(polys.df$spec.num))))))
+    if(colo$num[2] == 0){colo <- colo[-2,]}
+  }
+    
+  polys.df <- merge(polys.df, colo, sort = F, by.x = "spec.num", by.y = "num", all = F)
+  
+  polys.df$ord <- pmatch(polys.df$ECO_NAME,nam$ECO_NAME)
+  polys.df <- polys.df[order(polys.df$ord),]
+  
+  sp.count <-  polys.df$spec.num
+  poly.col <- polys.df$code
+  
+  plotpoly <- spCbind(x$polygons, sp.count)
+  plotpoly <- spCbind(plotpoly, poly.col)
+  
+  limits <- bbox(plotpoly)
+  
+  limits[1,1] <-  limits[1,1] - abs(abs(limits[1,1])- abs(limits[1,2])) * .2
+  limits[1,2] <-  limits[1,2] + abs(abs(limits[1,1])- abs(limits[1,2])) * .2
+  limits[2,1] <-  limits[2,1] - abs(abs(limits[2,1])- abs(limits[2,2])) * .2
+  limits[2,2] <-  limits[2,2] + abs(abs(limits[2,1])- abs(limits[2,2])) * .2
+  
+  lin.col <- rgb(153,153,153, maxColorValue = 255, alpha = 150)
+  
+  layout(matrix(c(1, 1, 1, 1, 1,  2), ncol =  6, nrow = 1))
+  map("world", xlim = limits[1,], ylim = limits[2,])
+  axis(1)
+  axis(2)
+  box("plot")
+  plot(plotpoly, col = as.character(plotpoly$poly.col), border = lin.col, add = T)
+  if(leg == "continous"){
+    par(mar = c(5,1,5,3))
+    ifelse(max(plotpoly$sp.count) < 25, leng <- max(plotpoly$sp.count),11)
+    ticks <- round(seq(min(plotpoly$sp.count), max(plotpoly$sp.count), len = leng),0)
+    scale <- (length(colo$num) - 1) / (max(plotpoly$sp.count) - min(plotpoly$sp.count))
+    plot(c(0,10), c(min(plotpoly$sp.count),max(plotpoly$sp.count)), 
+         type='n', bty='n', xaxt='n', xlab='', yaxt='n', ylab='')
+    axis(4, ticks, las=1)
+    for (i in 1:(length(colo$num))) {
+      y = (i - 1)/scale + min(plotpoly$sp.count)
+      rect(0, y, 10, y + 1 / scale, col= as.character(colo$code[i]), border=NA)
+    }
+    box("plot")
+  }else{
+    par(mar = c(5,1,5,3))
+    scale <- (length(colo$num) - 1) / (length(colo$num) - min(plotpoly$sp.count))
+    plot(c(0,10), c(min(colo$num),dim(colo)[1]+1), 
+         type='n', bty='n', xaxt='n', xlab='', yaxt='n', ylab='', xpd = F)
+    for (i in 1:length(colo$num)) {
+      y = (i - 1)/scale + min(plotpoly$sp.count)
+      rect(0, y, 5, y + 1 / scale, col= as.character(colo$code[i]), border=NA)
+      text(7,y + 1 / scale / 2, colo$num[i])
+    }
+    rect(0,min(plotpoly$sp.count),5,length(colo$num)+ 1 / scale)
+  }
+}
