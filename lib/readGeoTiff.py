@@ -74,7 +74,7 @@ def indexTiffs(infiles):
 			# Extract maxX
 			tifFiles[tif].append(tifObj.maxx())		# [1]
 			# Extract minY
-			tifFiles[tif].append(tifObj.miny())     # [2]
+			tifFiles[tif].append(tifObj.miny())     	# [2]
 			# Extract maxY
 			tifFiles[tif].append(tifObj.maxy())		# [3]
 	sys.stderr.write("\n")
