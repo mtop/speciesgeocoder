@@ -37,7 +37,7 @@ End;
 ####Test2####
 #Localities file: occurenceSouthAmerica1000.txt = 1000 points simulated by Ruud for South America, including points that occur over the ocean
 #Polygons file: southamerica_without_altitude.txt = 2 polygons that are equal in shape and cover the exact same area, but they are different in the altitude range (one below 500m and the other above 500m)
-#Tiff file: elevation with 250 m resolution
+#Tiff file: elevation with 30 m resolution
 #Expected result: some points will be coded for one polygon and some points will be coded for the other polygon
 #Actual result:
 
@@ -134,7 +134,7 @@ End;
 ####Test4####
 #Localities file: occurrenceFE.txt = 1000 points from my own dataset for South America; all points occur on land and cover different areas in South America
 #Polygons file: southamerica_without_altitude.txt = 2 polygons that are equal in shape and cover the exact same area, but they are different in the altitude range (one below 500m and the other above 500m) [same polygons used in test 2]
-#Tiff file: elevation with 250 m resolution
+#Tiff file: elevation with 30 m resolution
 #Expected result: some points will be coded for one polygon and some points will be coded for the other polygon
 #Actual result:
 
