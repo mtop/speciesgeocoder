@@ -52,7 +52,11 @@ class Geotiff(object):
 		return "MinX: ", self.minx(), "MaxX: ", self.maxx(), "MinY: ", self.miny(), "MaxY: ", self.maxy()
 
 	def get_elevation(self, lon, lat):
-		elevation = subprocess.check_output(["gdallocationinfo", "-valonly", "-wgs84", self.tiffile, lon, lat])
+		if sys.platform.startswith('linux2'):
+			binary = "bin/gdallocationinfo_linux2"
+		if sys.platform.startswith('darwin'):
+			binary = "bin/gdallocationinfo_darwin"
+		elevation = subprocess.check_output([binary, "-valonly", "-wgs84", self.tiffile, lon, lat])
 		return int(elevation)	
 
 	
