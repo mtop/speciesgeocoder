@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright (C) 2013 Mats Töpel. 
+#	Species locality data + polygons -> nexus file 
+#
+#	Copyright (C) 2014 Mats Töpel. mats.topel@bioenv.gu.se
 #
 #	Citation: If you use this version of the program, please cite;
-#	Mats Töpel (2013) Open Laboratory Notebook. www.matstopel.se
+#	Mats Töpel (2014) Open Laboratory Notebook. www.matstopel.se
 #
 #	This program is free software: you can redistribute it and/or modify
 #	it under the terms of the GNU General Public License as published by
