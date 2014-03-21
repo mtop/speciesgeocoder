@@ -1,0 +1,124 @@
+"elapsed"
+"occurences_datapoints10_R.txt_polygons_polygons_R_10.txt"	3.285
+"elapsed"
+"occurences_datapoints100_R.txt_polygons_polygons_R_10.txt"	1.357
+"elapsed"
+"occurences_datapoints1000_R.txt_polygons_polygons_R_10.txt"	1.328
+"elapsed"
+"occurences_datapoints10000_R.txt_polygons_polygons_R_10.txt"	2.193
+"elapsed"
+"occurences_datapoints100000_R.txt_polygons_polygons_R_10.txt"	11.473
+"elapsed"
+"occurences_datapoints1000000_R.txt_polygons_polygons_R_10.txt"	107.428
+"elapsed"
+"occurences_datapoints10000000_R.txt_polygons_polygons_R_10.txt"	1152.194
+"elapsed"
+"occurences_datapoints10_R.txt_polygons_polygons_R_100.txt"	7.78199999999993
+"elapsed"
+"occurences_datapoints100_R.txt_polygons_polygons_R_100.txt"	8.79899999999998
+"elapsed"
+"occurences_datapoints1000_R.txt_polygons_polygons_R_100.txt"	8.53800000000001
+"elapsed"
+"occurences_datapoints10000_R.txt_polygons_polygons_R_100.txt"	9.80099999999993
+"elapsed"
+"occurences_datapoints100000_R.txt_polygons_polygons_R_100.txt"	381.526
+"elapsed"
+"occurences_datapoints1000000_R.txt_polygons_polygons_R_100.txt"	172.846
+"elapsed"
+"occurences_datapoints10_R.txt_polygons_polygons_R_10.txt"	2.139
+"elapsed"
+"occurences_datapoints100_R.txt_polygons_polygons_R_10.txt"	1.117
+"elapsed"
+"occurences_datapoints1000_R.txt_polygons_polygons_R_10.txt"	1.186
+"elapsed"
+"occurences_datapoints10000_R.txt_polygons_polygons_R_10.txt"	2.036
+"elapsed"
+"occurences_datapoints100000_R.txt_polygons_polygons_R_10.txt"	11.262
+"elapsed"
+"occurences_datapoints1000000_R.txt_polygons_polygons_R_10.txt"	77.245
+"elapsed"
+"occurences_datapoints10000000_R.txt_polygons_polygons_R_10.txt"	734.764
+"elapsed"
+"occurences_datapoints10_R.txt_polygons_polygons_R_100.txt"	6.82100000000003
+"elapsed"
+"occurences_datapoints100_R.txt_polygons_polygons_R_100.txt"	8.18200000000002
+"elapsed"
+"occurences_datapoints1000_R.txt_polygons_polygons_R_100.txt"	8.27199999999993
+"elapsed"
+"occurences_datapoints10000_R.txt_polygons_polygons_R_100.txt"	9.529
+"elapsed"
+"occurences_datapoints100000_R.txt_polygons_polygons_R_100.txt"	23.2860000000001
+"elapsed"
+"occurences_datapoints1000000_R.txt_polygons_polygons_R_100.txt"	171.111
+"elapsed"
+"occurences_datapoints10000000_R.txt_polygons_polygons_R_100.txt"	1754.93
+"elapsed"
+"occurences_datapoints10_R.txt_polygons_polygons_R_1000.txt"	87.2709999999997
+"elapsed"
+"occurences_datapoints100_R.txt_polygons_polygons_R_1000.txt"	91.7730000000001
+"elapsed"
+"occurences_datapoints1000_R.txt_polygons_polygons_R_1000.txt"	180.555
+"elapsed"
+"occurences_datapoints10000_R.txt_polygons_polygons_R_1000.txt"	186.08
+"elapsed"
+"occurences_datapoints100000_R.txt_polygons_polygons_R_1000.txt"	296.103
+"elapsed"
+"occurences_datapoints1000000_R.txt_polygons_polygons_R_1000.txt"	1486.35
+"elapsed"
+"occurences_datapoints10000000_R.txt_polygons_polygons_R_1000.txt"	11755.478
+"elapsed"
+"occurences_datapoints10_R.txt_polygons_polygons_R_10000.txt"	2207.175
+"elapsed"
+"occurences_datapoints100_R.txt_polygons_polygons_R_10000.txt"	2192.17
+"elapsed"
+"occurences_datapoints1000_R.txt_polygons_polygons_R_10000.txt"	2245.972
+"elapsed"
+"occurences_datapoints10000_R.txt_polygons_polygons_R_10000.txt"	11660.539
+"elapsed"
+"occurences_datapoints100000_R.txt_polygons_polygons_R_10000.txt"	12242.952
+"elapsed"
+"occurences_datapoints1000000_R.txt_polygons_polygons_R_10000.txt"	23492.251
+"elapsed"
+"occurences_datapoints10000000_R.txt_polygons_polygons_R_10000.txt"	124160.906
+"elapsed"
+"occurences_datapoints10_R.txt_polygons_polygons_R_10.txt"	1.33199999999488
+"elapsed"
+"occurences_datapoints100_R.txt_polygons_polygons_R_10.txt"	0.561999999976251
+"elapsed"
+"occurences_datapoints1000_R.txt_polygons_polygons_R_10.txt"	0.604999999981374
+"elapsed"
+"occurences_datapoints10000_R.txt_polygons_polygons_R_10.txt"	1.27600000001257
+"elapsed"
+"occurences_datapoints100000_R.txt_polygons_polygons_R_10.txt"	7.21899999998277
+"elapsed"
+"occurences_datapoints1000000_R.txt_polygons_polygons_R_10.txt"	57.4679999999935
+"elapsed"
+"occurences_datapoints10000000_R.txt_polygons_polygons_R_10.txt"	658.138000000006
+"elapsed"
+"occurences_datapoints10_R.txt_polygons_polygons_R_100.txt"	0.962999999988824
+"elapsed"
+"occurences_datapoints100_R.txt_polygons_polygons_R_100.txt"	0.556000000011409
+"elapsed"
+"occurences_datapoints1000_R.txt_polygons_polygons_R_100.txt"	0.6019999999844
+"elapsed"
+"occurences_datapoints10000_R.txt_polygons_polygons_R_100.txt"	1.17499999998836
+"elapsed"
+"occurences_datapoints100000_R.txt_polygons_polygons_R_100.txt"	7.27800000002026
+"elapsed"
+"occurences_datapoints1000000_R.txt_polygons_polygons_R_100.txt"	57.1970000000147
+"elapsed"
+"occurences_datapoints10000000_R.txt_polygons_polygons_R_100.txt"	663.377999999997
+"elapsed"
+"occurences_datapoints10_R.txt_polygons_polygons_R_1000.txt"	0.960000000020955
+"elapsed"
+"occurences_datapoints100_R.txt_polygons_polygons_R_1000.txt"	0.554000000003725
+"elapsed"
+"occurences_datapoints1000_R.txt_polygons_polygons_R_1000.txt"	0.622000000003027
+"elapsed"
+"occurences_datapoints10000_R.txt_polygons_polygons_R_1000.txt"	1.28099999998813
+"elapsed"
+"occurences_datapoints100000_R.txt_polygons_polygons_R_1000.txt"	7.83699999999953
+"elapsed"
+"occurences_datapoints1000000_R.txt_polygons_polygons_R_1000.txt"	66.676999999996
+"elapsed"
+"occurences_datapoints10000000_R.txt_polygons_polygons_R_1000.txt"	780.612999999983

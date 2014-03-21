@@ -52,7 +52,11 @@ class Geotiff(object):
 		return "MinX: ", self.minx(), "MaxX: ", self.maxx(), "MinY: ", self.miny(), "MaxY: ", self.maxy()
 
 	def get_elevation(self, lon, lat):
-		elevation = subprocess.check_output(["gdallocationinfo", "-valonly", self.tiffile, lon, lat])
+		if sys.platform.startswith('linux2'):
+			binary = "bin/gdallocationinfo_linux2"
+		if sys.platform.startswith('darwin'):
+			binary = "bin/gdallocationinfo_darwin"
+		elevation = subprocess.check_output([binary, "-valonly", "-wgs84", self.tiffile, lon, lat])
 		return int(elevation)	
 
 	
@@ -74,16 +78,16 @@ def indexTiffs(infiles):
 			# Extract maxX
 			tifFiles[tif].append(tifObj.maxx())		# [1]
 			# Extract minY
-			tifFiles[tif].append(tifObj.miny())     # [2]
+			tifFiles[tif].append(tifObj.miny())     	# [2]
 			# Extract maxY
 			tifFiles[tif].append(tifObj.maxy())		# [3]
 	sys.stderr.write("\n")
 	return tifFiles						
 
-def coordInTif(lon, lat, tifFiles):
-	for tif in tifFiles:
+def coordInTif(lon, lat, index):
+	for tif in index:					
 		# Test if coordinates are found within the range of the tiff file.
-		if tifFiles[tif][2] < lat and lat < tifFiles[tif][3] and tifFiles[tif][0] < lon and lon < tifFiles[tif][1]:
+		if index[tif][2] < lat and lat < index[tif][3] and index[tif][0] < lon and lon < index[tif][1]:
 			return tif
 	
 

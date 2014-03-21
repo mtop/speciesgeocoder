@@ -1,12 +1,15 @@
 Dependencies:   python2.7 (includes argparser)
+				gdal-bin
                 python-gdal
-                gdal-bin
 
 OSX
 	# Download and install the GDAL package:
 	http://www.kyngchaos.com/files/software/frameworks/GDAL_Complete-1.10.dmg
 
-	# Add the following two lines to your .bash_profile file:
-	export PATH=$PATH:/Library/Frameworks/GDAL.framework/Programs
-	export PYTHONPATH=$PYTHONPATH:/Library/Frameworks/GDAL.framework/Versions/1.10/Python/2.7/site-packages
 
+#	# Add the following two lines to your .bash_profile file:
+#	export PATH=$PATH:/Library/Frameworks/GDAL.framework/Programs
+#	export PYTHONPATH=$PYTHONPATH:/Library/Frameworks/GDAL.framework/Versions/1.10/Python/2.7/site-packages
+
+	# Install cython
+	easy_install cython
