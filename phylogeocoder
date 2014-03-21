@@ -1,8 +1,8 @@
 #!/bin/sh
 
 # OSX Mavricks
-python ./geocoder.py $*
+#python ./geocoder.py $*
 
 #/Library/Frameworks/Python.framework/Versions/Current/bin/python ./geocoder.py $*
 #/opt/python/bin/python2.7 ./geocoder.py $*
-#/opt/python/bin/python2.7 /usr/local/git/geocoder/geocoder.py $*
+/opt/python/bin/python2.7 /usr/local/git/geocoder/geocoder.py $*
