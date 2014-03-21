@@ -1,6 +1,5 @@
 #!/bin/sh
 
-<<<<<<< HEAD
 #/Library/Frameworks/Python.framework/Versions/Current/bin/python ./geocoder.py $*
 /opt/python/bin/python2.7 ./geocoder.py $*
 =======
@@ -10,4 +9,3 @@ python ./geocoder.py $*
 #/Library/Frameworks/Python.framework/Versions/Current/bin/python ./geocoder.py $*
 #/opt/python/bin/python2.7 ./geocoder.py $*
 #/opt/python/bin/python2.7 /usr/local/git/geocoder/geocoder.py $*
->>>>>>> 6b47f136d2c989ce5a36c0afc6a60e2c05bfde07
