@@ -12,7 +12,7 @@ tar xvf proj-4.9.0b2.tar
 cd proj-4.9.0
 mkdir install_proj
 ./configure --prefix=$PWD/install_proj
-make install
+make clear install
 export PROJ4_ROOT=$PWD/install_proj
 
 # The proj.4 library will be created in src/.
