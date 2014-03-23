@@ -5,7 +5,7 @@
 \contentsline {chapter}{\numberline {5}Output-file description}{10}{chapter.5}
 \contentsline {chapter}{\numberline {6}Further functionalities}{12}{chapter.6}
 \contentsline {section}{\numberline {6.1}Calculating a co-existence matrix}{12}{section.6.1}
-\contentsline {section}{\numberline {6.2}Mapping diversity in polygons}{12}{section.6.2}
-\contentsline {section}{\numberline {6.3}Diversity and abundance grids}{12}{section.6.3}
-\contentsline {chapter}{\numberline {7}Function description}{13}{chapter.7}
-\contentsline {chapter}{\numberline {8}Benchmarking}{22}{chapter.8}
+\contentsline {section}{\numberline {6.2}Mapping diversity in polygons}{13}{section.6.2}
+\contentsline {section}{\numberline {6.3}Diversity and abundance grids}{19}{section.6.3}
+\contentsline {chapter}{\numberline {7}Function description}{22}{chapter.7}
+\contentsline {chapter}{\numberline {8}Benchmarking}{32}{chapter.8}

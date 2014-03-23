@@ -34,7 +34,7 @@ for(j in 1:length(edgenum))
   for(i in 1: length(occnum))
   {
     benchmGraphsOff (occnum[i],
-                     edgenum[j], paste("occurences",occnum[i],"polygons",polnum[j], sep = "_"))
+                     edgenum[j], paste("occurences",occnum[i],"edges",edgenum[j], sep = "_"))
   }
 }
 # 
