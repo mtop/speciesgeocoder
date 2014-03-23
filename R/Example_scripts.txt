@@ -1,0 +1,230 @@
+Example numbers refer to chapters in the tutorial "Turorial for using the speciesgeocodeR package
+
+
+############################################################################################
+#Example 3.1 Run speciesgecoder standard
+############################################################################################
+
+setwd("YOUR WORKING DIRECTORY PATH") # this sets the directory, where R loads and saves files, e.g. "C:\\USer\\Desktop\\data"
+source("speciesgeocodeR.R") # this loads the speciesgeocodeR package, the speciesgeocodeR.R file must be in the working director
+
+SpeciesGeoCoder("SPECIESDATA FILENAME", "POLYGONDATA FILENAME",  graphs = T, coex = F) #This runs a standard speciesgeocoder analysis with graphical output, the inputfiles must be in the working directory, e.g "point_data.txt", "polygon_data.txt"
+
+############################################################################################
+#Example 2 Run speciesgecoder standard with conversion of input polygons
+############################################################################################
+
+setwd("YOUR WORKING DIRECTORY PATH") # this sets the directory, where R loads and saves files, e.g. "C:\\USer\\Desktop\\data"
+source("speciesgeocodeR.R") # this loads the speciesgeocodeR package, the speciesgeocodeR.R file must be in the working directory
+
+poly <- ConvertPoly("POLYGON INPUTFILENAME") # this loads a textfile with polygons in QGIS or speciesgeocoder-python format and converts them for the use with speciesgeocodeR in R, name e.g. "polygon_coordinates.txt"
+write.table(poly, "POLYGON OUTPUTFILENAME", row.names = F,  sep = "\t") # This writes the new outputfile to the working directory
+
+SpeciesGeoCoder("SPECIESDATA FILENAME", "POLYGONDATA OUTPUTFILENAME",  graphs = T, coex = F) #This runs a standard speciesgeocoder analysis with graphical output, the inputfiles must be in the working directory, e.g "point_data.txt", "polygon_data.txt"
+
+############################################################################################
+#Example 4.1 Run speciesgeocoder with WWF trerrestrial ecoregions as input polygons (Olson et al. 2001)
+############################################################################################
+
+setwd("YOUR WORKING DIRECTORY PATH") # this sets the directory, where R loads and saves files, e.g. "C:\\USer\\Desktop\\data"
+source("speciesgeocodeR.R") # this loads the speciesgeocodeR package, the speciesgeocodeR.R file must be in the working directory
+
+wwf <-WWFload()
+
+SpeciesGeoCoder("SPECIESDATA FILE", wwf,  graphs = T, coex = F, wwf = T, scale = "FOCUS SCALE") #This runs a standard speciesgeocoder analysis with graphical output, the point inputfile must be in the working directory, e.g "point_data.txt", the polygonsinput is the poly object created in the step before. Please note that the scale argument is somewhat different from the scale argument of WWFpick. Here it sets summary level. If you chose REALM with WWFpick() you probably want to choose "BIOME" here.
+
+############################################################################################
+#Example 4.2  Pick a subset of WWF regions 
+############################################################################################
+
+setwd("YOUR WORKING DIRECTORY PATH") # this sets the directory, where R loads and saves files, e.g. "C:\\USer\\Desktop\\data"
+source("speciesgeocodeR.R") # this loads the speciesgeocodeR package, the speciesgeocodeR.R file must be in the working directory
+
+wwf <-WWFload()
+WWFnam(wwf)
+poly <- WWFpick(wwf, scale = "YOUR SCALE", name = "NAMES OF ECOREGIONS/BIOMES/REALMS TO PICK")
+
+SpeciesGeoCoder("SPECIESDATA FILE", poly,  graphs = T, coex = F, wwf = T, scale = "FOCUS SCALE") #This runs a standard speciesgeocoder analysis with graphical output, the point inputfile must be in the working directory, e.g "point_data.txt", the polygonsinput is the poly object created in the step before. Please note that the scale argument is somewhat different from the scale argument of WWFpick. Here it sets summary level. If you chose REALM with WWFpick() you probably want to choose "BIOME" here.
+
+
+############################################################################################
+#Example 4.3  Downloading the WWF regions manually
+############################################################################################
+
+setwd("YOUR WORKING DIRECTORY PATH") # this sets the directory, where R loads and saves files, e.g. "C:\\USer\\Desktop\\data"
+source("speciesgeocodeR.R") # this loads the speciesgeocodeR package, the speciesgeocodeR.R file must be in the working directory
+
+#download the zip file (https://worldwildlife.org/publications/terrestrial-ecoregions-of-the-world) and unpack it into your working directory
+wwf <- readShapeSpatial("wwf_terr_ecos.shp") # this reads in the wwf shape file from your working directory. YOu can download the file from WWF (see the link in the tutorial) and then extract it to your working directory.
+
+
+############################################################################################
+#Example 6.1.1 calculating a coexistence matrix
+############################################################################################
+
+setwd("YOUR WORKING DIRECTORY PATH") # this sets the directory, where R loads and saves files, e.g. "C:\\USer\\Desktop\\data"
+source("speciesgeocodeR.R") # this loads the speciesgeocodeR package, the speciesgeocodeR.R file must be in the working directory
+
+SpeciesGeoCoder("SPECIESDATA FILENAME", "POLYGONDATA FILENAME",  graphs = T, coex = T) #This runs a standard speciesgeocoder analysis with graphical output, the inputfiles must be in the working directory, e.g "point_data.txt", "polygon_data.txt"
+
+############################################################################################
+#Example 6.1.2 calculating a coexistence matrix without producing output files
+############################################################################################
+
+setwd("YOUR WORKING DIRECTORY PATH") # this sets the directory, where R loads and saves files, e.g. "C:\\USer\\Desktop\\data"
+source("speciesgeocodeR.R") # this loads the speciesgeocodeR package, the speciesgeocodeR.R file must be in the working directory
+
+inp <- ReadPoints("SPECIESDATA FILENAME", "POLYGONDATA FILENAME")
+outp <- SpGeoCodH(inp)
+coex <- CoExClass(outp)
+HeatPlotCoEx(coex)
+
+############################################################################################
+#Example 6.1.3 calculating a coexistence matrix without producing output files using the WWF shape files
+############################################################################################
+
+setwd("YOUR WORKING DIRECTORY PATH") # this sets the directory, where R loads and saves files, e.g. "C:\\USer\\Desktop\\data"
+source("speciesgeocodeR.R") # this loads the speciesgeocodeR package, the speciesgeocodeR.R file must be in the working directory
+
+inp <- ReadPoints("SPECIESDATA FILENAME", "POLYGONDATA FILENAME")
+outp <- SpGeoCodH(inp)
+clusto <- clust(outo, wwf, scale = "YOUR SCALE")
+coex <- CoExClass(clusto)
+HeatPlotCoEx(coex)
+
+############################################################################################
+#Example 6.2.1 Color-coding the inputpolygons by species numbers
+############################################################################################
+
+setwd("YOUR WORKING DIRECTORY PATH") # this sets the directory, where R loads and saves files, e.g. "C:\\USer\\Desktop\\data"
+source("speciesgeocodeR.R") # this loads the speciesgeocodeR package, the speciesgeocodeR.R file must be in the working directory
+
+inp <- ReadPoints("SPECIESDATA FILENAME", "POLYGONDATA FILENAME")
+outp <- SpGeoCodH(inp)
+MapDiversity(outp, scale = "CUSTOM")
+
+############################################################################################
+#Example 6.2.2 Color-coding the inputpolygons by species numbers using a discrete color scheme
+############################################################################################
+
+setwd("YOUR WORKING DIRECTORY PATH") # this sets the directory, where R loads and saves files, e.g. "C:\\USer\\Desktop\\data"
+source("speciesgeocodeR.R") # this loads the speciesgeocodeR package, the speciesgeocodeR.R file must be in the working directory
+
+inp <- ReadPoints("SPECIESDATA FILENAME", "POLYGONDATA FILENAME")
+outp <- SpGeoCodH(inp)
+MapDiversity(outp, scale = "CUSTOM", leg = "discrete")
+
+############################################################################################
+#Example 6.2.3 Adding occurrence points to the plot
+############################################################################################
+
+setwd("YOUR WORKING DIRECTORY PATH") # this sets the directory, where R loads and saves files, e.g. "C:\\USer\\Desktop\\data"
+source("speciesgeocodeR.R") # this loads the speciesgeocodeR package, the speciesgeocodeR.R file must be in the working directory
+
+inp <- ReadPoints("SPECIESDATA FILENAME", "POLYGONDATA FILENAME")
+outp <- SpGeoCodH(inp)
+MapDiversity(outp, scale = "CUSTOM", leg = "continous", show.occ = T)
+
+############################################################################################
+#Example 6.2.4 Using WWF terrestrial ECOREGIONS for color-coding
+############################################################################################
+
+setwd("YOUR WORKING DIRECTORY PATH") # this sets the directory, where R loads and saves files, e.g. "C:\\USer\\Desktop\\data"
+source("speciesgeocodeR.R") # this loads the speciesgeocodeR package, the speciesgeocodeR.R file must be in the working directory
+
+wwf <-WWFload()
+poly <- WWFpick(wwf, scale = "YOUR SCALE", name = "NAMES OF ECOREGIONS/BIOMES/REALMS TO PICK")
+
+inp <- ReadPoints("SPECIESDATA FILENAME", poly)
+outp <- SpGeoCodH(inp)
+
+MapDiversity(outp, scale = "ECOREGION", leg = "continous")
+
+############################################################################################
+#Example 6.2.5 Using occurence points to derive plot limits
+############################################################################################
+
+setwd("YOUR WORKING DIRECTORY PATH") # this sets the directory, where R loads and saves files, e.g. "C:\\USer\\Desktop\\data"
+source("speciesgeocodeR.R") # this loads the speciesgeocodeR package, the speciesgeocodeR.R file must be in the working directory
+
+wwf <-WWFload()
+poly <- WWFpick(wwf, scale = "YOUR SCALE", name = "NAMES OF ECOREGIONS/BIOMES/REALMS TO PICK")
+
+inp <- ReadPoints("SPECIESDATA FILENAME", poly)
+outp <- SpGeoCodH(inp)
+
+MapDiversity(outp, scale = "ECOREGION", leg = "continous", lim = "points")
+
+############################################################################################
+#Example 6.2.6 Using WWF terrestrial REALMs for color-coding
+############################################################################################
+
+setwd("YOUR WORKING DIRECTORY PATH") # this sets the directory, where R loads and saves files, e.g. "C:\\USer\\Desktop\\data"
+source("speciesgeocodeR.R") # this loads the speciesgeocodeR package, the speciesgeocodeR.R file must be in the working directory
+
+wwf <-WWFload()
+poly <- WWFpick(wwf, scale = "BIOME", name = "NAMES OF BIOMES TO PICK")
+
+inp <- ReadPoints("SPECIESDATA FILENAME", poly)
+outp <- SpGeoCodH(inp)
+clusto <- clust(outo, wwf, scale = "BIOME")
+
+MapDiversity(clusto, scale = "BIOME" or "REALM", leg = "continous", lim = "points")
+
+############################################################################################
+#Example 6.2.7 Using WWF terrestrial REALMs for color-coding
+############################################################################################
+
+setwd("YOUR WORKING DIRECTORY PATH") # this sets the directory, where R loads and saves files, e.g. "C:\\USer\\Desktop\\data"
+source("speciesgeocodeR.R") # this loads the speciesgeocodeR package, the speciesgeocodeR.R file must be in the working directory
+
+wwf <-WWFload()
+poly <- WWFpick(wwf, scale = "REALM", name = "NAMES OF REALMS TO PICK")
+
+inp <- ReadPoints("SPECIESDATA FILENAME",  poly)
+outp <- SpGeoCodH(inp)
+clusto <- clust(outo, wwf, scale = "REALM")
+
+MapDiversity(clusto, scale = "REALM", leg = "continous", lim = "points")
+
+############################################################################################
+#Example 6.3.1 Diversity Grid from input text file
+############################################################################################
+
+setwd("YOUR WORKING DIRECTORY PATH") # this sets the directory, where R loads and saves files, e.g. "C:\\USer\\Desktop\\data"
+source("speciesgeocodeR.R") # this loads the speciesgeocodeR package, the speciesgeocodeR.R file must be in the working directory
+
+div <- DiversityGrid("SPECIESDATA FILENAME",xlim = c(MIN,MAX), ylim = c(MIN,MAX))
+MapGrid(div)
+
+############################################################################################
+#Example 6.3.2 Diversity Grid from spgeoOUT object, adding points and polygons
+############################################################################################
+
+setwd("YOUR WORKING DIRECTORY PATH") # this sets the directory, where R loads and saves files, e.g. "C:\\USer\\Desktop\\data"
+source("speciesgeocodeR.R") # this loads the speciesgeocodeR package, the speciesgeocodeR.R file must be in the working directory
+
+inp <- ReadPoints("SPECIESDATA FILENAME", "POLYGONDATA FILENAME")
+outp <- SpGeoCodH(inp)
+
+div <- DiversityGrid(outp,xlim = c(MIN,MAX), ylim = c(MIN,MAX))
+points(outp$species_coordinates_in$XCOOR, outp$species_coordinates_in$YCOOR, cex = 0.5)
+plot(outp$polygons, add = T, border = "grey50")
+
+############################################################################################
+#Example 6.3.2 Abundance Grid from input text file
+############################################################################################
+
+setwd("YOUR WORKING DIRECTORY PATH") # this sets the directory, where R loads and saves files, e.g. "C:\\USer\\Desktop\\data"
+source("speciesgeocodeR.R") # this loads the speciesgeocodeR package, the speciesgeocodeR.R file must be in the working directory
+
+abu <- AbundanceGrid("SPECIESDATA FILENAME",xlim = c(MIN,MAX), ylim = c(MIN,MAX))
+MapGrid(abu)
+
+
+
+
+
+
+
+
