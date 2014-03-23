@@ -1,2 +1,0 @@
-"Caatinga"	"N_Andes"
-"1"	12	8
