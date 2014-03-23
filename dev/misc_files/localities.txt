@@ -1,0 +1,571 @@
+1	Ivesia aperta	-120.4	39.82	CHSC35943
+2	Ivesia aperta	-120.39	39.81	CHSC88602
+3	Ivesia aperta	-120.37	39.53	UC1137531
+4	Ivesia aperta	-120.36	39.63	UC585121
+5	Ivesia aperta	-120.32	39.69	4
+6	Ivesia aperta	-120.32	39.69	UC1560861
+7	Ivesia aperta	-120.32	39.66	CHSC91808
+8	Ivesia aperta	-120.32	39.69	UC1560862
+9	Ivesia aperta	-120.31	39.65	1
+10	Ivesia aperta	-120.3	39.65	CHSC67130
+11	Ivesia aperta	-120.29	39.68	5
+12	Ivesia aperta	-120.27	39.65	CDA12299
+13	Ivesia aperta	-120.27	39.68	UC1560864
+14	Ivesia aperta	-120.25	39.66	UC1560865
+15	Ivesia aperta	-120.23	40.04	UC1610051
+16	Ivesia aperta	-120.22	40.03	JEPS100321
+17	Ivesia aperta	-120.18	39.92	CDA19272
+18	Ivesia aperta	-120.1	39.65	CHSC67697
+19	Ivesia aperta	-120.09	39.66	CHSC67695
+20	Ivesia aperta	-120.08	39.59	UC477535
+21	Ivesia aperta	-120.06	39.57	UC1585842
+22	Ivesia aperta	-120.05	39.56	JEPS111223
+23	Ivesia aperta	-120.04	39.57	CHSC67696
+24	Ivesia aperta	-120.03	39.57	UC205445
+25	Ivesia aperta	-119.69	40.63	17
+26	Ivesia aperta	-119.54	39.45	14
+1	Ivesia argyrocoma	-117.65	34.3
+2	Ivesia argyrocoma	-117.21	34.24
+3	Ivesia argyrocoma	-117.13	34.28
+4	Ivesia argyrocoma	-117.08	34.02
+5	Ivesia argyrocoma	-116.94	34.28
+6	Ivesia argyrocoma	-116.93	34.3
+7	Ivesia argyrocoma	-116.93	34.27
+8	Ivesia argyrocoma	-116.93	34.24
+9	Ivesia argyrocoma	-116.93	34.26
+10	Ivesia argyrocoma	-116.93	34.31
+11	Ivesia argyrocoma	-116.92	34.3
+12	Ivesia argyrocoma	-116.88	34.25
+13	Ivesia argyrocoma	-116.87	34.3
+14	Ivesia argyrocoma	-116.87	34.26
+15	Ivesia argyrocoma	-116.86	34.3
+16	Ivesia argyrocoma	-116.86	34.24
+17	Ivesia argyrocoma	-116.85	34.24
+18	Ivesia argyrocoma	-116.85	34.3
+19	Ivesia argyrocoma	-116.85	34.31
+20	Ivesia argyrocoma	-116.82	34.23
+21	Ivesia argyrocoma	-116.82	34.3
+22	Ivesia argyrocoma	-116.8	34.25
+23	Ivesia argyrocoma	-116.71	34.21
+24	Ivesia argyrocoma	-116.24	34.2
+25	Ivesia argyrocoma	-116.19	34.83
+1	Ivesia arizonica	-117.63	37.79	
+2	Ivesia arizonica	-116.45	38.05	
+3	Ivesia arizonica	-115.02	36.2	
+4	Ivesia arizonica	-114.88	37.64	
+5	Ivesia arizonica	-113.75	35.71	
+6	Ivesia arizonica	-113.52	37.28	
+7	Ivesia arizonica	-112.36	36.38	Potentilla osterhoutii
+8	Ivesia arizonica	-112.14	36.06	
+9	Ivesia arizonica	-111.93	36.13	
+10	Ivesia arizonica	-111.77	35	
+11	Ivesia arizonica	-111.77	35.84	
+1	Ivesia baileyi	-120.58	40.65		
+2	Ivesia baileyi	-120.35	39.93		
+3	Ivesia baileyi	-120.29	41.55		
+4	Ivesia baileyi	-120.27	41.56		
+5	Ivesia baileyi	-120.25	41.59		
+6	Ivesia baileyi	-120.19	39.88		
+7	Ivesia baileyi	-119.21	43.78	395517	OSC
+8	Ivesia baileyi	-119.14	43.21	328899	OSC
+9	Ivesia baileyi	-119.12	43.42		
+10	Ivesia baileyi	-119.11	43.42	358204	OSC
+11	Ivesia baileyi	-119.05	43.62	357300	OSC
+12	Ivesia baileyi	-119	42.12	318737	OSC
+13	Ivesia baileyi	-119	43.66	367525	OSC
+14	Ivesia baileyi	-118.97	43.07		
+15	Ivesia baileyi	-118.81	43.67	278858	OSC
+16	Ivesia baileyi	-118.76	42.21	328868	OSC
+17	Ivesia baileyi	-118.6	42.65	278860	OSC
+18	Ivesia baileyi	-118.59	43.26	393301	OSC
+19	Ivesia baileyi	-118.59	42.7	369146	OSC
+20	Ivesia baileyi	-118.59	42.61	382395	OSC
+21	Ivesia baileyi	-118.58	42.66	312653	OSC
+22	Ivesia baileyi	-118.57	42.68	384629	OSC
+23	Ivesia baileyi	-118.57	42.63	316665	OSC
+24	Ivesia baileyi	-118.4	40.45		
+25	Ivesia baileyi	-118.12	41.41		
+26	Ivesia baileyi	-117.67	43.14	325158	OSC
+27	Ivesia baileyi	-117.63	43.21		
+28	Ivesia baileyi	-117.63	37.79		
+29	Ivesia baileyi	-117.39	42.08	341973	OSC
+30	Ivesia baileyi	-117.34	42.44	3638	OSC
+31	Ivesia baileyi	-117.32	42.14	335639	OSC
+32	Ivesia baileyi	-117.17	42.2	325156	OSC
+33	Ivesia baileyi	-117.16	42.54	325160	OSC
+34	Ivesia baileyi	-117.16	42.55	372730	OSC
+35	Ivesia baileyi	-117.03	39.95		
+36	Ivesia baileyi	-116.83	38		
+37	Ivesia baileyi	-116.78	42.92	524850	NY
+38	Ivesia baileyi	-116.77	42.48	524395	NY
+39	Ivesia baileyi	-116.7	42.5	523947	NY
+40	Ivesia baileyi	-116.5	38.37		
+41	Ivesia baileyi	-116.45	38.05		
+42	Ivesia baileyi	-116.27	39.98		
+43	Ivesia baileyi	-116.17	42.56		
+44	Ivesia baileyi	-115.54	42.21	525612	NY
+45	Ivesia baileyi	-115.47	43.34		
+46	Ivesia baileyi	-115.35	41.13		
+47	Ivesia baileyi	-114.96	42.54	525108	NY
+48	Ivesia baileyi	-114.9	39.44		
+49	Ivesia baileyi	-114.66	42.35		
+50	Ivesia baileyi	-114.34	40.11		
+51	Ivesia baileyi	-113.18	40.45		
+1	Ivesia cryptocaulis	-115.023	36.2018	http://data.gbif.org/occurrences/32305625	
+2	Ivesia cryptocaulis	-115.680	36.27		Ertter Charleston Peak
+1	Ivesia jaegeri	-116.19	34.83	http://data.gbif.org/occurrences/32305723
+2	Ivesia jaegeri	-115.02	36.2	http://data.gbif.org/occurrences/32305725
+3	Ivesia jaegeri	-115.59	35.54	
+4	Ivesia jaegeri	-115.57	35.53	
+5	Ivesia jaegeri	-115.52	35.52	
+6	Ivesia jaegeri	-115.63	36.25	Cathedral Rock
+7	Ivesia jaegeri	-115.65	35.25	Charleston Park
+8	Ivesia jaegeri	-115.56	36.38	hd Lee Cyn in pass
+9	Ivesia jaegeri	-115.43	36.28	Kyle Cyn
+10	Ivesia jaegeri	-115.6	36.31	Deer Creek
+11	Ivesia jaegeri	-115.66	36.26	Mary Jane Falls
+12	Ivesia jaegeri	-114.95	35.98	Deer Cr Grade 2 mi E Lee Cyn
+13	Ivesia jaegeri	-115.26	36.15	Harris Mt Rd, T20S R57E
+1	Ivesia kingii	-119.69	40.63	http://data.gbif.org/occurrences/32305737
+2	Ivesia kingii	-119.19	39.01	http://data.gbif.org/occurrences/32305734
+3	Ivesia kingii	-118.87	37.91	http://data.gbif.org/occurrences/32305728
+4	Ivesia kingii	-118.8	37.64	
+5	Ivesia kingii	-118.78	37.71	
+6	Ivesia kingii	-118.61	37.94	
+7	Ivesia kingii	-118.6	37.93	
+8	Ivesia kingii	-118.43	38.54	http://data.gbif.org/occurrences/32305735
+9	Ivesia kingii	-117.63	37.79	http://data.gbif.org/occurrences/32305731
+10	Ivesia kingii	-117.48	36.59	http://data.gbif.org/occurrences/32305727
+11	Ivesia kingii	-117.03	39.95	http://data.gbif.org/occurrences/32305733
+12	Ivesia kingii	-116.45	38.05	http://data.gbif.org/occurrences/32305736
+13	Ivesia kingii	-116.36	39.55	http://data.gbif.org/occurrences/60131753
+14	Ivesia kingii	-116.27	39.98	http://data.gbif.org/occurrences/32305732
+15	Ivesia kingii	-115.35	41.13	http://data.gbif.org/occurrences/32305730
+16	Ivesia kingii	-115.28	40.58	http://data.gbif.org/occurrences/60131677
+17	Ivesia kingii	-114.9	39.44	http://data.gbif.org/occurrences/32305738
+18	Ivesia kingii	-113.28	37.86	http://data.gbif.org/occurrences/32305742
+19	Ivesia kingii	-113.23	38.34	http://data.gbif.org/occurrences/32305740
+20	Ivesia kingii	-113.18	40.45	http://data.gbif.org/occurrences/32305746
+21	Ivesia kingii	-112.13	38.34	http://data.gbif.org/occurrences/32305743
+22	Ivesia kingii	-111.8	38.75	http://data.gbif.org/occurrences/32305745
+23	Ivesia kingii	-111.58	39.37	http://data.gbif.org/occurrences/32305744
+24	Ivesia kingii	-111.44	37.87	http://data.gbif.org/occurrences/32305741#####################
+1	Ivesia longibracteata	-122.04	40.76	http://data.gbif.org/occurrences/32305748
+2	Ivesia longibracteata	-122.34	41.19	http://data.gbif.org/occurrences/67206103
+3	Ivesia longibracteata	-122.33	41.17	http://data.gbif.org/occurrences/67206544
+4	Ivesia longibracteata	-121.98	40.98	Ertter, Castle Crags SW of Dunsmuir
+5	Ivesia longibracteata	-122.28	41.15	Ertter, Castle Crag shasta
+1	Ivesia lycopodioides	-120.53	38.78	http://data.gbif.org/occurrences/32305751
+2	Ivesia lycopodioides	-119.9	38.86	http://data.gbif.org/occurrences/67206637
+3	Ivesia lycopodioides	-119.88	38.86	http://data.gbif.org/occurrences/67206205
+4	Ivesia lycopodioides	-119.8	38.58	http://data.gbif.org/occurrences/32305750
+5	Ivesia lycopodioides	-119.69	40.63	http://data.gbif.org/occurrences/32305754
+6	Ivesia lycopodioides	-119.45	37.55	http://data.gbif.org/occurrences/67206427
+7	Ivesia lycopodioides	-119.43	37.67	http://data.gbif.org/occurrences/67206330
+8	Ivesia lycopodioides	-119.38	37.88	http://data.gbif.org/occurrences/67206834
+9	Ivesia lycopodioides	-119.35	38.0	http://data.gbif.org/occurrences/67206329
+10	Ivesia lycopodioides	-119.34	38.01	http://data.gbif.org/occurrences/67206823
+11	Ivesia lycopodioides	-119.34	37.99	http://data.gbif.org/occurrences/67206798
+12	Ivesia lycopodioides	-119.33	37.88	http://data.gbif.org/occurrences/67206815
+13	Ivesia lycopodioides	-119.33	38.12	http://data.gbif.org/occurrences/67206328
+14	Ivesia lycopodioides	-119.32	37.98	http://data.gbif.org/occurrences/67206836
+15	Ivesia lycopodioides	-119.32	37.97	http://data.gbif.org/occurrences/67206821
+16	Ivesia lycopodioides	-119.31	37.95	http://data.gbif.org/occurrences/67206820
+17	Ivesia lycopodioides	-119.3	37.97	http://data.gbif.org/occurrences/67206204
+18	Ivesia lycopodioides	-119.3	38.05	http://data.gbif.org/occurrences/67206331
+19	Ivesia lycopodioides	-119.29	38.41	http://data.gbif.org/occurrences/67206514
+20	Ivesia lycopodioides	-119.26	37.81	http://data.gbif.org/occurrences/67206139
+21	Ivesia lycopodioides	-119.23	37.78	http://data.gbif.org/occurrences/67206751
+22	Ivesia lycopodioides	-119.23	37.9	http://data.gbif.org/occurrences/67206971
+23	Ivesia lycopodioides	-119.22	37.89	http://data.gbif.org/occurrences/67206822
+24	Ivesia lycopodioides	-119.2	37.85	http://data.gbif.org/occurrences/67206199
+25	Ivesia lycopodioides	-119.19	37.83	http://data.gbif.org/occurrences/67206502
+26	Ivesia lycopodioides	-119.19	37.95	http://data.gbif.org/occurrences/67206327
+27	Ivesia lycopodioides	-118.9	37.32	http://data.gbif.org/occurrences/67206364
+28	Ivesia lycopodioides	-118.88	37.47	http://data.gbif.org/occurrences/67206231
+29	Ivesia lycopodioides	-118.87	37.91	http://data.gbif.org/occurrences/32305752
+30	Ivesia lycopodioides	-118.87	37.47	http://data.gbif.org/occurrences/67206179
+31	Ivesia lycopodioides	-118.77	36.56	http://data.gbif.org/occurrences/67206089
+32	Ivesia lycopodioides	-118.77	37.43	http://data.gbif.org/occurrences/67206824
+33	Ivesia lycopodioides	-118.75	37.44	http://data.gbif.org/occurrences/164304055
+34	Ivesia lycopodioides	-118.65	36.37	http://data.gbif.org/occurrences/67206083
+35	Ivesia lycopodioides	-118.52	37.18	http://data.gbif.org/occurrences/67206203
+36	Ivesia lycopodioides	-118.5	37.17	http://data.gbif.org/occurrences/67205972
+37	Ivesia lycopodioides	-118.34	35.88	http://data.gbif.org/occurrences/67206835
+38	Ivesia lycopodioides	-118.25	37.5	http://data.gbif.org/occurrences/67206419
+39	Ivesia lycopodioides	-118.23	37.9	http://data.gbif.org/occurrences/67206202
+40	Ivesia lycopodioides	-118.23	37.56	http://data.gbif.org/occurrences/67206579
+41	Ivesia lycopodioides	-118.34	35.88	UC64293
+42	Ivesia lycopodioides	-118.28	36.28	UCR44176
+43	Ivesia lycopodioides	-118.65	36.37	JEPS44349
+44	Ivesia lycopodioides	-118.23	36.48	RSA509494
+45	Ivesia lycopodioides	-118.22	36.5	UCR54550
+46	Ivesia lycopodioides	-118.77	36.56	JEPS44357
+47	Ivesia lycopodioides	-118.56	37.15	UCR53460
+48	Ivesia lycopodioides	-118.5	37.17	JEPS105039
+49	Ivesia lycopodioides	-118.52	37.18	JEPS91211
+50	Ivesia lycopodioides	-118.9	37.32	UC1215472
+51	Ivesia lycopodioides	-118.77	37.43	UC642913
+52	Ivesia lycopodioides	-118.75	37.44	UCR123401
+53	Ivesia lycopodioides	-118.74	37.44	UC1787279
+54	Ivesia lycopodioides	-118.87	37.46	JEPS87125
+55	Ivesia lycopodioides	-118.88	37.47	JEPS97802
+56	Ivesia lycopodioides	-118.25	37.5	UC1299801
+57	Ivesia lycopodioides	-119.45	37.54	UC1317744
+58	Ivesia lycopodioides	-118.23	37.56	UC1728154
+59	Ivesia lycopodioides	-118.25	37.58	JEPS91210
+60	Ivesia lycopodioides	-119.43	37.67	UC1128222
+61	Ivesia lycopodioides	-119.23	37.78	UC551575
+62	Ivesia lycopodioides	-119.26	37.81	JEPS73594
+63	Ivesia lycopodioides	-119.19	37.83	UC1540213
+64	Ivesia lycopodioides	-119.21	37.84	POM226259
+65	Ivesia lycopodioides	-119.2	37.85	JEPS91106
+66	Ivesia lycopodioides	-119.2	37.86	JEPS44350
+67	Ivesia lycopodioides	-119.28	37.87	SD127419
+68	Ivesia lycopodioides	-119.36	37.87	UCR14756
+69	Ivesia lycopodioides	-119.38	37.88	UC1085302
+70	Ivesia lycopodioides	-119.22	37.89	UC642666
+71	Ivesia lycopodioides	-119.23	37.92	JEPS111271
+72	Ivesia lycopodioides	-119.31	37.95	UC642664
+73	Ivesia lycopodioides	-119.18	37.95	UC1128219
+74	Ivesia lycopodioides	-119.32	37.97	UC642665
+75	Ivesia lycopodioides	-119.32	37.98	UC642932
+76	Ivesia lycopodioides	-119.33	37.99	UC624824
+77	Ivesia lycopodioides	-119.35	38.0	UC1128221
+78	Ivesia lycopodioides	-119.34	38.01	UC642667
+79	Ivesia lycopodioides	-119.3	38.04	UC1928422
+80	Ivesia lycopodioides	-119.3	38.05	UC1128223
+81	Ivesia lycopodioides	-119.33	38.12	UC1128220
+82	Ivesia lycopodioides	-119.29	38.41	UC1559687
+83	Ivesia lycopodioides	-119.88	38.86	JEPS91213
+1	Ivesia multifoliolata	-112.55	34.6	http://data.gbif.org/occurrences/32305758
+2	Ivesia multifoliolata	-111.53	34.67	http://data.gbif.org/occurrences/176028412
+3	Ivesia multifoliolata	-111.32	34.67	http://data.gbif.org/occurrences/176089523
+4	Ivesia multifoliolata	-111.77	35.84	http://data.gbif.org/occurrences/32305757
+5	Ivesia multifoliolata	-111.68	35.34	http://data.gbif.org/occurrences/176028413
+6	Ivesia multifoliolata	-111.65	35.2	http://data.gbif.org/occurrences/176028414
+7	Ivesia multifoliolata	-111.87	35.15	http://data.gbif.org/occurrences/217102347
+8	Ivesia multifoliolata	-112.2	35.18	Bill Williams Mt
+9	Ivesia multifoliolata	-111.45	34.9	nr Mormon Lk
+10	Ivesia multifoliolata	-111.52	35.1	Lake Mary
+11	Ivesia multifoliolata	-111.55	34.72	Apache Maid Mt
+12	Ivesia multifoliolata	-111.68	35.33	San Francisco Mts
+1	Ivesia pygmaea	-118.8	36.23	http://data.gbif.org/occurrences/32305771
+2	Ivesia pygmaea	-118.6	36.62	http://data.gbif.org/occurrences/67207387
+3	Ivesia pygmaea	-118.57	36.39	http://data.gbif.org/occurrences/67207433
+4	Ivesia pygmaea	-118.29	36.58	http://data.gbif.org/occurrences/67207434
+5	Ivesia pygmaea	-118.56	36.41	http://data.gbif.org/occurrences/67207542
+6	Ivesia pygmaea	-118.24	36.48	http://data.gbif.org/occurrences/67207881
+7	Ivesia pygmaea	-118.53	36.56	http://data.gbif.org/occurrences/67207900
+8	Ivesia pygmaea	-118.56	36.46	http://data.gbif.org/occurrences/67207908
+9	Ivesia pygmaea	-118.58	36.56	http://data.gbif.org/occurrences/67207951
+10	Ivesia pygmaea	-120.73	39.07	http://data.gbif.org/occurrences/32305770
+11	Ivesia pygmaea	-119.69	40.63	http://data.gbif.org/occurrences/32305773
+12	Ivesia pygmaea	-118.69	37.12	JEPS27665
+13	Ivesia pygmaea	-118.4	36.7	JEPS44347
+14	Ivesia pygmaea	-118.41	36.76	JEPS44355
+15	Ivesia pygmaea	-118.28	36.5	JEPS50682
+16	Ivesia pygmaea	-118.4	36.67	JEPS50712
+17	Ivesia pygmaea	-118.77	36.56	UC1128225
+18	Ivesia pygmaea	-118.57	36.39	UC114499
+19	Ivesia pygmaea	-118.51	36.56	UC114501
+20	Ivesia pygmaea	-118.48	36.71	UC114502
+21	Ivesia pygmaea	-118.57	36.4	UC114503
+22	Ivesia pygmaea	-118.59	36.45	UC114520
+23	Ivesia pygmaea	-118.73	37.12	UC1215524
+24	Ivesia pygmaea	-118.56	36.41	UC1360422
+25	Ivesia pygmaea	-118.55	36.56	UC1558290
+26	Ivesia pygmaea	-118.26	36.57	UC1728158
+27	Ivesia pygmaea	-118.24	36.48	UC63418
+28	Ivesia pygmaea	-118.53	36.56	UC642660
+29	Ivesia pygmaea	-118.38	36.78	UC642663
+30	Ivesia pygmaea	-118.55	36.46	UC64294
+31	Ivesia pygmaea	-118.67	37.11	UC683216
+32	Ivesia pygmaea	-118.39	36.77	UCR23466
+1	Ivesia rhypara	-119.69	40.63	http://data.gbif.org/occurrences/32305777	
+2	Ivesia rhypara	-119.2	41.8	http://data.gbif.org/occurrences/60131831	
+3	Ivesia rhypara	-118.12	41.41	http://data.gbif.org/occurrences/32305776	
+4	Ivesia rhypara	-115.35	41.13	http://data.gbif.org/occurrences/32305775	
+5	Ivesia rhypara	-123.56	42.36	http://data.gbif.org/occurrences/32305783	
+6	Ivesia rhypara	-122.74	42.42	http://data.gbif.org/occurrences/32305781	
+7	Ivesia rhypara	-120.39	42.79	http://data.gbif.org/occurrences/32305784	
+8	Ivesia rhypara	-119.9	43	http://data.gbif.org/occurrences/51857658	
+9	Ivesia rhypara	-119.9	43.1	http://data.gbif.org/occurrences/51858084	
+10	Ivesia rhypara	-118.97	43.07	http://data.gbif.org/occurrences/32305780	
+11	Ivesia rhypara	-117.2	43.3	http://data.gbif.org/occurrences/51858044	
+12	Ivesia rhypara	-117.27	43.3	http://data.gbif.org/occurrences/51858068	
+13	Ivesia rhypara	-117.3	43.4	http://data.gbif.org/occurrences/51858090	
+14	Ivesia rhypara	-117.63	43.21	http://data.gbif.org/occurrences/32305786	
+15	Ivesia rhypara	-122.53	44.49	http://data.gbif.org/occurrences/32305785	
+16	Ivesia rhypara	-121.17	44.63	http://data.gbif.org/occurrences/32305782	
+17	Ivesia rhypara	-117.67	44.71	http://data.gbif.org/occurrences/32305779	
+18	Ivesia rhypara	-119.94	43.05	534087	NY
+19	Ivesia rhypara	-119.92	43.07	519170	NY
+20	Ivesia rhypara	-117.22	43.31	519193	NY
+21	Ivesia rhypara	-117.2	43.3	536349	NY
+22	Ivesia rhypara	-119.9	43	537427	NY
+23	Ivesia rhypara	-119.86	42.98	536108	NY
+24	Ivesia rhypara	-117.24	43.31	537193	NY
+25	Ivesia rhypara	-117.26	43.28	537153	NY
+26	Ivesia rhypara	-117.26	43.44	537171	NY
+27	Ivesia rhypara	-117.27	43.3	6321	OSC
+28	Ivesia rhypara	-117.3	43.4	327406	OSC
+29	Ivesia rhypara	-119.9	43.1	329376	OSC
+1	Ivesia sabulosa	-116.45	38.05	http://data.gbif.org/occurrences/32305793
+2	Ivesia sabulosa	-116.27	39.98	http://data.gbif.org/occurrences/32305791
+3	Ivesia sabulosa	-115.02	36.2	http://data.gbif.org/occurrences/32305790
+4	Ivesia sabulosa	-114.9	39.44	http://data.gbif.org/occurrences/32305794
+5	Ivesia sabulosa	-114.88	37.64	http://data.gbif.org/occurrences/32305792
+6	Ivesia sabulosa	-113.86	38.27	http://data.gbif.org/occurrences/57035008
+7	Ivesia sabulosa	-113.57	36.35	http://data.gbif.org/occurrences/118801958
+8	Ivesia sabulosa	-113.52	37.28	http://data.gbif.org/occurrences/32305802
+9	Ivesia sabulosa	-113.28	37.86	http://data.gbif.org/occurrences/32305798
+10	Ivesia sabulosa	-113.23	38.34	http://data.gbif.org/occurrences/32305796
+11	Ivesia sabulosa	-113.11	39.05	http://data.gbif.org/occurrences/32305800
+12	Ivesia sabulosa	-112.68	37.52	http://data.gbif.org/occurrences/57035723
+13	Ivesia sabulosa	-112.29	37.74	http://data.gbif.org/occurrences/57034978
+14	Ivesia sabulosa	-112.25	37.17	http://data.gbif.org/occurrences/60131811
+15	Ivesia sabulosa	-111.89	37.29	http://data.gbif.org/occurrences/32305799
+16	Ivesia sabulosa	-111.83	36.84	http://data.gbif.org/occurrences/118686939
+17	Ivesia sabulosa	-111.8	38.75	http://data.gbif.org/occurrences/32305801
+18	Ivesia sabulosa	-111.77	35.84	http://data.gbif.org/occurrences/32305788
+19	Ivesia sabulosa	-111.44	37.87	http://data.gbif.org/occurrences/32305797
+1	Ivesia santolinoides	-116.19	34.83	http://data.gbif.org/occurrences/32305807
+2	Ivesia santolinoides	-118.73	35.34	http://data.gbif.org/occurrences/32305806
+3	Ivesia santolinoides	-118.29	35.83	http://data.gbif.org/occurrences/67207787
+4	Ivesia santolinoides	-118.37	35.82	http://data.gbif.org/occurrences/67207883
+5	Ivesia santolinoides	-118.8	36.23	http://data.gbif.org/occurrences/32305808
+6	Ivesia santolinoides	-118.27	36.43	http://data.gbif.org/occurrences/67207444
+7	Ivesia santolinoides	-118.77	36.58	http://data.gbif.org/occurrences/67207509
+8	Ivesia santolinoides	-118.65	36.37	http://data.gbif.org/occurrences/67207543
+9	Ivesia santolinoides	-118.15	36.45	http://data.gbif.org/occurrences/67207656
+10	Ivesia santolinoides	-118.25	36.57	http://data.gbif.org/occurrences/67207669
+11	Ivesia santolinoides	-118.65	36.58	http://data.gbif.org/occurrences/67207969
+12	Ivesia santolinoides	-118.61	36.85	http://data.gbif.org/occurrences/67208035
+13	Ivesia santolinoides	-119.08	37.17	http://data.gbif.org/occurrences/67207075
+14	Ivesia santolinoides	-119.19	37.3	http://data.gbif.org/occurrences/67207131
+15	Ivesia santolinoides	-119.38	37.88	http://data.gbif.org/occurrences/67207133
+16	Ivesia santolinoides	-119.29	37.36	http://data.gbif.org/occurrences/67207144
+17	Ivesia santolinoides	-119.2	37.24	http://data.gbif.org/occurrences/67207148
+18	Ivesia santolinoides	-119.16	37.11	http://data.gbif.org/occurrences/67207281
+19	Ivesia santolinoides	-119.41	37.25	http://data.gbif.org/occurrences/67207388
+20	Ivesia santolinoides	-119.52	37.57	http://data.gbif.org/occurrences/67207391
+21	Ivesia santolinoides	-119.43	37.25	http://data.gbif.org/occurrences/67207873
+22	Ivesia santolinoides	-119.45	37.97	http://data.gbif.org/occurrences/67207878
+23	Ivesia santolinoides	-119.36	37.06	http://data.gbif.org/occurrences/67207911
+24	Ivesia santolinoides	-118.91	37.35	http://data.gbif.org/occurrences/67207527
+25	Ivesia santolinoides	-120.53	38.78	http://data.gbif.org/occurrences/32305805
+26	Ivesia santolinoides	-120.01	38.8	http://data.gbif.org/occurrences/67207161
+27	Ivesia santolinoides	-120.07	38.84	http://data.gbif.org/occurrences/67207231
+28	Ivesia santolinoides	-120.2	38.85	http://data.gbif.org/occurrences/67207232
+29	Ivesia santolinoides	-120.13	38.66	http://data.gbif.org/occurrences/67207392
+30	Ivesia santolinoides	-120.09	38.81	http://data.gbif.org/occurrences/67207393
+31	Ivesia santolinoides	-120.08	38.84	http://data.gbif.org/occurrences/67207500
+32	Ivesia santolinoides	-120.16	38.85	http://data.gbif.org/occurrences/67207824
+33	Ivesia santolinoides	-120.02	38.85	http://data.gbif.org/occurrences/67207865
+34	Ivesia santolinoides	-120.26	38.58	http://data.gbif.org/occurrences/67207890
+35	Ivesia santolinoides	-120.12	38.66	http://data.gbif.org/occurrences/67207926
+36	Ivesia santolinoides	-120.04	38.83	http://data.gbif.org/occurrences/67207976
+37	Ivesia santolinoides	-120.22	38.89	http://data.gbif.org/occurrences/67207979
+38	Ivesia santolinoides	-120.05	38.85	http://data.gbif.org/occurrences/67208036
+39	Ivesia santolinoides	-120.12	38.81	http://data.gbif.org/occurrences/67208046
+40	Ivesia santolinoides	-119.8	38.58	http://data.gbif.org/occurrences/32305804
+41	Ivesia santolinoides	-119.75	38.31	http://data.gbif.org/occurrences/67207142
+42	Ivesia santolinoides	-119.99	38.69	http://data.gbif.org/occurrences/67207234
+43	Ivesia santolinoides	-119.63	38.09	http://data.gbif.org/occurrences/67207317
+44	Ivesia santolinoides	-119.61	38.07	http://data.gbif.org/occurrences/67207321
+45	Ivesia santolinoides	-119.87	38.2	http://data.gbif.org/occurrences/67207390
+46	Ivesia santolinoides	-119.78	38.23	http://data.gbif.org/occurrences/67207394
+47	Ivesia santolinoides	-119.76	38.11	http://data.gbif.org/occurrences/67207395
+48	Ivesia santolinoides	-119.85	38.55	http://data.gbif.org/occurrences/67207919
+49	Ivesia santolinoides	-119.84	38.28	http://data.gbif.org/occurrences/67207989
+50	Ivesia santolinoides	-119.9	38.52	JEPS30860
+51	Ivesia santolinoides	-118.34	35.46	JEPS39417
+52	Ivesia santolinoides	-119.46	38.02	JEPS44478
+53	Ivesia santolinoides	-119.29	37.35	JEPS44489
+54	Ivesia santolinoides	-119.08	37.63	JEPS44490
+55	Ivesia santolinoides	-120.01	38.86	JEPS44492
+56	Ivesia santolinoides	-118.71	36.66	JEPS44494
+57	Ivesia santolinoides	-120.07	38.86	JEPS71905
+1	Ivesia saxosa	-118.73	35.34	http://data.gbif.org/occurrences/32305811
+2	Ivesia saxosa	-118.63	37.51	
+3	Ivesia saxosa	-118.33	37.64	
+4	Ivesia saxosa	-118.25	37.5	http://data.gbif.org/occurrences/67207534
+5	Ivesia saxosa	-118.09	37.38	http://data.gbif.org/occurrences/67207596
+6	Ivesia saxosa	-118.09	37.43	http://data.gbif.org/occurrences/67207531
+7	Ivesia saxosa	-118.08	37.38	
+8	Ivesia saxosa	-118.08	37.43	
+9	Ivesia saxosa	-118	35.74	
+10	Ivesia saxosa	-117.48	36.59	http://data.gbif.org/occurrences/32305810
+11	Ivesia saxosa	-117.06	34.39	
+12	Ivesia saxosa	-116.88	34.3	
+13	Ivesia saxosa	-116.78	34.29	
+14	Ivesia saxosa	-116.77	33.02	http://data.gbif.org/occurrences/32305814
+15	Ivesia saxosa	-116.29	32.62	
+16	Ivesia saxosa	-116.27	32.66	
+17	Ivesia saxosa	-116.19	34.83	http://data.gbif.org/occurrences/32305813
+18	Ivesia saxosa	-115.98	33.73	http://data.gbif.org/occurrences/32305812
+19	Ivesia saxosa	-115.9	35.75	
+20	Ivesia saxosa	-115.67	34.83	
+1	Ivesia sericoleuca	-120.83	40.01	http://data.gbif.org/occurrences/32305819
+2	Ivesia sericoleuca	-120.77	39.3	http://data.gbif.org/occurrences/32305817
+3	Ivesia sericoleuca	-120.73	39.07	http://data.gbif.org/occurrences/32305818
+4	Ivesia sericoleuca	-120.58	40.65	http://data.gbif.org/occurrences/32305816
+5	Ivesia sericoleuca	-120.57	40.3	
+6	Ivesia sericoleuca	-120.5	39.59	http://data.gbif.org/occurrences/32305820
+7	Ivesia sericoleuca	-120.49	39.81	
+8	Ivesia sericoleuca	-120.44	39.63	http://data.gbif.org/occurrences/67207958
+9	Ivesia sericoleuca	-120.42	39.69	http://data.gbif.org/occurrences/67207686
+10	Ivesia sericoleuca	-120.41	39.66	
+11	Ivesia sericoleuca	-120.39	39.81	
+12	Ivesia sericoleuca	-120.39	39.82	
+13	Ivesia sericoleuca	-120.38	39.81	
+14	Ivesia sericoleuca	-120.38	39.59	
+15	Ivesia sericoleuca	-120.38	39.81	http://data.gbif.org/occurrences/67207848
+16	Ivesia sericoleuca	-120.37	39.77	
+17	Ivesia sericoleuca	-120.24	39.43	
+18	Ivesia sericoleuca	-120.23	39.44	
+19	Ivesia sericoleuca	-120.17	39.34	http://data.gbif.org/occurrences/67207619
+20	Ivesia sericoleuca	-120.15	39.34	
+21	Ivesia sericoleuca	-120.12	39.35	
+22	Ivesia sericoleuca	-119.69	40.63	http://data.gbif.org/occurrences/32305823
+23	Ivesia sericoleuca	-119.54	39.45	http://data.gbif.org/occurrences/32305822
+1	Ivesia setosa	-120.58	40.65	Ivesia baileyi
+2	Ivesia setosa	-120.29	41.55	Ivesia baileyi
+3	Ivesia setosa	-120.25	41.59	Ivesia baileyi
+4	Ivesia setosa	-119.21	43.78	Ivesia baileyi
+5	Ivesia setosa	-119.14	43.21	Ivesia baileyi
+6	Ivesia setosa	-119.12	43.42	Ivesia baileyi
+7	Ivesia setosa	-119.05	43.62	Ivesia baileyi
+8	Ivesia setosa	-119	43.66	Ivesia baileyi
+9	Ivesia setosa	-119	42.12	Ivesia baileyi
+10	Ivesia setosa	-118.97	43.07	Ivesia baileyi
+11	Ivesia setosa	-118.81	43.67	Ivesia baileyi
+12	Ivesia setosa	-118.76	42.21	Ivesia baileyi
+13	Ivesia setosa	-118.6	42.65	Ivesia baileyi
+14	Ivesia setosa	-118.59	42.61	Ivesia baileyi
+15	Ivesia setosa	-118.59	43.26	Ivesia baileyi
+16	Ivesia setosa	-118.58	42.66	Ivesia baileyi
+17	Ivesia setosa	-118.57	42.68	Ivesia baileyi
+18	Ivesia setosa	-118.57	42.63	Ivesia baileyi
+19	Ivesia setosa	-118.4	40.45	Ivesia baileyi
+20	Ivesia setosa	-118.12	41.41	Ivesia baileyi
+21	Ivesia setosa	-117.67	43.14	Ivesia baileyi
+22	Ivesia setosa	-117.63	43.21	Ivesia baileyi
+23	Ivesia setosa	-117.63	37.79	Ivesia baileyi
+24	Ivesia setosa	-117.39	42.08	Ivesia baileyi
+25	Ivesia setosa	-117.34	42.44	Ivesia baileyi
+26	Ivesia setosa	-117.32	42.14	Ivesia baileyi
+27	Ivesia setosa	-117.17	42.2	Ivesia baileyi
+28	Ivesia setosa	-117.16	42.55	Ivesia baileyi
+29	Ivesia setosa	-117.16	42.54	Ivesia baileyi
+30	Ivesia setosa	-117.03	39.95	Ivesia baileyi
+31	Ivesia setosa	-116.83	38	Ivesia setosa
+32	Ivesia setosa	-116.5	38.37	Ivesia setosa
+33	Ivesia setosa	-116.45	38.05	Ivesia baileyi
+34	Ivesia setosa	-116.27	39.98	Ivesia baileyi
+35	Ivesia setosa	-116.17	42.56	Ivesia baileyi
+36	Ivesia setosa	-115.47	43.34	Ivesia baileyi
+37	Ivesia setosa	-115.35	41.13	Ivesia baileyi
+38	Ivesia setosa	-114.9	39.44	Ivesia baileyi
+39	Ivesia setosa	-114.66	42.35	Ivesia baileyi
+40	Ivesia setosa	-114.34	40.11	Ivesia setosa (S. Wats.) Rydb.
+41	Ivesia setosa	-113.18	40.45	Ivesia baileyi
+1	Ivesia shockleyi	-122.02	37.26	JEPS44165	
+2	Ivesia shockleyi	-120.73	39.07	http://data.gbif.org/occurrences/32305826	
+3	Ivesia shockleyi	-120.39	42.79	http://data.gbif.org/occurrences/32305838	
+4	Ivesia shockleyi	-120.12	42.3	http://data.gbif.org/occurrences/51858082	
+5	Ivesia shockleyi	-119.69	40.63	http://data.gbif.org/occurrences/32305835	
+6	Ivesia shockleyi	-119.58	38.4	JEPS100653	
+7	Ivesia shockleyi	-119.28	38.09	http://data.gbif.org/occurrences/67207396	
+8	Ivesia shockleyi	-119.27	38.05	http://data.gbif.org/occurrences/67207678	
+9	Ivesia shockleyi	-119.03	37.61	JEPS87088	
+10	Ivesia shockleyi	-118.9	37.57	JEPS104887	
+11	Ivesia shockleyi	-118.87	37.91	http://data.gbif.org/occurrences/32305825	
+12	Ivesia shockleyi	-118.71	37.77	RSA699945	
+13	Ivesia shockleyi	-118.43	38.54	http://data.gbif.org/occurrences/32305833	
+14	Ivesia shockleyi	-118.25	37.5	UC1300279	
+15	Ivesia shockleyi	-118.21	37.57	http://data.gbif.org/occurrences/67207529	
+16	Ivesia shockleyi	-118.16	37.38	http://data.gbif.org/occurrences/67207592	
+17	Ivesia shockleyi	-118.12	41.41	http://data.gbif.org/occurrences/32305831	
+18	Ivesia shockleyi	-117.63	37.79	http://data.gbif.org/occurrences/32305829	
+19	Ivesia shockleyi	-117.31	42.13	http://data.gbif.org/occurrences/63856846	
+20	Ivesia shockleyi	-117.03	39.95	http://data.gbif.org/occurrences/32305832	
+21	Ivesia shockleyi	-116.45	38.05	http://data.gbif.org/occurrences/32305834	
+22	Ivesia shockleyi	-116.27	39.98	http://data.gbif.org/occurrences/32305830	
+23	Ivesia shockleyi	-115.35	41.13	http://data.gbif.org/occurrences/32305828	
+24	Ivesia shockleyi	-114.9	39.44	http://data.gbif.org/occurrences/32305836	
+25	Ivesia shockleyi	-113.23	38.34	http://data.gbif.org/occurrences/32305840	
+26	Ivesia shockleyi	-117.31	42.13	333405	OSC
+27	Ivesia shockleyi	-120.12	42.3	324296	OSC
+1	Ivesia tweedyi	-121.58	46.95	http://data.gbif.org/occurrences/70522684	
+2	Ivesia tweedyi	-121.25	46.79	http://data.gbif.org/occurrences/70522844	
+3	Ivesia tweedyi	-120.9	47.42	http://data.gbif.org/occurrences/70523688	
+4	Ivesia tweedyi	-120.85	47.98	http://data.gbif.org/occurrences/70523672	
+5	Ivesia tweedyi	-120.74	46.46	http://data.gbif.org/occurrences/32305851	
+6	Ivesia tweedyi	-120.68	47.12	http://data.gbif.org/occurrences/32305848	
+7	Ivesia tweedyi	-120.64	47.88	http://data.gbif.org/occurrences/32305847	
+8	Ivesia tweedyi	-120.31	47.39	http://data.gbif.org/occurrences/70522840	
+9	Ivesia tweedyi	-117.85	48.4	http://data.gbif.org/occurrences/32305850	
+10	Ivesia tweedyi	-117.28	48.53	http://data.gbif.org/occurrences/32305849	
+11	Ivesia tweedyi	-116.45	48.79	http://data.gbif.org/occurrences/32305842	
+12	Ivesia tweedyi	-115.89	47.35	http://data.gbif.org/occurrences/32305844	
+13	Ivesia tweedyi	-115.46	45.85	http://data.gbif.org/occurrences/32305843	
+14	Ivesia tweedyi	-121.25	46.79	24155	UWBM
+15	Ivesia tweedyi	-121.58	46.95	4558	UWBM
+16	Ivesia tweedyi	-120.87	47.16	153839	UWBM
+17	Ivesia tweedyi	-120.83	47.18	579769	UWBM
+18	Ivesia tweedyi	-120.99	47.18	153835	UWBM
+19	Ivesia tweedyi	-120.88	47.25	24152	UWBM
+20	Ivesia tweedyi	-120.88	47.37	153736	UWBM
+21	Ivesia tweedyi	-120.31	47.39	24151	UWBM
+22	Ivesia tweedyi	-120.88	47.39	153719	UWBM
+23	Ivesia tweedyi	-120.71	47.41	153735	UWBM
+24	Ivesia tweedyi	-120.9	47.42	153848	UWBM
+25	Ivesia tweedyi	-120.85	47.98	153743	UWBM
+26	Ivesia tweedyi	-117.3	48.34	153712	UWBM
+27	Ivesia tweedyi	-117.5	48.44	24154	UWBM
+28	Ivesia tweedyi	-117.3	48.34	http://data.gbif.org/occurrences/70523652	
+29	Ivesia tweedyi	-117.5	48.44	http://data.gbif.org/occurrences/70522843	
+30	Ivesia tweedyi	-120.71	47.41	http://data.gbif.org/occurrences/70523667	
+31	Ivesia tweedyi	-120.83	47.18	http://data.gbif.org/occurrences/164352456	
+32	Ivesia tweedyi	-120.87	47.16	http://data.gbif.org/occurrences/70523684	
+33	Ivesia tweedyi	-120.88	47.39	http://data.gbif.org/occurrences/70523658	
+34	Ivesia tweedyi	-120.88	47.25	http://data.gbif.org/occurrences/70522841	
+35	Ivesia tweedyi	-120.88	47.37	http://data.gbif.org/occurrences/70523655	
+36	Ivesia tweedyi	-120.99	47.18	http://data.gbif.org/occurrences/70523682	
+1	Ivesia unguiculata	-120.77	39.3	http://data.gbif.org/occurrences/32305856
+2	Ivesia unguiculata	-119.91	37.58	http://data.gbif.org/occurrences/32305855
+3	Ivesia unguiculata	-119.77	37.22	http://data.gbif.org/occurrences/32305854
+4	Ivesia unguiculata	-119.65	36.75	http://data.gbif.org/occurrences/32305853
+5	Ivesia unguiculata	-119.36	37.06	http://data.gbif.org/occurrences/67207910
+6	Ivesia unguiculata	-119.34	37.5	http://data.gbif.org/occurrences/67207675
+7	Ivesia unguiculata	-119.32	37.1	
+8	Ivesia unguiculata	-119.3	37.48	http://data.gbif.org/occurrences/67207568
+9	Ivesia unguiculata	-119.28	37.53	http://data.gbif.org/occurrences/67207139
+10	Ivesia unguiculata	-119.25	37.54	http://data.gbif.org/occurrences/67207270
+11	Ivesia unguiculata	-119.25	37.54	UC1731621
+12	Ivesia unguiculata	-119.23	37.09	JEPS44472
+13	Ivesia unguiculata	-119.21	37.25	JEPS44473
+14	Ivesia unguiculata	-118.97	37.38	http://data.gbif.org/occurrences/67207960
+15	Ivesia unguiculata	-118.94	36.8	SBBG11595
+1	Ivesia utahensis	-111.93	40.67	http://data.gbif.org/occurrences/32305858
+2	Ivesia utahensis	-111.67	40.12	http://data.gbif.org/occurrences/32305860
+3	Ivesia utahensis	-111.16	40.33	http://data.gbif.org/occurrences/32305861
+4	Ivesia utahensis	-111.64	40.56	http://data.gbif.org/occurrences/60131827
+5	Ivesia utahensis	-111.63	40.58	http://data.gbif.org/occurrences/211295791
+6	Ivesia utahensis	-110.9	40.68	http://data.gbif.org/occurrences/57035522
+7	Ivesia utahensis	-110.97	40.88	http://data.gbif.org/occurrences/32305859
+8	Ivesia utahensis	-111.92	41.3	http://data.gbif.org/occurrences/32305862
+9	Ivesia utahensis	-111.78	40.57	Eriksen
+10	Ivesia utahensis	-111.61	40.55	Ertter, hd Mineral Basin, T3S R3E S18
+1	Ivesia webberi	-119.61	38.92	http://data.gbif.org/occurrences/32305867
+2	Ivesia webberi	-120.5	39.59	http://data.gbif.org/occurrences/32305865
+3	Ivesia webberi	-120.19	39.76	http://data.gbif.org/occurrences/67207597
+4	Ivesia webberi	-120.03	39.63	http://data.gbif.org/occurrences/67207620
+5	Ivesia webberi	-120.83	40.01	http://data.gbif.org/occurrences/32305864
+6	Ivesia webberi	-119.69	40.63	http://data.gbif.org/occurrences/32305868
+7	Ivesia webberi	-120.01	39.94	
+8	Ivesia webberi	-120.03	39.63	
+9	Ivesia webberi	-119.9	39.6	Ertter, 8 mi NW of Reno
+10	Ivesia webberi	-120.42	39.48	Ertter, Webber Lake

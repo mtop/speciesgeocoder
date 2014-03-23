@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#   Copyright (C) 2013 Mats Töpel.
+#   Copyright (C) 2014 Mats Töpel.
 #
 #   Citation: If you use this version of the program, please cite;
-#   Mats Töpel (2013) Open Laboratory Notebook. www.matstopel.se
+#   Mats Töpel (2014) Open Laboratory Notebook. www.matstopel.se
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -52,7 +52,12 @@ class Geotiff(object):
 		return "MinX: ", self.minx(), "MaxX: ", self.maxx(), "MinY: ", self.miny(), "MaxY: ", self.maxy()
 
 	def get_elevation(self, lon, lat):
-		elevation = subprocess.check_output(["gdallocationinfo", "-valonly", "-wgs84", self.tiffile, lon, lat])
+		from os.path import abspath, dirname, join
+		if sys.platform.startswith('linux2'):
+			binary = abspath(join(dirname(__file__), "../bin/gdallocationinfo_linux2"))
+		if sys.platform.startswith('darwin'):
+			binary = abspath(join(dirname(__file__), "../bin/gdallocationinfo_darwin"))
+		elevation = subprocess.check_output([binary, "-valonly", "-wgs84", self.tiffile, lon, lat])
 		return int(elevation)	
 
 	
@@ -74,7 +79,7 @@ def indexTiffs(infiles):
 			# Extract maxX
 			tifFiles[tif].append(tifObj.maxx())		# [1]
 			# Extract minY
-			tifFiles[tif].append(tifObj.miny())     # [2]
+			tifFiles[tif].append(tifObj.miny())     	# [2]
 			# Extract maxY
 			tifFiles[tif].append(tifObj.maxy())		# [3]
 	sys.stderr.write("\n")

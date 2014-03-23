@@ -1,0 +1,51 @@
+# Description of this directory: The dev/ directory contains files 
+# used or produced during the development of SpeciesGeoCoder. 
+# Non of these files will be included in releases of the code.
+
+### PROJ.4 ###
+# XX can be downloaded from:
+# ftp://ftp.remotesensing.org/proj
+
+$ wget ftp://ftp.remotesensing.org/proj/proj-4.9.0b2.tar.gz
+$ gunzip proj-4.9.0b2.tar.gz
+$ tar xvf proj-4.9.0b2.tar
+$ cd proj-4.9.0
+$ ./configure
+$ make
+$ export PROJ4_ROOT=$PWD
+
+# The proj.4 library will be created in src/.
+
+
+### GDAL ###
+# The GDAL source code can be downloade from:
+# http://download.osgeo.org/gdal/
+
+$ wget http://download.osgeo.org/gdal/1.10.1/gdal-1.10.1.tar.gz
+$ gunzip gdal-1.10.1.tar.gz
+$ tar xvf gdal-1.10.1.tar
+$ cd gdal-1.10.1
+#$ ./configure --without-ld-shared --disable-shared --enable-static
+$ ./configure --disable-shared --with-static-proj4=$PROJ4_ROOT
+$ make
+
+# On linux
+$ mv apps/gdalinfo apps/gdalinfo_linux2
+$ mv apps/gdallocationinfo apps/gdallocationinfo_linux2
+	or
+# On Mac OSX
+$ mv apps/gdalinfo apps/gdalinfo_darwin
+$ mv apps/gdallocationinfo apps/gdallocationinfo_darwin
+
+# Move the two binaries "gdalinfo_XXXX" and "gdallocationinfo_XXXX" 
+# to the bin/ directory of SpeciesGeoCoder.
+
+
+
+### Elevation data
+# NOTE: The 30 m. resolution datasets seems to contain wrong elevation data. 
+# DO NOT USE YET. FOr more info. see issue #40.
+#
+# 30 m. resolution data (geotif-files):
+# Download instructions: http://gdem.ersdac.jspacesystems.or.jp/feature.jsp
+# Download site: http://gdem.ersdac.jspacesystems.or.jp/search.jsp

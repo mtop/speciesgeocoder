@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#	Copyright (C) 2013 Mats Töpel. 
+#	Species locality data + polygons -> nexus file 
+#
+#	Copyright (C) 2014 Mats Töpel. mats.topel@bioenv.gu.se
 #
 #	Citation: If you use this version of the program, please cite;
-#	Mats Töpel (2013) Open Laboratory Notebook. www.matstopel.se
+#	Mats Töpel (2014) Open Laboratory Notebook. www.matstopel.se
 #
 #	This program is free software: you can redistribute it and/or modify
 #	it under the terms of the GNU General Public License as published by
@@ -70,12 +72,12 @@ class Polygons(object):
 			try:
 				if splitline[2]:
 					if "-" in splitline[2]:
-						low = splitline[2].split("-")[0]
-						high = splitline[2].split("-")[1]
+						low = splitline[2].split("-")[0].rstrip("\n")
+						high = splitline[2].split("-")[1].rstrip("\n")
 					if ">" in splitline[2]:
-						low = splitline[2].split(">")[1]
+						low = splitline[2].split(">")[1].rstrip("\n")
 					if "<" in splitline[2]:
-						high = splitline[2].split("<")[1]
+						high = splitline[2].split("<")[1].rstrip("\n")
 			except:
 				low = None
 				hight = None
@@ -366,18 +368,22 @@ def elevationTest(lat, lon, polygon, index):
 #		return True	
 	if correct_file:
 
+
 		new_tiff = Geotiff(correct_file)
-		elevation = new_tiff.get_elevation(lon, lat)
+		elevation = new_tiff.get_elevation(lon.rstrip("\n"), lat.rstrip("\n"))
 
 		if not polygon[2]:
 			low = -1000					# A really low elevation.
 		else:
 			low = int(polygon[2])
 		if not polygon[3]:
-			high = -1000				# A really low elevation.
+			high = 10000					# A really high elevation.
 		else:
 			high = int(polygon[3])
 		return (low < elevation and elevation < high)
+	else:
+		# Notify the user that no elevation data is available for a locality.
+		sys.stderr.write("[ Warning ] No elevation data available for locality %s, %s\n" % (lon.rstrip("\n"), lat.rstrip("\n")))
 	
 def main():
 	# Create list to store the geotif objects in.
