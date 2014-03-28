@@ -984,7 +984,7 @@ MapDiversity <- function(x, scale, leg = "continuous", lim = "polygons", show.oc
   box("plot")
   if(leg == "continuous"){
     par(mar = c(5,1,5,3))
-        ifelse(max(plotpoly$sp.count) < 25, leng <- max(plotpoly$sp.count),11)
+        ifelse(max(plotpoly$sp.count) < 25, leng <- max(plotpoly$sp.count),leng <- 11)
     ticks <- round(seq(min(plotpoly$sp.count), max(plotpoly$sp.count), len = leng),0)
     scale <- (length(colo$num) - 1) / (max(plotpoly$sp.count) - min(plotpoly$sp.count))
     plot(c(0,10), c(min(plotpoly$sp.count),max(plotpoly$sp.count)), 

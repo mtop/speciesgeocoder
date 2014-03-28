@@ -1,0 +1,2 @@
+"Cascade.range"	"Coastal.California"	"Colorado.Plateau"	"Great.Basin"	"Mojave.Desert"	"Northern.rockies.and.Idaho.batholith"	"Sierra.Nevada"
+"1"	2	2	6	14	4	3	11

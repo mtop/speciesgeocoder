@@ -1,0 +1,23 @@
+"identifier"	"Cascade range"	"Coastal California"	"Colorado Plateau"	"Great Basin"	"Mojave Desert"	"Northern rockies and Idaho batholith"	"Sierra Nevada"
+"1"	"Ivesia aperta"	0	0	0	25	0	0	1
+"2"	"Ivesia argyrocoma"	0	0	0	0	25	0	0
+"3"	"Ivesia arizonica"	0	0	7	4	0	0	0
+"4"	"Ivesia baileyi"	0	0	0	50	0	1	0
+"5"	"Ivesia cryptocaulis"	0	0	2	0	0	0	0
+"6"	"Ivesia jaegeri"	0	0	12	0	1	0	0
+"7"	"Ivesia kingii"	0	0	0	23	0	0	1
+"8"	"Ivesia longibracteata"	0	0	0	0	0	0	5
+"9"	"Ivesia lycopodioides"	0	0	0	10	0	0	73
+"10"	"Ivesia multifoliolata"	0	0	12	0	0	0	0
+"11"	"Ivesia pygmaea"	0	0	0	1	0	0	31
+"12"	"Ivesia rhypara"	3	0	0	26	0	0	0
+"13"	"Ivesia sabulosa"	0	0	3	16	0	0	0
+"14"	"Ivesia santolinoides"	0	0	0	0	1	0	56
+"15"	"Ivesia saxosa"	0	0	1	7	9	0	2
+"16"	"Ivesia sericoleuca"	0	0	0	15	0	0	8
+"17"	"Ivesia setosa"	0	0	0	40	0	1	0
+"18"	"Ivesia shockleyi"	0	1	0	20	0	0	6
+"19"	"Ivesia tweedyi"	27	0	0	0	0	9	0
+"20"	"Ivesia unguiculata"	0	1	0	0	0	0	14
+"21"	"Ivesia utahensis"	0	0	0	10	0	0	0
+"22"	"Ivesia webberi"	0	0	0	7	0	0	3
