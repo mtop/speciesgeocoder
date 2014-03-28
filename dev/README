@@ -6,13 +6,14 @@
 # XX can be downloaded from:
 # ftp://ftp.remotesensing.org/proj
 
-$ wget ftp://ftp.remotesensing.org/proj/proj-4.9.0b2.tar.gz
-$ gunzip proj-4.9.0b2.tar.gz
-$ tar xvf proj-4.9.0b2.tar
-$ cd proj-4.9.0
-$ ./configure
-$ make
-$ export PROJ4_ROOT=$PWD
+wget ftp://ftp.remotesensing.org/proj/proj-4.9.0b2.tar.gz
+gunzip proj-4.9.0b2.tar.gz
+tar xvf proj-4.9.0b2.tar
+cd proj-4.9.0
+mkdir install_proj
+./configure --prefix=$PWD/install_proj
+make clear install
+export PROJ4_ROOT=$PWD/install_proj
 
 # The proj.4 library will be created in src/.
 
@@ -21,13 +22,12 @@ $ export PROJ4_ROOT=$PWD
 # The GDAL source code can be downloade from:
 # http://download.osgeo.org/gdal/
 
-$ wget http://download.osgeo.org/gdal/1.10.1/gdal-1.10.1.tar.gz
-$ gunzip gdal-1.10.1.tar.gz
-$ tar xvf gdal-1.10.1.tar
-$ cd gdal-1.10.1
-#$ ./configure --without-ld-shared --disable-shared --enable-static
-$ ./configure --disable-shared --with-static-proj4=$PROJ4_ROOT
-$ make
+wget http://download.osgeo.org/gdal/1.10.1/gdal-1.10.1.tar.gz
+gunzip gdal-1.10.1.tar.gz
+tar xvf gdal-1.10.1.tar
+cd gdal-1.10.1
+./configure --disable-shared --with-static-proj4=$PROJ4_ROOT
+make
 
 # On linux
 $ mv apps/gdalinfo apps/gdalinfo_linux2
