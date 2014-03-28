@@ -1,0 +1,11 @@
+# Cygwin - Packagaes to install
+Interpreters/python
+Editors/vim
+Devel/gcc-core
+Devel/gcc-g++
+Devel/git
+Devel/make
+Net/openssh
+Net/wget
+Science/R
+X11/xinit
