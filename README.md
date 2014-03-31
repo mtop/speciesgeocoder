@@ -1,18 +1,10 @@
 geocoder
 ========
-Short description:
-Species locality data + polygons -> nexus file.
 
-Longer description:
-geocoder.py is a program written in Python that takes one file
-containing polygons, and one file with species locality data
-as input. The program then tests if a species have been recorded
-inside any of the polygons. The result is presented as a nexus-
-file with "0" indicating absence, and "1" indicating pressence
-in a polygon.
+SpeciesGeoCoder is an open-source software package written in Python and R, that utilise the GDAL library (http://www.gdal.org/) for fast analysis of geoTIFF files, which allows for the easy and fast coding of species into user-defined operational units. These units may be of any size and be purely spatial (i.e., polygons) such as political units (countries, states), conservation areas, realms, biomes, ecoregions, islands, biodiversity hotspots, and areas of endemism; but they may also be defined as a combination of several criteria, including altitudinal ranges. This flexibility allows scoring species into complex categories, such as those encountered in topographically and ecologically heterogeneous landscapes. The various outputs of SpeciesGeoCoder include quantitative biodiversity statistics, global and local distribution maps, and Nexus files that can be directly used in many phylogeny-based applications for ancestral state reconstruction, investigations on biome evolution, and diversification rate analyses. 
 
 Input:  See the example files localities.txt and polygons.txt.
-Output:See the example file ivesioids_out.nex.
+Output: See the example file ivesioids_out.nex.
 
 ================================================================
 The program provides a number of options that can be viewed by 
