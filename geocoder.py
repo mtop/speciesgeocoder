@@ -373,11 +373,11 @@ def elevationTest(lat, lon, polygon, index):
 		elevation = new_tiff.get_elevation(lon.rstrip("\n"), lat.rstrip("\n"))
 
 		if not polygon[2]:
-			low = -1000					# A really low elevation.
+			low = -1000000					# A really low elevation.
 		else:
 			low = int(polygon[2])
 		if not polygon[3]:
-			high = 10000					# A really high elevation.
+			high = 1000000					# A really high elevation.
 		else:
 			high = int(polygon[3])
 		return (low < elevation and elevation < high)
