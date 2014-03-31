@@ -380,7 +380,7 @@ def elevationTest(lat, lon, polygon, index):
 			high = 1000000					# A really high elevation.
 		else:
 			high = int(polygon[3])
-		return (low =< elevation and elevation < high)
+		return (low <= elevation and elevation < high)
 	else:
 		# Notify the user that no elevation data is available for a locality.
 		sys.stderr.write("[ Warning ] No elevation data available for locality %s, %s\n" % (lon.rstrip("\n"), lat.rstrip("\n")))
