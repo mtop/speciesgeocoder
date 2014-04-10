@@ -250,109 +250,6 @@ def pointInPolygon(poly, x, y):
 	return inside
 
 
-class Result(object):
-	def __init__(self, polygons):
-		self.polygonNames =  polygons.getPolygonNames()
-	
-	def setSpeciesNames(self, dataObject):
-		# Create a dictionary where each key corresponds to 
-		# a speceis names, and the values are initially lists
-		# of zeros of the same length as the number of polygons. 
-		self.initialList = []
-		for i in range(len(self.polygonNames)):
-			self.initialList.append(0)
-		try:
-			if self.result:
-				pass
-		except:
-			self.result = {}
-
-		for name in dataObject.getSpeciesNames():
-			if name not in self.result:
-				self.result[name] = self.initialList
-			else:
-				continue
-
-	def getSpeciesNames(self):
-		speciesNames = []
-		for key in self.result:
-			speciesNames.append(key)
-		return speciesNames
-
-	def getPolygonNames(self):
-		return self.polygonNames
-
-	def setResult(self, speciesName, polygonName):
-		list = self.result[speciesName]
-		newList = []
-		index = 0
-		for i in list:
-			if index == self.polygonNumber(polygonName):
-				newVal = i+1
-				newList.append(newVal)
-				index += 1
-			else:
-				newList.append(i)
-				index += 1
-		self.result[speciesName] = newList
-
-	def getResult(self):
-		return self.result
-
-	def polygonNumber(self, polygonName):
-		return self.polygonNames.index(polygonName)
-
-	def printNexus(self):
-		# Print the results to stdOut in NEXUS format.
-		# Use a redirect to store in file.
-		print "#NEXUS\n"
-		print "Begin data;"
-		print "\tDimensions ntax=%s nchar=%s;" % (len(self.getSpeciesNames()), len(self.getPolygonNames()))
-		print "\tFormat datatype=standard symbols=\"01\" gap=-;"
-		print "\tCHARSTATELABELS"
-		# Print the names of the polygons
-		for i in range(len(self.getPolygonNames())):
-			if i+1 < len(self.getPolygonNames()):
-				print "\t%s %s"	% (i+1, self.getPolygonNames()[i]) + ','
-			if i+1 == len(self.getPolygonNames()):
-				print "\t%s %s" % (i+1, self.getPolygonNames()[i]) + ';'
-		print "\n"
-		print "\tMatrix"
-		# Print the species names and character matrix
-		for name in sorted(self.getResult()):
-			print name.replace(" ","_"), '\t\t', self.resultToStr(self.result[name])
-		print '\t;'
-		print 'End;'
-
-
-	def resultToStr(self, resultList):
-		string = ''
-		for i in resultList:
-			if i > 0:
-				# If a minimum number of occurenses are required...
-				if args.number:
-					string = self.minOccurence(i, string)
-				else:	
-					string = self.verbose(i, string)
-			else:
-				string += "0"
-		return string
-
-	def minOccurence(self, occurences, string):
-		if int(occurences) > int(args.number[0]):
-			return self.verbose(occurences, string)
-		else:
-			string += "0" + "[" + str(occurences) + "]"
-			return string
-
-	def verbose(self, i, string):
-		if args.verbose:
-			string += "1" + "[" + str(i) + "]"
-		else:
-			string += "1"
-		return string
-
-
 def elevationTest(lat, lon, polygon, index):
 	from lib.readGeoTiff import coordInTif	
 	from lib.readGeoTiff import Geotiff
@@ -386,10 +283,11 @@ def elevationTest(lat, lon, polygon, index):
 		sys.stderr.write("[ Warning ] No elevation data available for locality %s, %s\n" % (lon.rstrip("\n"), lat.rstrip("\n")))
 	
 def main():
+	from lib.result import Result
 	# Create list to store the geotif objects in.
 	done = 0
 	polygons = Polygons()
-	result = Result(polygons)
+	result = Result(polygons, args)
 	# Index the geotiff files if appropriate.
 	if args.tif:
 		from lib.readGeoTiff import indexTiffs
@@ -422,9 +320,11 @@ def main():
 							if elevationTest(locality[1], locality[2], polygon, index) == True:
 								# Store the result
 								result.setResult(locality[0], polygon[0])		
+#								print locality[0], polygon[0]						# Devel.
 						else:
 							# Store the result
 							result.setResult(locality[0], polygon[0])
+#							print locality[0], polygon[0]                     	# Devel.
 				else:
 					# locality[0] = species name, locality[1] = longitude, locality[2] =  latitude
 					if pointInPolygon(polygon[1], locality[1], locality[2]) == True:
@@ -461,21 +361,80 @@ def main():
 	sys.stderr.write("\n")
 	result.printNexus()
 
-#	if args.plot == True:
-#	### Go to R ###
-#	### Do tests of cutoff values and call R + functions
-#	### import rpy2
-#		try:
-#			import rpy2.robjects as ro
-#		except:
-#			sys.exit("[ Error ] rpy2 is not installed. Ploting the result will not be possible")
-#		
-#		# Write data to files that R can read.
-#		for line in readlines():
-#	
-#		ro.r('source("R/SpeciesGeoCodeR.R")')
+	if args.plot == True:
+	### Go to R ###
+	### Do tests of cutoff values and call R + functions
+		
+		try:
+			import rpy2.robjects as ro
+		except:
+			sys.exit("[ Error ] rpy2 is not installed. Ploting the result will not be possible")
+		
+		spName_list = []
+		spLong_list = []
+		spLat_list = []
+		polyName_list = []
+		polyLong_list = []
+		polyLat_list = []
+		import os 														# Devel.
+		source_root =  os.path.dirname(os.path.abspath(__file__))		# Devel.
+		ro.r('source("%s/R/SpeciesGeoCodeR.R")' % source_root)
 
+		# Localities
+		# Store species names, long. and lat. data in separate lists...
+		for locality in localities.getLocalities():
+			spName_list.append(locality[0])
+			spLong_list.append(locality[1])
+			spLat_list.append(locality[2])
+		# ...then transform these lists into separate R objects...
+		ro.r('speciesNames <- c("%s")' % spName_list)
+		ro.r('spLongitudes <- c("%s")' % spLong_list)
+		ro.r('spLatitudes <- c("%s")' % spLat_list)
+		# ...and finally a data frame.
+		ro.r('coordinates <- data.frame(identifier = speciesNames, XCOOR = spLongitudes, YCOOR = spLatitudes)')
+		ro.r('png(filename="test_plot-1.png")')		# Devel.
+		ro.r('plot(coordinates)')					# Devel.
+		ro.r('dev.off()')							# Devel.
 
+		# Polygons
+		# Store polygon names long. and lat. data in separate lists...
+		for polygon in polygons.getPolygons():
+			polyName_list.append(polygon[0])
+			polyLong_list.append(polygon[1])
+			polyLat_list.append(polygon[2])
+		# ...then transform these lists into separate R objects...
+		ro.r('polygonNames <- c("%s")' % polyName_list)
+		ro.r('polygonLong <- c("%s")' % polyLong_list)
+		ro.r('polyLat <- c("%s")' % polyLat_list)
+		# ...and finally a data frame.
+		ro.r('polygons <- data.frame(identifier = polygonNames, XCOOR = polygonLong, YCOOR = polyLat)')
+		ro.r('png(filename="test_plot-2.png")')     # Devel.
+		ro.r('plot(polygons)')                   	# Devel.
+		ro.r('dev.off()')                           # Devel.
+#		sys.exit()
+	
+		# Sampletable
+		Rspecies = []
+		Rpolygon = []
+		for sample in result.getSampletable():
+			Rspecies.append(sample[0])
+			Rpolygon.append(sample[1])
+		ro.r('sampleSpecies <- c("%s")' % Rspecies)
+		ro.r('samplePolygon <- c("%s")' % Rpolygon)
+		ro.r('sampletable <- data.frame(species = sampleSpecies, polygon = samplePolygon)')
+		ro.r('png(filename="test_sampletable.png")')    # Devel.
+		ro.r('plot(sampletable)')                      	# Devel.
+		ro.r('dev.off()')                           	# Devel.		
+
+		# Speciestable
+		ro.r('speciestable <- data.frame(c("%s"))' % polygons.getPolygonNames())
+#		ro.r('names(speciestable) <- c("%s")' % polygons.getPolygonNames())
+		for name in localities.getSpeciesNames():
+			ro.r('newrow <- c("%s")' % result.result[name]) 
+			ro.r('speciestable <- rbind(speciestable, newrow)')
+		ro.r('png(filename="test_speciestable.png")')   # Devel.
+		ro.r('plot(sampletable)')                       # Devel.
+		ro.r('dev.off()')                               # Devel.
 
 
 
