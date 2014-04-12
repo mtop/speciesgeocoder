@@ -8,7 +8,7 @@ Output: See the example file ivesioids_out.nex.
 
 ================================================================
 The program provides a number of options that can be viewed by 
-running it with the "--help" option.
+using the "--help" option.
 
 ```
 topel@Slartibartfasts:~/git/geocoder$ ./geocoder.py -h
