@@ -1,10 +1,57 @@
-Dependencies:   python2.7 (includes argparser)
-				gdal-bin
-                python-gdal
+# This file describes the installation of SpeciesGeoCoder on a Mac OSX or GNU/Linux system.
+# The installation has been tested on the following systems + python versions:
+Debian 6 (squeeze) + python 2.6.6
+
+
+### Installing using wget
+### Copy and paste the following commands in a terminal
+
+wget https://github.com/mtop/speciesgeocoder/archive/master.zip
+unzip master.zip
+cd speciesgeocoder-master/
+./geocoder.py -l example_data/localities.csv -p example_data/polygons.txt
+
+
+### Installing using git
+### Copy and paste the following commands in a terminal
+
+git clone git@github.com:mtop/speciesgeocoder.git
+cd speciesgeocoder/
+./geocoder.py -l example_data/localities.csv -p example_data/polygons.txt
+
+
+
+
+
+################################################
+### The following text is under construction ###
+### and mainly relevant for developers.      ###
+################################################
+
 
 OSX
-	# Download and install the GDAL package:
-	http://www.kyngchaos.com/files/software/frameworks/GDAL_Complete-1.10.dmg
+	### Probably not needed as bin/gdallocationinfo_* exists. HAS TO BE TESTED ###
+	###	# Download and install the GDAL package:
+	###	http://www.kyngchaos.com/files/software/frameworks/GDAL_Complete-1.10.dmg
+
+	# Download and install R: 
+	http://cran.r-project.org/bin/macosx/R-latest.pkg
+
+	# Start R and install the dependencies by running the following commands 
+	(you may also be prompted to install XQuartz [http://xquartz.macosforge.org/landing/]:
+	
+	install.packages("maptools")
+	install.packages("maps")
+	install.packages("mapdata")
+	install.packages("raster")
+		
+		
+
+	# Install rpy2:
+
+	sudo easy_install rpy2
+
+	
 
 
 #	# Add the following two lines to your .bash_profile file:
