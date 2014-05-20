@@ -1,6 +1,7 @@
 # This file describes the installation of SpeciesGeoCoder on a Mac OSX or GNU/Linux system.
 # The installation has been tested on the following systems + python versions:
-Debian 6 (squeeze) + python 2.6.6
+Debian 6 (Squeeze) + python 2.6.6
+Debian 7.5 (Wheezy) + python 2.7.3
 
 
 ### Installing using wget
@@ -9,7 +10,7 @@ Debian 6 (squeeze) + python 2.6.6
 wget https://github.com/mtop/speciesgeocoder/archive/master.zip
 unzip master.zip
 cd speciesgeocoder-master/
-./geocoder.py -l example_data/localities.csv -p example_data/polygons.txt
+./geocoder.py -l example_data/localities.csv -p example_data/polygons.txt -t test.tif
 
 
 ### Installing using git
@@ -60,3 +61,13 @@ OSX
 
 	# Install cython
 	easy_install cython
+
+### For beta testers ###
+### Installing using wget
+### Copy and paste the following commands in a terminal
+
+wget https://github.com/mtop/speciesgeocoder/archive/master.zip
+unzip master.zip
+cd speciesgeocoder-master/
+wget http://albiorix.bioenv.gu.se/web_data/speciesgeocoder/test.tif
+./geocoder.py -l example_data/localities.csv -p example_data/polygons.txt -t test.tif
