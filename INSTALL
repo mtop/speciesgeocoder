@@ -2,6 +2,21 @@
 # The installation has been tested on the following systems + python versions:
 Debian 6 (Squeeze) + python 2.6.6
 Debian 7.5 (Wheezy) + python 2.7.3
+Mac OSX 10.8.5 + python 2.7.5
+
+
+# Dependencies
+Python module argparse (included in python v2.7) 
+
+### Installing using a web browser
+
+1). Direct your browser to the following URL (a compressed file will then be automatically downloaded):
+https://github.com/mtop/speciesgeocoder/archive/master.zip
+
+2). Unzip the file by clicking on it.
+3). Open a terminal window and use the command "cd" and move into the directory "speciesgeocoder-master/"
+4). copy and paste the following command in your terminal window:
+	./geocoder.py -l example_data/localities.csv -p example_data/polygons.txt -t example_data/color_etopo1_ice_low.tif
 
 
 ### Installing using wget
@@ -28,6 +43,12 @@ cd speciesgeocoder/
 ### The following text is under construction ###
 ### and mainly relevant for developers.      ###
 ################################################
+
+# Installation is known to fail on following combinations of OS + python versions:
+"ImportError: No module named argparse"
+Mac OSX 10.6.8 + python 2.5
+Ubuntu 10.04 + python 2.6.5
+
 
 
 OSX
