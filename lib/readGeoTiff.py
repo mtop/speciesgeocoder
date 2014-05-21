@@ -19,7 +19,6 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from osgeo import gdal
 import sys
 import subprocess
 
@@ -28,6 +27,7 @@ class Geotiff(object):
 	def __init__(self, tiffile):
 		self.tiffile = tiffile
 		try:
+			from osgeo import gdal
 #			import zzz							# Devel.
 			my_file = gdal.Open(self.tiffile)
 			self.width = my_file.RasterXSize
