@@ -27,26 +27,51 @@ class Geotiff(object):
 	# GeoTiff object
 	def __init__(self, tiffile):
 		self.tiffile = tiffile
-		my_file = gdal.Open(self.tiffile)
-		self.width = my_file.RasterXSize
-		self.height = my_file.RasterYSize
-		self.gt = my_file.GetGeoTransform()
-		self.MINX = self.gt[0]
-		self.MINY = self.gt[3] + self.width*self.gt[4] + self.height*self.gt[5]
-		self.MAXX = self.gt[0] + self.width*self.gt[1] + self.height*self.gt[2]
-		self.MAXY = self.gt[3]
+		try:
+#			import zzz							# Devel.
+			my_file = gdal.Open(self.tiffile)
+			self.width = my_file.RasterXSize
+			self.height = my_file.RasterYSize
+			self.gt = my_file.GetGeoTransform()
+			self.MINX = self.gt[0]
+			self.MINY = self.gt[3] + self.width*self.gt[4] + self.height*self.gt[5]
+			self.MAXX = self.gt[0] + self.width*self.gt[1] + self.height*self.gt[2]
+			self.MAXY = self.gt[3]
+		except:
+			from os.path import abspath, dirname, join
+			if sys.platform.startswith('linux2'):
+				sys.exit("GDAL not installed")				# For now
+			if sys.platform.startswith('darwin'):
+				binary = abspath(join(dirname(__file__), "../bin/gdalinfo_darwin"))
+			self.out = subprocess.check_output([binary, self.tiffile])
+
+			upper_left = self.out.split("Upper Left  (  ")[1].split(")")[0].split("\n")
+			lower_left = self.out.split("Lower Left  (  ")[1].split(")")[0].split("\n")
+			upper_right = self.out.split("Upper Right (  ")[1].split(")")[0].split("\n")
+			lower_right = self.out.split("Lower Right (  ")[1].split(")")[0].split("\n")
+
+			self.MINY = lower_left[0].split(",")[1]
+			self.MINX = lower_left[0].split(",")[0]		# OK
+			self.MAXY = upper_right[0].split(",")[1]
+			self.MAXX = lower_right[0].split(",")[0]	# OK
+
+#            minx: 17.9998611111
+#            maxx: 19.0001388889
+#            miny: 56.9998611111
+#            maxy: 58.0001388889
+
 
 	def minx(self):
-		return self.MINX
+		return float(self.MINX)
 	
 	def miny(self):
-		return self.MINY
+		return float(self.MINY)
 
 	def maxx(self):
-		return self.MAXX
+		return float(self.MAXX)
 
 	def maxy(self):
-		return self.MAXY
+		return float(self.MAXY)
 
 	def corners(self):
 		return "MinX: ", self.minx(), "MaxX: ", self.maxx(), "MinY: ", self.miny(), "MaxY: ", self.maxy()
@@ -74,14 +99,25 @@ def indexTiffs(infiles):
 		if ".tif" in tif:					# Remove later on.
 			tifObj = Geotiff(tif)
 			tifFiles[tif] = []
+
 			# Extract minX
-			tifFiles[tif].append(tifObj.minx())		# [0]
+			tifFiles[tif].append(tifObj.minx())		# [0], Left [0]
 			# Extract maxX
-			tifFiles[tif].append(tifObj.maxx())		# [1]
+			tifFiles[tif].append(tifObj.maxx())		# [1], Right [0]	
 			# Extract minY
-			tifFiles[tif].append(tifObj.miny())     	# [2]
+			tifFiles[tif].append(tifObj.miny())     # [2], Lower [1]
 			# Extract maxY
-			tifFiles[tif].append(tifObj.maxy())		# [3]
+			tifFiles[tif].append(tifObj.maxy())		# [3], Upper [1]
+
+###			print tifObj.minx()			# Devel.
+###			print tifObj.maxx()			# Devel.
+###			print tifObj.miny()			# Devel.
+###			print tifObj.maxy()			# Devel.
+#			minx: 17.9998611111  
+#			maxx: 19.0001388889
+#			miny: 56.9998611111
+#			maxy: 58.0001388889
+
 	sys.stderr.write("\n")
 	return tifFiles						
 
