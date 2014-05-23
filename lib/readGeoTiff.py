@@ -40,7 +40,7 @@ class Geotiff(object):
 		except:
 			from os.path import abspath, dirname, join
 			if sys.platform.startswith('linux2'):
-				binary = abspath(join(dirname(__file__), "../bin/gdalinfo_linux2"))
+				binary = abspath(join(dirname(__file__), "../bin/gdalinfo_linux"))
 #				sys.exit("GDAL not installed")				# For now
 			if sys.platform.startswith('darwin'):
 				binary = abspath(join(dirname(__file__), "../bin/gdalinfo_darwin"))
