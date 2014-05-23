@@ -5,9 +5,16 @@ Debian 7.5 (Wheezy) + python 2.7.3
 Mac OSX 10.8.5 + python 2.7.5
 
 
-# Dependencies
+# Dependencies*
 Python module argparse (included in python v2.7) 
-make (Included on GNU/Linux systems and part of the package 'Xcode' on Appstore for Mac OSX)
+make
+gcc
+
+*The programs 'make' and 'gcc' are only needed if the pre-compiled versions of gdalinfo and gdallocationinfo does now work on your system. Both 'make' and 'gcc' should be installed on a regular GNU/Linux system. Mac OSX users can find installation istructions below.
+
+# Notes about installing on Mac OSX.
+'make' and 'gcc' are part of the package 'Xcode' that is available on Appstore. After installation, open Xcode, go to Preferences -> Downloads -> Components -> Command Line Tools, and install the commandline tools of Xcode.
+
 
 ### Installing using a web browser
 1). Direct your browser to the following URL (a compressed file will then be automatically downloaded):
