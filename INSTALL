@@ -1,46 +1,80 @@
-# This file describes the installation of SpeciesGeoCoder on a Mac OSX or GNU/Linux system.
-# The installation has been tested on the following systems + python versions:
-Debian 6 (Squeeze) + python 2.6.6
-Debian 7.5 (Wheezy) + python 2.7.3
-Mac OSX 10.8.5 + python 2.7.5
+# This file describes the installation of SpeciesGeoCoder on Mac OSX, GNU/Linux and Windows system.
 
 
-# Dependencies*
+===========================================
+# Content of this file
+1.) For the impatient
+2.) Dependencies
+3.) Installing on Mac OSX.
+4.) Installing on Windows using Cygwin
+5.) Installing the development version
+===========================================
+
+===
+1.) For the impatient
+	wget https://github.com/mtop/speciesgeocoder/archive/master.zip
+	unzip master.zip
+	cd speciesgeocoder-master/
+	make
+	make test # Not implemented yet
+	sudo make install
+
+===
+2.) Dependencies*
 Python module argparse (included in python v2.7) 
 make
 gcc
 
-*The programs 'make' and 'gcc' are only needed if the pre-compiled versions of gdalinfo and gdallocationinfo does now work on your system. Both 'make' and 'gcc' should be installed on a regular GNU/Linux system. Mac OSX users can find installation istructions below.
+*The programs 'make' and 'gcc' are only needed if the pre-compiled 
+versions of gdalinfo and gdallocationinfo does now work on your system. 
+Both 'make' and 'gcc' should be installed on a regular GNU/Linux 
+system. Mac OSX and Windows/Cygwin users can find installation 
+instructions below.
 
-# Notes about installing on Mac OSX.
-'make' and 'gcc' are part of the package 'Xcode' that is available on Appstore. After installation, open Xcode, go to Preferences -> Downloads -> Components -> Command Line Tools, and install the commandline tools of Xcode.
+===
+3.) Installing on Mac OSX.
+'make' and 'gcc' are part of the package 'Xcode' that is available on 
+Appstore. After installation, open Xcode and go to: 
+Preferences -> Downloads -> Components -> Command Line Tools, and 
+install the commandline tools of Xcode.
 
 
 ### Installing using a web browser 
-1). Direct your browser to the following URL (a compressed file will then be automatically downloaded):
+a). Direct your browser to the following URL (a compressed file will 
+then be automatically downloaded):
 https://github.com/mtop/speciesgeocoder/archive/master.zip
 
-2). Unzip the file by clicking on it.
-3). Open a terminal window and use the command "cd" and move into the directory "speciesgeocoder-master/"
-4). Type 'make'
-5). copy and paste the following command into your terminal window:
+b). Unzip the file by clicking on it.
+c). Open a terminal window and use the command "cd" and move into the 
+	directory "speciesgeocoder-master/"
+d). Type 'make distclean', 'make', 'make test' and 'sudo make install'
+e). copy and paste the following command into your terminal window:
 	./geocoder.py -l example_data/localities.csv -p example_data/polygons.txt -t example_data/*.tif
 
+===
+4.) Installing on Windows using Cygwin
 
 ### Installing using wget
 ### Copy and paste the following commands in a terminal
 wget https://github.com/mtop/speciesgeocoder/archive/master.zip
 unzip master.zip
-make
 cd speciesgeocoder-master/
+make distclean
+make 
+make test # Not implemented yet
+sudo (?) make install 
+
+
 ./geocoder.py -l example_data/localities.csv -p example_data/polygons.txt -t example_data/*.tif
 
 
-### Installing using git
+5.) Installing the development version
 ### Copy and paste the following commands in a terminal
 git clone git@github.com:mtop/speciesgeocoder.git
 cd speciesgeocoder/
+make distclean
 make
+make test
 ./geocoder.py -l example_data/localities.csv -p example_data/polygons.txt -t example_data/*.tif
 
 
@@ -52,6 +86,10 @@ make
 ### and mainly relevant for developers.      ###
 ################################################
 
+# The installation has been tested on the following systems + python versions:
+Debian 6 (Squeeze) + python 2.6.6
+Debian 7.5 (Wheezy) + python 2.7.3
+Mac OSX 10.8.5 + python 2.7.5
 # Installation is known to fail on following combinations of OS + python versions:
 "ImportError: No module named argparse"
 Mac OSX 10.6.8 + python 2.5
@@ -78,12 +116,9 @@ OSX
 		
 
 	# Install rpy2:
-
 	sudo easy_install rpy2
 
-	
-
-
+# 	gdal stuff #
 #	# Add the following two lines to your .bash_profile file:
 #	export PATH=$PATH:/Library/Frameworks/GDAL.framework/Programs
 #	export PYTHONPATH=$PYTHONPATH:/Library/Frameworks/GDAL.framework/Versions/1.10/Python/2.7/site-packages
