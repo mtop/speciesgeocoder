@@ -48,10 +48,10 @@ class Geotiff(object):
 				binary = abspath(join(dirname(__file__), "../bin/gdalinfo_cygwin"))
 			self.out = subprocess.check_output([binary, self.tiffile])
 
-			upper_left = self.out.split("Upper Left  (  ")[1].split(")")[0].split("\n")
-			lower_left = self.out.split("Lower Left  (  ")[1].split(")")[0].split("\n")
-			upper_right = self.out.split("Upper Right (  ")[1].split(")")[0].split("\n")
-			lower_right = self.out.split("Lower Right (  ")[1].split(")")[0].split("\n")
+			upper_left = self.out.split("Upper Left  (")[1].split(")")[0].split("\n")
+			lower_left = self.out.split("Lower Left  (")[1].split(")")[0].split("\n")
+			upper_right = self.out.split("Upper Right (")[1].split(")")[0].split("\n")
+			lower_right = self.out.split("Lower Right (")[1].split(")")[0].split("\n")
 
 			self.MINY = lower_left[0].split(",")[1]
 			self.MINX = lower_left[0].split(",")[0]		# OK
