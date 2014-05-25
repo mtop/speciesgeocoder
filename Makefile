@@ -15,14 +15,23 @@ INSTALL=/usr/bin/install -S
 
 all: install_proj proj4 gdal $(OS)
 
-proj4: install_proj
+proj4: install_proj $(OS)_configure
 	cd $(PROJ4DIR) && ./configure --prefix=$(PROJ4DIR)/install_proj
 	make -C $(PROJ4DIR)
 	make install -C $(PROJ4DIR)
 
-gdal:
-	cd $(GDALDIR) && ./configure --disable-shared --with-static-proj4=$(PROJ4_ROOT)
+gdal: $(OS)_configure
+	cd $(GDALDIR) && ./configure --with-static-proj4=$(PROJ4_ROOT)
 	make -C $(GDALDIR)
+
+Linux_configure: Darwin_configure
+Darwin_configure:
+	cd $(PROJ4DIR) && ./configure --disable-shared --prefix=$(PROJ4DIR)/install_proj
+
+CYGWIN_NT-5.1_configure: CYGWIN_NT-6.1_configure
+CYGWIN_NT-6.1-WOW64_configure: CYGWIN_NT-6.1_configure
+CYGWIN_NT-6.1_configure:
+	cd $(PROJ4DIR) && ./configure --prefix=$(PROJ4DIR)/install_proj
 
 Darwin:
 	@cp $(GDALDIR)/apps/gdalinfo $(ROOTDIR)/bin/gdalinfo_darwin
@@ -34,8 +43,8 @@ Linux:
 CYGWIN_NT-5.1: CYGWIN_NT-6.1
 CYGWIN_NT-6.1-WOW64: CYGWIN_NT-6.1
 CYGWIN_NT-6.1:
-	ln -s $(GDALDIR)/apps/gdalinfo $(ROOTDIR)/bin/gdalinfo_cygwin
-	ln -s $(GDALDIR)/apps/gdallocationinfo $(ROOTDIR)/bin/gdallocationinfo_cygwin
+	@ln -s $(GDALDIR)/apps/gdalinfo $(ROOTDIR)/bin/gdalinfo_cygwin
+	@ln -s $(GDALDIR)/apps/gdallocationinfo $(ROOTDIR)/bin/gdallocationinfo_cygwin
 
 install_proj:
 	-mkdir $(PROJ4DIR)/install_proj

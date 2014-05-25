@@ -16,29 +16,32 @@ gcc
 'make' and 'gcc' are part of the package 'Xcode' that is available on Appstore. After installation, open Xcode, go to Preferences -> Downloads -> Components -> Command Line Tools, and install the commandline tools of Xcode.
 
 
-### Installing using a web browser
+### Installing using a web browser 
 1). Direct your browser to the following URL (a compressed file will then be automatically downloaded):
 https://github.com/mtop/speciesgeocoder/archive/master.zip
 
 2). Unzip the file by clicking on it.
 3). Open a terminal window and use the command "cd" and move into the directory "speciesgeocoder-master/"
-4). copy and paste the following command in your terminal window:
-	./geocoder.py -l example_data/localities.csv -p example_data/polygons.txt -t example_data/color_etopo1_ice_low.tif
+4). Type 'make'
+5). copy and paste the following command into your terminal window:
+	./geocoder.py -l example_data/localities.csv -p example_data/polygons.txt -t example_data/*.tif
 
 
 ### Installing using wget
 ### Copy and paste the following commands in a terminal
 wget https://github.com/mtop/speciesgeocoder/archive/master.zip
 unzip master.zip
+make
 cd speciesgeocoder-master/
-./geocoder.py -l example_data/localities.csv -p example_data/polygons.txt -t test.tif
+./geocoder.py -l example_data/localities.csv -p example_data/polygons.txt -t example_data/*.tif
 
 
 ### Installing using git
 ### Copy and paste the following commands in a terminal
 git clone git@github.com:mtop/speciesgeocoder.git
 cd speciesgeocoder/
-./geocoder.py -l example_data/localities.csv -p example_data/polygons.txt
+make
+./geocoder.py -l example_data/localities.csv -p example_data/polygons.txt -t example_data/*.tif
 
 
 
