@@ -15,23 +15,22 @@ INSTALL=/usr/bin/install -S
 
 all: install_proj proj4 gdal $(OS)
 
-proj4: install_proj $(OS)_configure
+proj4: install_proj 
 	cd $(PROJ4DIR) && ./configure --prefix=$(PROJ4DIR)/install_proj
 	make -C $(PROJ4DIR)
 	make install -C $(PROJ4DIR)
 
 gdal: $(OS)_configure
-	cd $(GDALDIR) && ./configure --with-static-proj4=$(PROJ4_ROOT)
 	make -C $(GDALDIR)
 
 Linux_configure: Darwin_configure
 Darwin_configure:
-	cd $(PROJ4DIR) && ./configure --disable-shared --prefix=$(PROJ4DIR)/install_proj
+	cd $(GDALDIR) && ./configure --disable-shared --with-static-proj4=$(PROJ4_ROOT)
 
 CYGWIN_NT-5.1_configure: CYGWIN_NT-6.1_configure
 CYGWIN_NT-6.1-WOW64_configure: CYGWIN_NT-6.1_configure
 CYGWIN_NT-6.1_configure:
-	cd $(PROJ4DIR) && ./configure --prefix=$(PROJ4DIR)/install_proj
+	cd $(GDALDIR) && ./configure --with-static-proj4=$(PROJ4_ROOT)
 
 Darwin:
 	@cp $(GDALDIR)/apps/gdalinfo $(ROOTDIR)/bin/gdalinfo_darwin
@@ -40,6 +39,7 @@ Darwin:
 Linux:
 	@cp $(GDALDIR)/apps/gdalinfo $(ROOTDIR)/bin/gdalinfo_linux
 	@cp $(GDALDIR)/apps/gdallocationinfo $(ROOTDIR)/bin/gdallocationinfo_linux
+
 CYGWIN_NT-5.1: CYGWIN_NT-6.1
 CYGWIN_NT-6.1-WOW64: CYGWIN_NT-6.1
 CYGWIN_NT-6.1:
@@ -56,7 +56,6 @@ install: $(OS)
 	@echo "#!/bin/bash" > $(INSTALLDIR)/speciesgeocoder
 	@echo "$(INSTALLDIR)/$(DIR)/geocoder.py" >> $(INSTALLDIR)/speciesgeocoder
 	@chmod +x $(INSTALLDIR)/speciesgeocoder
-
 
 clean:
 	make clean -C $(PROJ4DIR)
