@@ -10,6 +10,7 @@ PROJ4DIR=$(PWD)/src/proj-4.9.0
 GDALDIR=$(PWD)/src/gdal-1.10.1
 PROJ4_ROOT=$(PROJ4DIR)/install_proj
 OS := $(shell uname)
+cygwin=$
 INSTALL=/usr/bin/install -S
 
 all: install_proj proj4 gdal $(OS)
@@ -30,8 +31,9 @@ Darwin:
 Linux:
 	@cp $(GDALDIR)/apps/gdalinfo $(ROOTDIR)/bin/gdalinfo_linux
 	@cp $(GDALDIR)/apps/gdallocationinfo $(ROOTDIR)/bin/gdallocationinfo_linux
-
-CYGWIN*:
+CYGWIN_NT-5.1: CYGWIN_NT-6.1
+CYGWIN_NT-6.1-WOW64: CYGWIN_NT-6.1
+CYGWIN_NT-6.1:
 	ln -s $(GDALDIR)/apps/gdalinfo $(ROOTDIR)/bin/gdalinfo_cygwin
 	ln -s $(GDALDIR)/apps/gdallocationinfo $(ROOTDIR)/bin/gdallocationinfo_cygwin
 
