@@ -53,3 +53,4 @@ clean:
 
 distclean:
 	make distclean -C $(PROJ4DIR)
+	make distclean -C $(GDALDIR)
