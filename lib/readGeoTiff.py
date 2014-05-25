@@ -44,6 +44,8 @@ class Geotiff(object):
 #				sys.exit("GDAL not installed")				# For now
 			if sys.platform.startswith('darwin'):
 				binary = abspath(join(dirname(__file__), "../bin/gdalinfo_darwin"))
+			if sys.platform.startswith('cygwin'):
+				binary = abspath(join(dirname(__file__), "../bin/gdalinfo_cygwin"))
 			self.out = subprocess.check_output([binary, self.tiffile])
 
 			upper_left = self.out.split("Upper Left  (  ")[1].split(")")[0].split("\n")
@@ -83,6 +85,8 @@ class Geotiff(object):
 			binary = abspath(join(dirname(__file__), "../bin/gdallocationinfo_linux2"))
 		if sys.platform.startswith('darwin'):
 			binary = abspath(join(dirname(__file__), "../bin/gdallocationinfo_darwin"))
+		if sys.platform.startswith('cygwin'):
+			binary = abspath(join(dirname(__file__), "../bin/gdallocationinfo_cygwin"))
 		elevation = subprocess.check_output([binary, "-valonly", "-wgs84", self.tiffile, lon, lat])
 		return int(elevation)	
 
