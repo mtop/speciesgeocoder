@@ -1,5 +1,5 @@
-# This file describes the installation of SpeciesGeoCoder on Mac OSX, GNU/Linux and Windows system.
-
+# This file describes the installation of SpeciesGeoCoder on Mac OSX, 
+# GNU/Linux and Windows system.
 
 ===========================================
 # Content of this file
@@ -7,17 +7,18 @@
 2.) Dependencies
 3.) Installing on Mac OSX.
 4.) Installing on Windows using Cygwin
-5.) Installing the development version
+5.) Installing on GNU/Linux
+6.) Installing the development version
+7.) Example data
 ===========================================
 
 ===
 1.) For the impatient
-	wget https://github.com/mtop/speciesgeocoder/archive/master.zip
-	unzip master.zip
-	cd speciesgeocoder-master/
-	make
-	make test # Not implemented yet
-	sudo make install
+wget https://github.com/mtop/speciesgeocoder/archive/master.zip
+unzip master.zip
+cd speciesgeocoder-master/
+make
+sudo make install
 
 ===
 2.) Dependencies*
@@ -36,20 +37,24 @@ instructions below.
 'make' and 'gcc' are part of the package 'Xcode' that is available on 
 Appstore. After installation, open Xcode and go to: 
 Preferences -> Downloads -> Components -> Command Line Tools, and 
-install the commandline tools of Xcode.
+install the commandline tools of Xcode. Then follow these steps:
 
-
-### Installing using a web browser 
 a). Direct your browser to the following URL (a compressed file will 
-then be automatically downloaded):
-https://github.com/mtop/speciesgeocoder/archive/master.zip
+	thenbe automatically downloaded):
+
+	https://github.com/mtop/speciesgeocoder/archive/master.zip
 
 b). Unzip the file by clicking on it.
 c). Open a terminal window and use the command "cd" and move into the 
 	directory "speciesgeocoder-master/"
-d). Type 'make distclean', 'make', 'make test' and 'sudo make install'
-e). copy and paste the following command into your terminal window:
+d). Type 'make' to compile GDAL binaries.
+e). Copy and paste the following command into your terminal window
+	to make sure everything works as expected:
+
 	./geocoder.py -l example_data/localities.csv -p example_data/polygons.txt -t example_data/*.tif
+
+f).	Then run the command 'sudo make install' to install the package 
+	in /usr/local/bin
 
 ===
 4.) Installing on Windows using Cygwin
@@ -59,79 +64,26 @@ e). copy and paste the following command into your terminal window:
 wget https://github.com/mtop/speciesgeocoder/archive/master.zip
 unzip master.zip
 cd speciesgeocoder-master/
-make distclean
 make 
-make test # Not implemented yet
 sudo (?) make install 
 
+===
+5.) Installing on GNU/Linux
 
-./geocoder.py -l example_data/localities.csv -p example_data/polygons.txt -t example_data/*.tif
-
-
-5.) Installing the development version
+===
+6.) Installing the development version
 ### Copy and paste the following commands in a terminal
 git clone git@github.com:mtop/speciesgeocoder.git
 cd speciesgeocoder/
 make distclean
 make
 make test
+
+===
+7.) Example data
+Examples of the imput files used by 'speciesgeocoder' is located in
+the directory example_data/. You can test the program by typing the
+following command in the 'speciesgeocoder' directory.
+
 ./geocoder.py -l example_data/localities.csv -p example_data/polygons.txt -t example_data/*.tif
 
-
-
-
-
-################################################
-### The following text is under construction ###
-### and mainly relevant for developers.      ###
-################################################
-
-# The installation has been tested on the following systems + python versions:
-Debian 6 (Squeeze) + python 2.6.6
-Debian 7.5 (Wheezy) + python 2.7.3
-Mac OSX 10.8.5 + python 2.7.5
-# Installation is known to fail on following combinations of OS + python versions:
-"ImportError: No module named argparse"
-Mac OSX 10.6.8 + python 2.5
-Ubuntu 10.04 + python 2.6.5
-
-
-
-OSX
-	### Probably not needed as bin/gdallocationinfo_* exists. HAS TO BE TESTED ###
-	###	# Download and install the GDAL package:
-	###	http://www.kyngchaos.com/files/software/frameworks/GDAL_Complete-1.10.dmg
-
-	# Download and install R: 
-	http://cran.r-project.org/bin/macosx/R-latest.pkg
-
-	# Start R and install the dependencies by running the following commands 
-	(you may also be prompted to install XQuartz [http://xquartz.macosforge.org/landing/]:
-	
-	install.packages("maptools")
-	install.packages("maps")
-	install.packages("mapdata")
-	install.packages("raster")
-		
-		
-
-	# Install rpy2:
-	sudo easy_install rpy2
-
-# 	gdal stuff #
-#	# Add the following two lines to your .bash_profile file:
-#	export PATH=$PATH:/Library/Frameworks/GDAL.framework/Programs
-#	export PYTHONPATH=$PYTHONPATH:/Library/Frameworks/GDAL.framework/Versions/1.10/Python/2.7/site-packages
-
-	# Install cython
-	easy_install cython
-
-### For beta testers ###
-### Installing using wget
-### Copy and paste the following commands in a terminal
-
-wget https://github.com/mtop/speciesgeocoder/archive/master.zip
-unzip master.zip
-cd speciesgeocoder-master/
-wget http://albiorix.bioenv.gu.se/web_data/speciesgeocoder/test.tif
-./geocoder.py -l example_data/localities.csv -p example_data/polygons.txt -t test.tif
