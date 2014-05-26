@@ -1,0 +1,114 @@
+.TH "gdallocationinfo" 1 "Mon Aug 26 2013" "GDAL" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gdallocationinfo \- .TH "gdallocationinfo" 1 "Mon Aug 26 2013" "GDAL" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gdallocationinfo \- raster query tool
+.SH "SYNOPSIS"
+.PP
+.PP
+.PP
+.nf
+
+Usage: gdallocationinfo [--help-general] [-xml] [-lifonly] [-valonly]
+                        [-b band]* [-overview overview_level]
+                        [-l_srs srs_def] [-geoloc] [-wgs84]
+                        srcfile [x y]
+.fi
+.PP
+.SH "DESCRIPTION"
+.PP
+The gdallocationinfo utility provide a mechanism to query information about a pixel given it's location in one of a variety of coordinate systems. Several reporting options are provided.
+.PP
+.IP "\fB\fB-xml\fP: \fP" 1c
+The output report will be XML formatted for convenient post processing.
+.PP
+.IP "\fB\fB-lifonly\fP: \fP" 1c
+The only output is filenames production from the LocationInfo request against the database (ie. for identifying impacted file from VRT).
+.PP
+.IP "\fB\fB-valonly\fP: \fP" 1c
+The only output is the pixel values of the selected pixel on each of the selected bands.
+.PP
+.IP "\fB\fB-b\fP \fIband\fP: \fP" 1c
+Selects a band to query. Multiple bands can be listed. By default all bands are queried.
+.PP
+.IP "\fB\fB-overview\fP \fIoverview_level\fP: \fP" 1c
+Query the (overview_level)th overview (overview_level=1 is the 1st overview), instead of the base band. Note that the x,y location (if the coordinate system is pixel/line) must still be given with respect to the base band.
+.PP
+.IP "\fB\fB-l_srs\fP \fIsrs def\fP: \fP" 1c
+The coordinate system of the input x, y location.
+.PP
+.IP "\fB\fB-geoloc\fP: \fP" 1c
+Indicates input x,y points are in the georeferencing system of the image.
+.PP
+.IP "\fB\fB-wgs84\fP: \fP" 1c
+Indicates input x,y points are WGS84 long, lat.
+.PP
+.IP "\fB\fIsrcfile\fP:\fP" 1c
+The source GDAL raster datasource name.
+.PP
+.IP "\fB\fIx\fP:\fP" 1c
+X location of target pixel. By default the coordinate system is pixel/line unless -l_srs, -wgs84 or -geoloc supplied. 
+.PP
+.IP "\fB\fIy\fP:\fP" 1c
+Y location of target pixel. By default the coordinate system is pixel/line unless -l_srs, -wgs84 or -geoloc supplied. 
+.PP
+.PP
+.PP
+This utility is intended to provide a variety of information about a pixel. Currently it reports three things:
+.PP
+.PD 0
+.IP "\(bu" 2
+The location of the pixel in pixel/line space. 
+.IP "\(bu" 2
+The result of a LocationInfo metadata query against the datasource - currently this is only implemented for VRT files which will report the file(s) used to satisfy requests for that pixel. 
+.IP "\(bu" 2
+The raster pixel value of that pixel for all or a subset of the bands. 
+.IP "\(bu" 2
+The unscaled pixel value if a Scale and/or Offset apply to the band. 
+.PP
+.PP
+The pixel selected is requested by x/y coordinate on the commandline, or read from stdin. More than one coordinate pair can be supplied when reading coordinatesis from stdin. By default pixel/line coordinates are expected. However with use of the -geoloc, -wgs84, or -l_srs switches it is possible to specify the location in other coordinate systems.
+.PP
+The default report is in a human readable text format. It is possible to instead request xml output with the -xml switch.
+.PP
+For scripting purposes, the -valonly and -lifonly switches are provided to restrict output to the actual pixel values, or the LocationInfo files identified for the pixel.
+.PP
+It is anticipated that additional reporting capabilities will be added to gdallocationinfo in the future.
+.SH "EXAMPLE"
+.PP
+Simple example reporting on pixel (256,256) on the file utm.tif.
+.PP
+.PP
+.nf
+
+$ gdallocationinfo utm.tif 256 256
+Report:
+  Location: (256P,256L)
+  Band 1:
+    Value: 115
+.fi
+.PP
+.PP
+Query a VRT file providing the location in WGS84, and getting the result in xml.
+.PP
+.PP
+.nf
+
+$ gdallocationinfo -xml -wgs84 utm.vrt -117.5 33.75
+<Report pixel="217" line="282">
+  <BandReport band="1">
+    <LocationInfo>
+      <File>utm.tif</File>
+    </LocationInfo>
+    <Value>16</Value>
+  </BandReport>
+</Report>
+.fi
+.PP
+.SH "AUTHORS"
+.PP
+Frank Warmerdam <warmerdam@pobox.com> 

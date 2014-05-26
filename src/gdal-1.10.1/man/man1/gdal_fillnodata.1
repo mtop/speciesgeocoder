@@ -1,0 +1,59 @@
+.TH "gdal_fillnodata" 1 "Mon Aug 26 2013" "GDAL" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gdal_fillnodata \- .TH "gdal_fillnodata" 1 "Mon Aug 26 2013" "GDAL" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gdal_fillnodata \- fill raster regions by interpolation from edges
+.SH "SYNOPSIS"
+.PP
+.PP
+.nf
+
+gdal_fillnodata.py [-q] [-md max_distance] [-si smooth_iterations]
+                [-o name=value] [-b band]
+                srcfile [-nomask] [-mask filename] [-of format] [dstfile]
+.fi
+.PP
+.SH "DESCRIPTION"
+.PP
+The gdal_fillnodata.py script fills selection regions (usually nodata areas) by interpolating from valid pixels around the edges of the area.
+.PP
+Additional details on the algorithm are available in the GDALFillNodata() docs.
+.PP
+.IP "\fB\fB-q\fP:\fP" 1c
+The script runs in quiet mode. The progress monitor is supressed and routine messages are not displayed.
+.PP
+.IP "\fB\fB-md\fP \fImax_distance\fP:\fP" 1c
+The maximum distance (in pixels) that the algorithm will search out for values to interpolate.
+.PP
+.IP "\fB\fB-si\fP \fIsmooth_iterations\fP:\fP" 1c
+The number of 3x3 average filter smoothing iterations to run after the interpolation to dampen artifacts. The default is zero smoothing iterations.
+.PP
+.IP "\fB\fB-o\fP \fIname=value\fP:\fP" 1c
+Specify a special argument to the algorithm. Currently none are supported. 
+.PP
+.IP "\fB\fB-b\fP \fIband\fP:\fP" 1c
+The band to operate on, by default the first band is operated on. 
+.PP
+.IP "\fB\fIsrcfile\fP\fP" 1c
+The source raster file used to identify target pixels. Only one band is used.
+.PP
+.IP "\fB\fB-nomask\fP:\fP" 1c
+Do not use the default validity mask for the input band (such as nodata, or alpha masks). 
+.PP
+.IP "\fB\fB-mask\fP \fIfilename\fP:\fP" 1c
+Use the first band of the specified file as a validity mask (zero is invalid, non-zero is valid). 
+.PP
+.IP "\fB\fIdstfile\fP\fP" 1c
+The new file to create with the interpolated result. If not provided, the source band is updated in place.
+.PP
+.IP "\fB\fB-of\fP \fIformat\fP:\fP" 1c
+Select the output format. The default is GeoTIFF (GTiff). Use the short format name.
+.PP
+.PP
+.SH "AUTHORS"
+.PP
+Frank Warmerdam <warmerdam@pobox.com> 

@@ -1,0 +1,192 @@
+.TH "ogr2ogr" 1 "Mon Aug 26 2013" "GDAL" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ogr2ogr \- .TH "ogr2ogr" 1 "Mon Aug 26 2013" "GDAL" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ogr2ogr \- converts simple features data between file formats
+.SH "SYNOPSIS"
+.PP
+.PP
+.PP
+.nf
+
+Usage: ogr2ogr [--help-general] [-skipfailures] [-append] [-update]
+               [-select field_list] [-where restricted_where] 
+               [-progress] [-sql <sql statement>] [-dialect dialect]
+               [-preserve_fid] [-fid FID]
+               [-spat xmin ymin xmax ymax]
+               [-a_srs srs_def] [-t_srs srs_def] [-s_srs srs_def]
+               [-f format_name] [-overwrite] [[-dsco NAME=VALUE] ...]
+               dst_datasource_name src_datasource_name
+               [-lco NAME=VALUE] [-nln name] [-nlt type] [-dim 2|3] [layer [layer ...]]
+
+Advanced options :
+               [-gt n]
+               [-clipsrc [xmin ymin xmax ymax]|WKT|datasource|spat_extent]
+               [-clipsrcsql sql_statement] [-clipsrclayer layer]
+               [-clipsrcwhere expression]
+               [-clipdst [xmin ymin xmax ymax]|WKT|datasource]
+               [-clipdstsql sql_statement] [-clipdstlayer layer]
+               [-clipdstwhere expression]
+               [-wrapdateline] [-datelineoffset val]
+               [[-simplify tolerance] | [-segmentize max_dist]]
+               [-fieldTypeToString All|(type1[,type2]*)]
+               [-fieldmap identity | index1[,index2]*]
+               [-splitlistfields] [-maxsubfields val]
+               [-explodecollections] [-zfield field_name]
+               [-gcp pixel line easting northing [elevation]]* [-order n | -tps]
+
+.fi
+.PP
+.SH "DESCRIPTION"
+.PP
+This program can be used to convert simple features data between file formats performing various operations during the process such as spatial or attribute selections, reducing the set of attributes, setting the output coordinate system or even reprojecting the features during translation.
+.PP
+.IP "\fB\fB -f\fP\fI format_name\fP:\fP" 1c
+output file format name (default is ESRI Shapefile), some possible values are: 
+.PP
+.nf
+
+     -f "ESRI Shapefile"
+     -f "TIGER"
+     -f "MapInfo File"
+     -f "GML"
+     -f "PostgreSQL"
+	 
+.fi
+.PP
+  
+.IP "\fB\fB-append\fP:\fP" 1c
+Append to existing layer instead of creating new 
+.IP "\fB\fB-overwrite\fP:\fP" 1c
+Delete the output layer and recreate it empty 
+.IP "\fB\fB-update\fP:\fP" 1c
+Open existing output datasource in update mode rather than trying to create a new one 
+.IP "\fB\fB-select\fP\fI field_list\fP:\fP" 1c
+Comma-delimited list of fields from input layer to copy to the new layer. A field is skipped if mentioned previously in the list even if the input layer has duplicate field names. (Defaults to all; any field is skipped if a subsequent field with same name is found.) 
+.IP "\fB\fB-progress\fP:\fP" 1c
+(starting with GDAL 1.7.0) Display progress on terminal. Only works if input layers have the 'fast feature count' capability. 
+.IP "\fB\fB-sql\fP \fIsql_statement\fP:\fP" 1c
+SQL statement to execute. The resulting table/layer will be saved to the output. 
+.IP "\fB\fB-dialect\fP \fIdialect\fP:\fP" 1c
+SQL dialect. In some cases can be used to use (unoptimized) OGR SQL instead of the native SQL of an RDBMS by passing OGRSQL. Starting with GDAL 1.10, the 'SQLITE' dialect can also be used with any datasource. 
+.IP "\fB\fB-where\fP\fI restricted_where\fP:\fP" 1c
+Attribute query (like SQL WHERE) 
+.IP "\fB\fB-skipfailures\fP:\fP" 1c
+Continue after a failure, skipping the failed feature. 
+.IP "\fB\fB-spat\fP\fI xmin ymin xmax ymax\fP:\fP" 1c
+spatial query extents. Only features whose geometry intersects the extents will be selected. The geometries will not be clipped unless -clipsrc is specified 
+.IP "\fB\fB-dsco\fP \fINAME=VALUE\fP:\fP" 1c
+Dataset creation option (format specific) 
+.IP "\fB\fB-lco\fP\fI NAME=VALUE\fP:\fP" 1c
+Layer creation option (format specific) 
+.IP "\fB\fB-nln\fP\fI name\fP:\fP" 1c
+Assign an alternate name to the new layer 
+.IP "\fB\fB-nlt\fP\fI type\fP:\fP" 1c
+Define the geometry type for the created layer. One of NONE, GEOMETRY, POINT, LINESTRING, POLYGON, GEOMETRYCOLLECTION, MULTIPOINT, MULTIPOLYGON or MULTILINESTRING. Add '25D' to the name to get 2.5D versions. Starting with GDAL 1.10, PROMOTE_TO_MULTI can be used to automatically promote layers that mix polygon or multipolygons to multipolygons, and layers that mix linestrings or multilinestrings to multilinestrings. Can be usefull when converting shapefiles to PostGIS (and other target drivers) that implements strict checks for geometry type. 
+.IP "\fB\fB-dim\fP\fI val\fP:\fP" 1c
+(starting with GDAL 1.10) Force the coordinate dimension to val (valid values are 2 or 3). This affects both the layer geometry type, and feature geometries. 
+.IP "\fB\fB-a_srs\fP\fI srs_def\fP:\fP" 1c
+Assign an output SRS 
+.IP "\fB\fB-t_srs\fP\fI srs_def\fP:\fP" 1c
+Reproject/transform to this SRS on output 
+.IP "\fB\fB-s_srs\fP\fI srs_def\fP:\fP" 1c
+Override source SRS 
+.IP "\fB\fB-preserve_fid\fP:\fP" 1c
+Use the FID of the source features instead of letting the output driver to automatically assign a new one. 
+.IP "\fB\fB-fid\fP \fIfid\fP:\fP" 1c
+If provided, only the feature with this feature id will be reported. Operates exclusive of the spatial or attribute queries. Note: if you want to select several features based on their feature id, you can also use the fact the 'fid' is a special field recognized by OGR SQL. So, '-where 'fid in (1,3,5)'' would select features 1, 3 and 5. 
+.PP
+.PP
+Srs_def can be a full WKT definition (hard to escape properly), or a well known definition (ie. EPSG:4326) or a file with a WKT definition.
+.PP
+Advanced options :
+.PP
+.IP "\fB\fB-gt\fP \fIn\fP:\fP" 1c
+group \fIn\fP features per transaction (default 200). Increase the value for better performance when writing into DBMS drivers that have transaction support. 
+.IP "\fB\fB-clipsrc\fP\fI [xmin ymin xmax ymax]|WKT|datasource|spat_extent\fP: \fP" 1c
+(starting with GDAL 1.7.0) clip geometries to the specified bounding box (expressed in source SRS), WKT geometry (POLYGON or MULTIPOLYGON), from a datasource or to the spatial extent of the \fB-spat\fP option if you use the \fIspat_extent\fP keyword. When specifying a datasource, you will generally want to use it in combination of the \fB-clipsrclayer\fP, \fB-clipsrcwhere\fP or \fB-clipsrcsql\fP options 
+.IP "\fB\fB-clipsrcsql\fP \fIsql_statement\fP:\fP" 1c
+Select desired geometries using an SQL query instead. 
+.IP "\fB\fB-clipsrclayer\fP \fIlayername\fP:\fP" 1c
+Select the named layer from the source clip datasource. 
+.IP "\fB\fB-clipsrcwhere\fP \fIexpression\fP:\fP" 1c
+Restrict desired geometries based on attribute query. 
+.IP "\fB\fB-clipdst\fP\fI xmin ymin xmax ymax\fP:\fP" 1c
+(starting with GDAL 1.7.0) clip geometries after reprojection to the specified bounding box (expressed in dest SRS), WKT geometry (POLYGON or MULTIPOLYGON) or from a datasource. When specifying a datasource, you will generally want to use it in combination of the -clipdstlayer, -clipdstwhere or -clipdstsql options 
+.IP "\fB\fB-clipdstsql\fP \fIsql_statement\fP:\fP" 1c
+Select desired geometries using an SQL query instead. 
+.IP "\fB\fB-clipdstlayer\fP \fIlayername\fP:\fP" 1c
+Select the named layer from the destination clip datasource. 
+.IP "\fB\fB-clipdstwhere\fP \fIexpression\fP:\fP" 1c
+Restrict desired geometries based on attribute query. 
+.IP "\fB\fB-wrapdateline\fP:\fP" 1c
+(starting with GDAL 1.7.0) split geometries crossing the dateline meridian (long. = +/- 180deg) 
+.IP "\fB\fB-datelineoffset\fP:\fP" 1c
+(starting with GDAL 1.10) offset from dateline in degrees (default long. = +/- 10deg, geometries within 170deg to -170deg will be splited) 
+.IP "\fB\fB-simplify\fP\fI tolerance\fP:\fP" 1c
+(starting with GDAL 1.9.0) distance tolerance for simplification. Note: the algorithm used preserves topology per feature, in particular for polygon geometries, but not for a whole layer. 
+.IP "\fB\fB-segmentize\fP\fI max_dist\fP:\fP" 1c
+(starting with GDAL 1.6.0) maximum distance between 2 nodes. Used to create intermediate points 
+.IP "\fB\fB-fieldTypeToString\fP\fI type1, ...\fP:\fP" 1c
+(starting with GDAL 1.7.0) converts any field of the specified type to a field of type string in the destination layer. Valid types are : Integer, Real, String, Date, Time, DateTime, Binary, IntegerList, RealList, StringList. Special value \fBAll\fP can be used to convert all fields to strings. This is an alternate way to using the CAST operator of OGR SQL, that may avoid typing a long SQL query. 
+.IP "\fB\fB-splitlistfields\fP:\fP" 1c
+(starting with GDAL 1.8.0) split fields of type StringList, RealList or IntegerList into as many fields of type String, Real or Integer as necessary. 
+.IP "\fB\fB-maxsubfields\fP \fIval\fP:\fP" 1c
+To be combined with -splitlistfields to limit the number of subfields created for each split field. 
+.IP "\fB\fB-explodecollections\fP:\fP" 1c
+(starting with GDAL 1.8.0) produce one feature for each geometry in any kind of geometry collection in the source file 
+.IP "\fB\fB-zfield\fP \fIfield_name\fP:\fP" 1c
+(starting with GDAL 1.8.0) Uses the specified field to fill the Z coordinate of geometries 
+.IP "\fB\fB-gcp\fP \fIungeoref_x ungeoref_y georef_x georef_y elevation\fP:\fP" 1c
+(starting with GDAL 1.10.0) Add the indicated ground control point. This option may be provided multiple times to provide a set of GCPs.  
+.IP "\fB\fB-order\fP \fIn\fP:\fP" 1c
+(starting with GDAL 1.10.0) order of polynomial used for warping (1 to 3). The default is to select a polynomial order based on the number of GCPs. 
+.IP "\fB\fB-tps\fP:\fP" 1c
+(starting with GDAL 1.10.0) Force use of thin plate spline transformer based on available GCPs. 
+.IP "\fB\fB-fieldmap\fP:\fP" 1c
+(starting with GDAL 1.10.0) Specifies the list of field indexes to be copied from the source to the destination. The (n)th value specified in the list is the index of the field in the target layer definition in which the n(th) field of the source layer must be copied. Index count starts at zero. There must be exactly as many values in the list as the count of the fields in the source layer. We can use the 'identity' setting to specify that the fields should be transferred by using the same order. This setting should be used along with the -append setting. 
+.PP
+.SH "PERFORMANCE HINTS"
+.PP
+When writing into transactional DBMS (SQLite/PostgreSQL,MySQL, etc...), it might be beneficial to increase the number of INSERT statements executed between BEGIN TRANSACTION and COMMIT TRANSACTION statements. This number is specified with the -gt option. For example, for SQLite, explicitly defining \fB-gt 1024\fP usually ensures a noticeable performance boost; defining an even bigger \fB-gt 65536\fP ensures optimal performance while populating some table containing many hundredth thousand or million rows. However, note that if there are failed insertions, the scope of -skipfailures is a whole transaction.
+.PP
+For PostgreSQL, the PG_USE_COPY config option can be set to YES for significantly insertion performance boot. See the PG driver documentation page.
+.PP
+More generally, consult the documentation page of the input and output drivers for performance hints.
+.SH "EXAMPLE"
+.PP
+Example appending to an existing layer (both flags need to be used):
+.PP
+.PP
+.nf
+
+% ogr2ogr -update -append -f PostgreSQL PG:dbname=warmerda abc.tab
+.fi
+.PP
+.PP
+Example reprojecting from ETRS_1989_LAEA_52N_10E to EPSG:4326 and clipping to a bounding box
+.PP
+.PP
+.nf
+
+% ogr2ogr -wrapdateline -t_srs EPSG:4326 -clipdst -5 40 15 55 france_4326.shp europe_laea.shp
+.fi
+.PP
+.PP
+Example for using the -fieldmap setting. The first field of the source layer is used to fill the third field (index 2 = third field) of the target layer, the second field of the source layer is ignored, the third field of the source layer used to fill the fifth field of the target layer.
+.PP
+.PP
+.nf
+
+% ogr2ogr -append -fieldmap 2,-1,4 dst.shp src.shp
+.fi
+.PP
+.PP
+More examples are given in the individual format pages.
+.SH "AUTHOR"
+.PP
+Frank Warmerdam <warmerdam@pobox.com>, Silke Reimer <silke@intevation.de> 

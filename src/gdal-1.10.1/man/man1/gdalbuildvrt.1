@@ -1,0 +1,132 @@
+.TH "gdalbuildvrt" 1 "Mon Aug 26 2013" "GDAL" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gdalbuildvrt \- .TH "gdalbuildvrt" 1 "Mon Aug 26 2013" "GDAL" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gdalbuildvrt \- Builds a VRT from a list of datasets. (compiled by default since GDAL 1.6.1)
+.SH "SYNOPSIS"
+.PP
+.PP
+.nf
+
+gdalbuildvrt [-tileindex field_name]
+             [-resolution {highest|lowest|average|user}]
+             [-te xmin ymin xmax ymax] [-tr xres yres] [-tap]
+             [-separate] [-b band] [-sd subdataset]
+             [-allow_projection_difference] [-q]
+             [-addalpha] [-hidenodata]
+             [-srcnodata "value [value...]"] [-vrtnodata "value [value...]"] 
+             [-a_srs srs_def]
+             [-input_file_list my_liste.txt] [-overwrite] output.vrt [gdalfile]*
+.fi
+.PP
+.SH "DESCRIPTION"
+.PP
+This program builds a VRT (Virtual Dataset) that is a mosaic of the list of input GDAL datasets. The list of input GDAL datasets can be specified at the end of the command line, or put in a text file (one filename per line) for very long lists, or it can be a MapServer tileindex (see \fBgdaltindex\fP utility). In the later case, all entries in the tile index will be added to the VRT.
+.PP
+With -separate, each files goes into a separate \fIstacked\fP band in the VRT band. Otherwise, the files are considered as tiles of a larger mosaic and the VRT file has as many bands as one of the input files.
+.PP
+If one GDAL dataset is made of several subdatasets and has 0 raster bands, all the subdatasets will be added to the VRT rather than the dataset itself.
+.PP
+gdalbuildvrt does some amount of checks to assure that all files that will be put in the resulting VRT have similar characteristics : number of bands, projection, color interpretation... If not, files that do not match the common characteristics will be skipped. (This is only true in the default mode, and not when using the -separate option)
+.PP
+If there is some amount of spatial overlapping between files, the order may depend on the order they are inserted in the VRT file, but this behaviour should not be relied on.
+.PP
+This utility is somehow equivalent to the gdal_vrtmerge.py utility and is build by default in GDAL 1.6.1.
+.PP
+.IP "\fB\fB-tileindex\fP:\fP" 1c
+Use the specified value as the tile index field, instead of the default value with is 'location'. 
+.PP
+.IP "\fB\fB-resolution\fP {highest|lowest|average|user}:\fP" 1c
+In case the resolution of all input files is not the same, the -resolution flag enables the user to control the way the output resolution is computed. 'average' is the default. 'highest' will pick the smallest values of pixel dimensions within the set of source rasters. 'lowest' will pick the largest values of pixel dimensions within the set of source rasters. 'average' will compute an average of pixel dimensions within the set of source rasters. 'user' is new in GDAL 1.7.0 and must be used in combination with the -tr option to specify the target resolution. 
+.PP
+.IP "\fB\fB-tr\fP xres yres :\fP" 1c
+(starting with GDAL 1.7.0) set target resolution. The values must be expressed in georeferenced units. Both must be positive values. Specifying those values is of course incompatible with highest|lowest|average values for -resolution option. 
+.PP
+.IP "\fB\fB-tap\fP:\fP" 1c
+(GDAL >= 1.8.0) (target aligned pixels) align the coordinates of the extent of the output file to the values of the -tr, such that the aligned extent includes the minimum extent.
+.PP
+.IP "\fB\fB-te\fP xmin ymin xmax ymax :\fP" 1c
+(starting with GDAL 1.7.0) set georeferenced extents of VRT file. The values must be expressed in georeferenced units. If not specified, the extent of the VRT is the minimum bounding box of the set of source rasters. 
+.PP
+.IP "\fB\fB-addalpha\fP:\fP" 1c
+(starting with GDAL 1.7.0) Adds an alpha mask band to the VRT when the source raster have none. Mainly useful for RGB sources (or grey-level sources). The alpha band is filled on-the-fly with the value 0 in areas without any source raster, and with value 255 in areas with source raster. The effect is that a RGBA viewer will render the areas without source rasters as transparent and areas with source rasters as opaque. This option is not compatible with -separate.
+.PP
+.IP "\fB\fB-hidenodata\fP:\fP" 1c
+(starting with GDAL 1.7.0) Even if any band contains nodata value, giving this option makes the VRT band not report the NoData. Useful when you want to control the background color of the dataset. By using along with the -addalpha option, you can prepare a dataset which doesn't report nodata value but is transparent in areas with no data.
+.PP
+.IP "\fB\fB-srcnodata\fP \fIvalue [value...]\fP:\fP" 1c
+(starting with GDAL 1.7.0) Set nodata values for input bands (different values can be supplied for each band). If more than one value is supplied all values should be quoted to keep them together as a single operating system argument. If the option is not specified, the intrinsic nodata settings on the source datasets will be used (if they exist). The value set by this option is written in the NODATA element of each ComplexSource element. Use a value of \fCNone\fP to ignore intrinsic nodata settings on the source datasets.
+.PP
+.IP "\fB\fB-b\fP \fIband\fP:\fP" 1c
+(GDAL >= 1.10.0) Select an input \fIband\fP to be processed. Bands are numbered from 1. If input bands not set all bands will be added to vrt
+.PP
+.IP "\fB\fB-sd\fP \fIsubdataset\fP\fP" 1c
+(GDAL >= 1.10.0) If the input dataset contains several subdatasets use a subdataset with the specified number (starting from 1). This is an alternative of giving the full subdataset name as an input.
+.PP
+.IP "\fB\fB-vrtnodata\fP \fIvalue [value...]\fP:\fP" 1c
+(starting with GDAL 1.7.0) Set nodata values at the VRT band level (different values can be supplied for each band). If more than one value is supplied all values should be quoted to keep them together as a single operating system argument. If the option is not specified, intrinsic nodata settings on the first dataset will be used (if they exist). The value set by this option is written in the NoDataValue element of each VRTRasterBand element. Use a value of \fCNone\fP to ignore intrinsic nodata settings on the source datasets.
+.PP
+.IP "\fB\fB-separate\fP:\fP" 1c
+(starting with GDAL 1.7.0) Place each input file into a separate \fIstacked\fP band. In that case, only the first band of each dataset will be placed into a new band. Contrary to the default mode, it is not required that all bands have the same datatype. 
+.PP
+.IP "\fB\fB-allow_projection_difference\fP:\fP" 1c
+(starting with GDAL 1.7.0) When this option is specified, the utility will accept to make a VRT even if the input datasets have not the same projection. Note: this does not mean that they will be reprojected. Their projection will just be ignored. 
+.PP
+.IP "\fB\fB-a_srs\fP \fIsrs_def\fP:\fP" 1c
+(starting with GDAL 1.10) Override the projection for the output file. The \fIsrs_def\fP may be any of the usual GDAL/OGR forms, complete WKT, PROJ.4, EPSG:n or a file containing the WKT. 
+.PP
+.IP "\fB\fB-input_file_list\fP:\fP" 1c
+To specify a text file with an input filename on each line 
+.PP
+.IP "\fB\fB-q\fP:\fP" 1c
+(starting with GDAL 1.7.0) To disable the progress bar on the console 
+.PP
+.IP "\fB\fB-overwrite\fP:\fP" 1c
+Overwrite the VRT if it already exists.
+.PP
+.PP
+.SH "EXAMPLE"
+.PP
+.PP
+Make a virtual mosaic from all TIFF files contained in a directory : 
+.PP
+.nf
+
+gdalbuildvrt doq_index.vrt doq/*.tif
+
+.fi
+.PP
+.PP
+Make a virtual mosaic from files whose name is specified in a text file : 
+.PP
+.nf
+
+gdalbuildvrt -input_file_list my_liste.txt doq_index.vrt
+
+.fi
+.PP
+.PP
+Make a RGB virtual mosaic from 3 single-band input files : 
+.PP
+.nf
+
+gdalbuildvrt -separate rgb.vrt red.tif green.tif blue.tif
+
+.fi
+.PP
+.PP
+Make a virtual mosaic with blue background colour (RGB: 0 0 255) : 
+.PP
+.nf
+
+gdalbuildvrt -hidenodata -vrtnodata "0 0 255" doq_index.vrt doq/*.tif
+
+.fi
+.PP
+.SH "AUTHOR"
+.PP
+Even Rouault <even.rouault@mines-paris.org> 

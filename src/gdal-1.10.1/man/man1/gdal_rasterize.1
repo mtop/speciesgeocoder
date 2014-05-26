@@ -1,0 +1,122 @@
+.TH "gdal_rasterize" 1 "Mon Aug 26 2013" "GDAL" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gdal_rasterize \- .TH "gdal_rasterize" 1 "Mon Aug 26 2013" "GDAL" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gdal_rasterize \- burns vector geometries into a raster
+.SH "SYNOPSIS"
+.PP
+.PP
+.nf
+
+Usage: gdal_rasterize [-b band]* [-i] [-at]
+       [-burn value]* | [-a attribute_name] [-3d]
+       [-l layername]* [-where expression] [-sql select_statement]
+       [-of format] [-a_srs srs_def] [-co "NAME=VALUE"]*
+       [-a_nodata value] [-init value]*
+       [-te xmin ymin xmax ymax] [-tr xres yres] [-tap] [-ts width height]
+       [-ot {Byte/Int16/UInt16/UInt32/Int32/Float32/Float64/
+             CInt16/CInt32/CFloat32/CFloat64}] [-q]
+       <src_datasource> <dst_filename>
+.fi
+.PP
+.SH "DESCRIPTION"
+.PP
+This program burns vector geometries (points, lines and polygons) into the raster band(s) of a raster image. Vectors are read from OGR supported vector formats.
+.PP
+Note that the vector data must in the same coordinate system as the raster data; on the fly reprojection is not provided.
+.PP
+Since GDAL 1.8.0, the target GDAL file can be created by gdal_rasterize. One of -tr or -ts option must be used in that case.
+.PP
+.IP "\fB\fB-b\fP \fIband\fP: \fP" 1c
+The band(s) to burn values into. Multiple -b arguments may be used to burn into a list of bands. The default is to burn into band 1.
+.PP
+.IP "\fB\fB-i\fP: \fP" 1c
+Invert rasterization. Burn the fixed burn value, or the burn value associated with the first feature into all parts of the image \fInot\fP inside the provided a polygon.
+.PP
+.IP "\fB\fB-at\fP: \fP" 1c
+Enables the ALL_TOUCHED rasterization option so that all pixels touched by lines or polygons will be updated not just those one the line render path, or whose center point is within the polygon. Defaults to disabled for normal rendering rules.
+.PP
+.IP "\fB\fB-burn\fP \fIvalue\fP: \fP" 1c
+A fixed value to burn into a band for all objects. A list of -burn options can be supplied, one per band being written to.
+.PP
+.IP "\fB\fB-a\fP \fIattribute_name\fP: \fP" 1c
+Identifies an attribute field on the features to be used for a burn in value. The value will be burned into all output bands.
+.PP
+.IP "\fB\fB-3d\fP: \fP" 1c
+Indicates that a burn value should be extracted from the 'Z' values of the feature. These values are adjusted by the burn value given by '-burn value' or '-a attribute_name' if provided. As of now, only points and lines are drawn in 3D.
+.PP
+.IP "\fB\fB-l\fP \fIlayername\fP: \fP" 1c
+Indicates the layer(s) from the datasource that will be used for input features. May be specified multiple times, but at least one layer name or a -sql option must be specified.
+.PP
+.IP "\fB\fB-where\fP \fIexpression\fP: \fP" 1c
+An optional SQL WHERE style query expression to be applied to select features to burn in from the input layer(s). 
+.PP
+.IP "\fB\fB-sql\fP \fIselect_statement\fP: \fP" 1c
+An SQL statement to be evaluated against the datasource to produce a virtual layer of features to be burned in.
+.PP
+.IP "\fB\fB-of\fP \fIformat\fP:\fP" 1c
+(GDAL >= 1.8.0) Select the output format. The default is GeoTIFF (GTiff). Use the short format name.
+.PP
+.IP "\fB\fB-a_nodata\fP \fIvalue\fP:\fP" 1c
+(GDAL >= 1.8.0) Assign a specified nodata value to output bands.
+.PP
+.IP "\fB\fB-init\fP \fIvalue\fP:\fP" 1c
+(GDAL >= 1.8.0) Pre-initialize the output image bands with these values. However, it is not marked as the nodata value in the output file. If only one value is given, the same value is used in all the bands.
+.PP
+.IP "\fB\fB-a_srs\fP \fIsrs_def\fP:\fP" 1c
+(GDAL >= 1.8.0) Override the projection for the output file. If not specified, the projection of the input vector file will be used if available. If incompatible projections between input and output files, no attempt will be made to reproject features. The \fIsrs_def\fP may be any of the usual GDAL/OGR forms, complete WKT, PROJ.4, EPSG:n or a file containing the WKT. 
+.PP
+.IP "\fB\fB-co\fP \fI'NAME=VALUE'\fP:\fP" 1c
+(GDAL >= 1.8.0) Passes a creation option to the output format driver. Multiple \fB-co\fP options may be listed. See format specific documentation for legal creation options for each format.
+.PP
+.IP "\fB\fB-te\fP \fIxmin ymin xmax ymax\fP :\fP" 1c
+(GDAL >= 1.8.0) set georeferenced extents. The values must be expressed in georeferenced units. If not specified, the extent of the output file will be the extent of the vector layers. 
+.PP
+.IP "\fB\fB-tr\fP \fIxres yres\fP :\fP" 1c
+(GDAL >= 1.8.0) set target resolution. The values must be expressed in georeferenced units. Both must be positive values. 
+.PP
+.IP "\fB\fB-tap\fP:\fP" 1c
+(GDAL >= 1.8.0) (target aligned pixels) align the coordinates of the extent of the output file to the values of the -tr, such that the aligned extent includes the minimum extent.
+.PP
+.IP "\fB\fB-ts\fP \fIwidth height\fP:\fP" 1c
+(GDAL >= 1.8.0) set output file size in pixels and lines. Note that -ts cannot be used with -tr
+.PP
+.IP "\fB\fB-ot\fP \fItype\fP:\fP" 1c
+(GDAL >= 1.8.0) For the output bands to be of the indicated data type. Defaults to Float64
+.PP
+.IP "\fB\fB-q\fP:\fP" 1c
+(GDAL >= 1.8.0) Suppress progress monitor and other non-error output.
+.PP
+.IP "\fB\fIsrc_datasource\fP: \fP" 1c
+Any OGR supported readable datasource.
+.PP
+.IP "\fB\fIdst_filename\fP: \fP" 1c
+The GDAL supported output file. Must support update mode access. Before GDAL 1.8.0, gdal_rasterize could not create new output files.
+.PP
+.PP
+.SH "EXAMPLE"
+.PP
+The following would burn all polygons from mask.shp into the RGB TIFF file work.tif with the color red (RGB = 255,0,0).
+.PP
+.PP
+.nf
+
+gdal_rasterize -b 1 -b 2 -b 3 -burn 255 -burn 0 -burn 0 -l mask mask.shp work.tif
+.fi
+.PP
+.PP
+The following would burn all 'class A' buildings into the output elevation file, pulling the top elevation from the ROOF_H attribute.
+.PP
+.PP
+.nf
+
+gdal_rasterize -a ROOF_H -where 'class="A"' -l footprints footprints.shp city_dem.tif
+.fi
+.PP
+.SH "AUTHORS"
+.PP
+Frank Warmerdam <warmerdam@pobox.com> 

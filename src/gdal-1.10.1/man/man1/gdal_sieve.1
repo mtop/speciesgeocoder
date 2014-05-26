@@ -1,0 +1,58 @@
+.TH "gdal_sieve" 1 "Mon Aug 26 2013" "GDAL" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gdal_sieve \- .TH "gdal_sieve" 1 "Mon Aug 26 2013" "GDAL" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gdal_sieve \- removes small raster polygons
+.SH "SYNOPSIS"
+.PP
+.PP
+.nf
+
+gdal_sieve.py [-q] [-st threshold] [-4] [-8] [-o name=value]
+           srcfile [-nomask] [-mask filename] [-of format] [dstfile]
+.fi
+.PP
+.SH "DESCRIPTION"
+.PP
+The gdal_sieve.py script removes raster polygons smaller than a provided threshold size (in pixels) and replaces replaces them with the pixel value of the largest neighbour polygon. The result can be written back to the existing raster band, or copied into a new file.
+.PP
+Additional details on the algorithm are available in the GDALSieveFilter() docs.
+.PP
+.IP "\fB\fB-q\fP:\fP" 1c
+The script runs in quiet mode. The progress monitor is supressed and routine messages are not displayed.
+.PP
+.IP "\fB\fB-st\fP \fIthreshold\fP:\fP" 1c
+Set the size threshold in pixels. Only raster polygons smaller than this size will be removed.
+.PP
+.IP "\fB\fB-o\fP \fIname=value\fP:\fP" 1c
+Specify a special argument to the algorithm. Currently none are supported. 
+.PP
+.IP "\fB\fB-4\fP:\fP" 1c
+Four connectedness should be used when determining polygons. That is diagonal pixels are not considered directly connected. This is the default. 
+.PP
+.IP "\fB\fB-8\fP:\fP" 1c
+Eight connectedness should be used when determining polygons. That is diagonal pixels are considered directly connected. 
+.PP
+.IP "\fB\fIsrcfile\fP\fP" 1c
+The source raster file used to identify target pixels. Only the first band is used.
+.PP
+.IP "\fB\fB-nomask\fP:\fP" 1c
+Do not use the default validity mask for the input band (such as nodata, or alpha masks). 
+.PP
+.IP "\fB\fB-mask\fP \fIfilename\fP:\fP" 1c
+Use the first band of the specified file as a validity mask (zero is invalid, non-zero is valid). 
+.PP
+.IP "\fB\fIdstfile\fP\fP" 1c
+The new file to create with the filtered result. If not provided, the source band is updated in place.
+.PP
+.IP "\fB\fB-of\fP \fIformat\fP:\fP" 1c
+Select the output format. The default is GeoTIFF (GTiff). Use the short format name. 
+.PP
+.PP
+.SH "AUTHORS"
+.PP
+Frank Warmerdam <warmerdam@pobox.com> 

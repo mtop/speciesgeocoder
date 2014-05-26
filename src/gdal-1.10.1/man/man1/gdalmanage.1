@@ -1,0 +1,110 @@
+.TH "gdalmanage" 1 "Mon Aug 26 2013" "GDAL" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gdalmanage \- .TH "gdalmanage" 1 "Mon Aug 26 2013" "GDAL" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gdalmanage \- Identify, delete, rename and copy raster data files
+.SH "SYNOPSIS"
+.PP
+.PP
+.nf
+
+Usage: gdalmanage mode [-r] [-u] [-f format]
+                  datasetname [newdatasetname]
+.fi
+.PP
+.SH "DESCRIPTION"
+.PP
+The gdalmanage program can perform various operations on raster data files, depending on the chosen \fImode\fP. This includes identifying raster data types and deleting, renaming or copying the files.
+.PP
+.IP "\fB\fImode\fP:\fP" 1c
+Mode of operation 
+.IP "\fB\fBidentify\fP \fIdatasetname\fP:\fP" 1c
+List data format of file. 
+.IP "\fB\fBcopy\fP \fIdatasetname newdatasetname\fP:\fP" 1c
+Create a copy of the raster file with a new name. 
+.IP "\fB\fBrename\fP \fIdatasetname newdatasetname\fP:\fP" 1c
+Change the name of the raster file. 
+.IP "\fB\fBdelete\fP \fIdatasetname\fP:\fP" 1c
+Delete raster file. 
+.PP
+.PP
+.IP "\fB\fB-r\fP:\fP" 1c
+Recursively scan files/folders for raster files. 
+.IP "\fB\fB-u\fP:\fP" 1c
+Report failures if file type is unidentified. 
+.IP "\fB\fB-f\fP \fIformat\fP:\fP" 1c
+Specify format of raster file if unknown by the application. Uses short data format name (e.g. \fIGTiff\fP).
+.PP
+.IP "\fB\fIdatasetname\fP:\fP" 1c
+Raster file to operate on. 
+.IP "\fB\fInewdatasetname\fP:\fP" 1c
+For copy and rename modes, you provide a \fIsource\fP filename and a \fItarget\fP filename, just like copy and move commands in an operating system. 
+.PP
+.SH "EXAMPLES"
+.PP
+.SS "Using identify mode"
+Report the data format of the raster file by using the \fIidentify\fP mode and specifying a data file name:
+.PP
+.PP
+.nf
+
+$ gdalmanage identify NE1_50M_SR_W.tif
+
+NE1_50M_SR_W.tif: GTiff
+.fi
+.PP
+.PP
+Recursive mode will scan subfolders and report the data format:
+.PP
+.PP
+.nf
+
+$ gdalmanage identify -r 50m_raster/
+
+NE1_50M_SR_W/ne1_50m.jpg: JPEG
+NE1_50M_SR_W/ne1_50m.png: PNG
+NE1_50M_SR_W/ne1_50m_20pct.tif: GTiff
+NE1_50M_SR_W/ne1_50m_band1.tif: GTiff
+NE1_50M_SR_W/ne1_50m_print.png: PNG
+NE1_50M_SR_W/NE1_50M_SR_W.aux: HFA
+NE1_50M_SR_W/NE1_50M_SR_W.tif: GTiff
+NE1_50M_SR_W/ne1_50m_sub.tif: GTiff
+NE1_50M_SR_W/ne1_50m_sub2.tif: GTiff
+
+.fi
+.PP
+ 
+.SS "Using copy mode"
+Copy the raster data:
+.PP
+.PP
+.nf
+
+$ gdalmanage copy NE1_50M_SR_W.tif ne1_copy.tif
+.fi
+.PP
+.SS "Using rename mode"
+Rename raster data: 
+.PP
+.nf
+
+$ gdalmanage rename NE1_50M_SR_W.tif ne1_rename.tif
+
+.fi
+.PP
+.SS "Using delete mode"
+Delete the raster data:
+.PP
+.PP
+.nf
+
+gdalmanage delete NE1_50M_SR_W.tif
+.fi
+.PP
+.SH "AUTHORS"
+.PP
+Tyler Mitchell <spatialguru@shaw.ca> 

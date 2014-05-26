@@ -1,0 +1,61 @@
+.TH "gdal_polygonize" 1 "Mon Aug 26 2013" "GDAL" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gdal_polygonize \- .TH "gdal_polygonize" 1 "Mon Aug 26 2013" "GDAL" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+gdal_polygonize \- produces a polygon feature layer from a raster
+.SH "SYNOPSIS"
+.PP
+.PP
+.nf
+
+gdal_polygonize.py [-8] [-nomask] [-mask filename] raster_file [-b band]
+                [-q] [-f ogr_format] out_file [layer] [fieldname]
+.fi
+.PP
+.SH "DESCRIPTION"
+.PP
+This utility creates vector polygons for all connected regions of pixels in the raster sharing a common pixel value. Each polygon is created with an attribute indicating the pixel value of that polygon. A raster mask may also be provided to determine which pixels are eligible for processing.
+.PP
+The utility will create the output vector datasource if it does not already exist, defaulting to GML format.
+.PP
+The utility is based on the GDALPolygonize() function which has additional details on the algorithm.
+.PP
+.IP "\fB\fB-8\fP:\fP" 1c
+(GDAL >= 1.10) Use 8 connectedness. Default is 4 connectedness. 
+.PP
+.IP "\fB\fB-nomask\fP:\fP" 1c
+Do not use the default validity mask for the input band (such as nodata, or alpha masks). 
+.PP
+.IP "\fB\fB-mask\fP \fIfilename\fP:\fP" 1c
+Use the first band of the specified file as a validity mask (zero is invalid, non-zero is valid). 
+.PP
+.IP "\fB\fIraster_file\fP\fP" 1c
+The source raster file from which polygons are derived.
+.PP
+.IP "\fB\fB-b\fP \fIband\fP: \fP" 1c
+The band on \fIraster_file\fP to build the polygons from. 
+.PP
+.IP "\fB\fB-f\fP \fIogr_format\fP\fP" 1c
+Select the output format of the file to be created. Default is GML. 
+.PP
+.IP "\fB\fIout_file\fP\fP" 1c
+The destination vector file to which the polygons will be written. 
+.PP
+.IP "\fB\fIlayer\fP\fP" 1c
+The name of the layer created to hold the polygon features. 
+.PP
+.IP "\fB\fIfieldname\fP\fP" 1c
+The name of the field to create (defaults to 'DN'). 
+.PP
+.IP "\fB\fB-q\fP:\fP" 1c
+The script runs in quiet mode. The progress monitor is supressed and routine messages are not displayed. 
+.PP
+.PP
+.PP
+.SH "AUTHORS"
+.PP
+Frank Warmerdam <warmerdam@pobox.com> 
