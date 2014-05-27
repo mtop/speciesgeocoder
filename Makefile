@@ -1,13 +1,17 @@
 # This is the Makefile for compiling the gdal and proj4 code needed for 
 # SpeciesGeoCoder to run properly.
 # Default installation directory is /usr/local/bin. You can change the 
-# installation directory by changing the value of the variable "INSTALLDIR".
+# installation directory by changing the value of the variable "PREFIX".
 
+PWD="."
 ROOTDIR=$(PWD)
-DIR=$(shell basename $(PWD))
-INSTALLDIR=/usr/local/bin
+#DIR=$(shell basename $(PWD))
+DIR=$(shell basename $PWD)
+PREFIX=/usr/local/bin
+INSTALLDIR=SpeciesGeoCoder.v.1.0
 PROJ4DIR=$(PWD)/src/proj-4.9.0
-GDALDIR=$(PWD)/src/gdal-1.10.1
+#GDALDIR=$(PWD)/src/gdal-1.10.1
+GDALDIR=./src/gdal-1.10.1
 PROJ4_ROOT=$(PROJ4DIR)/install_proj
 OS := $(shell uname)
 cygwin=$
@@ -43,19 +47,17 @@ Linux:
 CYGWIN_NT-5.1: CYGWIN_NT-6.1
 CYGWIN_NT-6.1-WOW64: CYGWIN_NT-6.1
 CYGWIN_NT-6.1:
-	@ln -s $(GDALDIR)/apps/gdalinfo $(ROOTDIR)/bin/gdalinfo_cygwin
-	@ln -s $(GDALDIR)/apps/gdallocationinfo $(ROOTDIR)/bin/gdallocationinfo_cygwin
+	@ln -s $(GDALDIR)/apps/gdalinfo.exe $(ROOTDIR)/bin/gdalinfo_cygwin
+	@ln -s $(GDALDIR)/apps/gdallocationinfo.exe $(ROOTDIR)/bin/gdallocationinfo_cygwin
 
 install_proj:
 	-mkdir $(PROJ4DIR)/install_proj
 
 install: $(OS)
-	@echo "Installing SpeciesGeoCoder in $(INSTALLDIR)"
-	@cp -rf $(PWD) $(INSTALLDIR)
-	@touch $(INSTALLDIR)/speciesgeocoder
-	@echo "#!/bin/bash" > $(INSTALLDIR)/speciesgeocoder
-	@echo "$(INSTALLDIR)/$(DIR)/geocoder.py" >> $(INSTALLDIR)/speciesgeocoder
-	@chmod +x $(INSTALLDIR)/speciesgeocoder
+	@echo "Installing SpeciesGeoCoder in $(PREFIX)"
+	@cp -R $(PWD) $(PREFIX)/$(INSTALLDIR)
+	@$(INSTALL) speciesgeocoder $(PREFIX)
+	@echo "#!/bin/bash  \npython $(PREFIX)/$(INSTALLDIR)/geocoder.py \$$*" > $(PREFIX)/speciesgeocoder
 
 clean:
 	make clean -C $(PROJ4DIR)
