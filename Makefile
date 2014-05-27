@@ -7,7 +7,7 @@ PWD="."
 ROOTDIR=$(PWD)
 #DIR=$(shell basename $(PWD))
 DIR=$(shell basename $PWD)
-PREFIX=/usr/local/bin
+PREFIX=/usr/local/bin/test
 INSTALLDIR=SpeciesGeoCoder.v.1.0
 PROJ4DIR=$(PWD)/src/proj-4.9.0
 #GDALDIR=$(PWD)/src/gdal-1.10.1
@@ -58,6 +58,11 @@ install: $(OS)
 	@cp -R $(PWD) $(PREFIX)/$(INSTALLDIR)
 	@$(INSTALL) speciesgeocoder $(PREFIX)
 	@echo "#!/bin/bash  \npython $(PREFIX)/$(INSTALLDIR)/geocoder.py \$$*" > $(PREFIX)/speciesgeocoder
+
+uninstall:
+	@echo "Removing SpeciesGeoCoder from $(PREFIX)"
+	@-rm $(PREFIX)/speciesgeocoder
+	@-rm -r $(PREFIX)/$(INSTALLDIR)
 
 clean:
 	make clean -C $(PROJ4DIR)
