@@ -12,16 +12,19 @@
 7.) Example data
 ===========================================
 
-===
+=====================
 1.) For the impatient
+=====================
 wget https://github.com/mtop/speciesgeocoder/archive/master.zip
 unzip master.zip
 cd speciesgeocoder-master/
 make
 sudo make install
 
-===
+
+=================
 2.) Dependencies*
+=================
 Python module argparse (included in python v2.7) 
 make
 gcc
@@ -32,8 +35,10 @@ Both 'make' and 'gcc' should be installed on a regular GNU/Linux
 system. Mac OSX and Windows/Cygwin users can find installation 
 instructions below.
 
-===
+
+==========================
 3.) Installing on Mac OSX.
+==========================
 'make' and 'gcc' are part of the package 'Xcode' that is available on 
 Appstore. After installation, open Xcode and go to: 
 Preferences -> Downloads -> Components -> Command Line Tools, and 
@@ -56,34 +61,45 @@ e. Copy and paste the following command into your terminal window
 f.	Then run the command 'sudo make install' to install the package 
 	in /usr/local/bin
 
-===
-4.) Installing on Windows using Cygwin
 
-### Installing using wget
-### Copy and paste the following commands in a terminal
+======================================
+4.) Installing on Windows using Cygwin
+======================================
+Follow the instructions in the file doc/HOWTO_Cygwin_installation.txt
+to install Cygwin and all dependencies to SpeciesGeoCoder.
+
+# Copy and paste the following commands in a Cygwin terminal window
 wget https://github.com/mtop/speciesgeocoder/archive/master.zip
 unzip master.zip
 cd speciesgeocoder-master/
 make 
 sudo (?) make install 
 
-===
+===========================
 5.) Installing on GNU/Linux
+===========================
+wget https://github.com/mtop/speciesgeocoder/archive/master.zip
+unzip master.zip
+cd speciesgeocoder-master/
+make
+sudo make install
 
-===
+
+======================================
 6.) Installing the development version
-### Copy and paste the following commands in a terminal
+======================================
 git clone git@github.com:mtop/speciesgeocoder.git
 cd speciesgeocoder/
 make distclean
 make
-make test
 
-===
+
+================
 7.) Example data
-Examples of the imput files used by 'speciesgeocoder' is located in
-the directory example_data/. You can test the program by typing the
-following command in the 'speciesgeocoder' directory.
+================
+Examples of the the type of input files used by 'speciesgeocoder' 
+is located in the directory example_data/. You can test the program 
+by typing the following command in the 'speciesgeocoder' directory.
 
 ./geocoder.py -l example_data/localities.csv -p example_data/polygons.txt -t example_data/*.tif
 
