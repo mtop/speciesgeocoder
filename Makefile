@@ -15,7 +15,7 @@ GDALDIR=./src/gdal-1.10.1
 PROJ4_ROOT=$(PROJ4DIR)/install_proj
 OS := $(shell uname)
 cygwin=$
-INSTALL=/usr/bin/install -S
+INSTALL=/usr/bin/install
 
 all: install_proj proj4 gdal $(OS)
 
