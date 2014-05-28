@@ -62,7 +62,7 @@ install: $(OS)
 
 uninstall:
 	@echo "Removing SpeciesGeoCoder from $(PREFIX)"
-	@-rm $(PREFIX)/speciesgeocode r
+	@-rm $(PREFIX)/speciesgeocoder 
 	@-rm -r $(PREFIX)/$(INSTALLDIR)
 
 clean:
