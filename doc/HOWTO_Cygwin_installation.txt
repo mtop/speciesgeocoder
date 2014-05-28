@@ -19,7 +19,8 @@ the installation process of a Cygwin system on Windows XP/Vista/7/.
    Cygwin on your computer.
 5. When the page "Select packages to install" appears, select the 
    following programs (dependencis):
-
+	
+	Archive/unzip
 	Devel/gcc-core
 	Devel/gcc-g++
 	Devel/make
