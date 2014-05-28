@@ -73,7 +73,7 @@ wget https://github.com/mtop/speciesgeocoder/archive/master.zip
 unzip master.zip
 cd speciesgeocoder-master/
 make 
-sudo (?) make install 
+make install 
 
 ===========================
 5.) Installing on GNU/Linux
