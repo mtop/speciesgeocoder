@@ -4,13 +4,13 @@
 # installation directory by changing the value of the variable "PREFIX".
 
 PWD="."
-ROOTDIR=$(PWD)
+ROOTDIR=$(shell env PWD)
 #DIR=$(shell basename $(PWD))
 DIR=$(shell basename $PWD)
 PREFIX=/usr/local/bin/test
 INSTALLDIR=SpeciesGeoCoder.v.1.0
-PROJ4DIR=$(PWD)/src/proj-4.9.0
-#GDALDIR=$(PWD)/src/gdal-1.10.1
+PROJ4DIR=$(ROOTDIR)/src/proj-4.9.0
+#GDALDIR=$(ROOTDIR)/src/gdal-1.10.1
 GDALDIR=./src/gdal-1.10.1
 PROJ4_ROOT=$(PROJ4DIR)/install_proj
 OS := $(shell uname)
