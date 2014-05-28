@@ -47,8 +47,8 @@ Linux:
 CYGWIN_NT-5.1: CYGWIN_NT-6.1
 CYGWIN_NT-6.1-WOW64: CYGWIN_NT-6.1
 CYGWIN_NT-6.1:
-	@ln -s $(GDALDIR)/apps/gdalinfo.exe $(ROOTDIR)/bin/gdalinfo_cygwin
-	@ln -s $(GDALDIR)/apps/gdallocationinfo.exe $(ROOTDIR)/bin/gdallocationinfo_cygwin
+	-@ln -s $(GDALDIR)/apps/gdalinfo.exe $(ROOTDIR)/bin/gdalinfo_cygwin
+	-@ln -s $(GDALDIR)/apps/gdallocationinfo.exe $(ROOTDIR)/bin/gdallocationinfo_cygwin
 
 install_proj:
 	-mkdir $(PROJ4DIR)/install_proj
@@ -61,7 +61,7 @@ install: $(OS)
 
 uninstall:
 	@echo "Removing SpeciesGeoCoder from $(PREFIX)"
-	@-rm $(PREFIX)/speciesgeocoder
+	@-rm $(PREFIX)/speciesgeocode r
 	@-rm -r $(PREFIX)/$(INSTALLDIR)
 
 clean:
