@@ -1,2 +1,0 @@
-"identifier"	"XCOOR"	"YCOOR"
-"391"	"Ivesia saxosa"	-118.63	37.51
