@@ -57,7 +57,8 @@ install: $(OS)
 	@echo "Installing SpeciesGeoCoder in $(PREFIX)"
 	@cp -R $(PWD) $(PREFIX)/$(INSTALLDIR)
 	@$(INSTALL) speciesgeocoder $(PREFIX)
-	@echo "#!/bin/bash  \npython $(PREFIX)/$(INSTALLDIR)/geocoder.py \$$*" > $(PREFIX)/speciesgeocoder
+	@echo "#!/bin/bash" > $(PREFIX)/speciesgeocoder 
+	@echo "python $(PREFIX)/$(INSTALLDIR)/geocoder.py \$$*" >> $(PREFIX)/speciesgeocoder
 
 uninstall:
 	@echo "Removing SpeciesGeoCoder from $(PREFIX)"
