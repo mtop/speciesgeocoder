@@ -25,7 +25,7 @@ sudo make install
 =================
 2.) Dependencies*
 =================
-Python module argparse (included in python v2.7) 
+argparse (Module included in python v2.7) 
 make
 gcc
 R (only needed if you want to use the plot functions)
