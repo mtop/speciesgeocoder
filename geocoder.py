@@ -186,6 +186,7 @@ class MyLocalities(Localities):
 			nr += 1
 		return nr
 
+
 class GbifLocalities(Localities):
 	# Object that contains the locality data in the form
 	# that is delivered from http://data.gbif.org 
@@ -372,10 +373,60 @@ def main():
 	sys.stderr.write("\n")
 	result.printNexus()
 
+
 	if args.plot == True:
 	### Go to R ###
 	### Do tests of cutoff values and call R + functions
+
+		### Prepare the input files for R
 		
+		# coordinates.sgc.txt
+		out1 = open("coordinates.sgc.txt", "w")
+		out1.write("identifier\tXCOOR\tYCOOR\n")
+		localities = MyLocalities()
+		for species, latitude, longitude in localities.getLocalities():
+			# Note that the latitude/longitude order has shifted 
+			# in order to fit the requirements of the R code.
+			out1.write("%s\t%s\t%s\n" % (species.replace(" ", "_") , longitude, latitude))
+		out1.close()
+
+		# polygons.sgc.txt
+		out2 = open("polygons.sgc.txt", "w")
+		out2.write("identifier\tXCOOR\tYCOOR\n")
+		for polygon in polygons.getPolygons():
+			for coordPair in polygon[1]:
+				# Note that the latitude/longitude order has shifted
+				# in order to fit the requirements of the R code.
+				out2.write("%s\t%s\t%s\n" % (polygon[0].replace(" ", "_"), coordPair.split(',')[0], coordPair.split(',')[1]))
+		out2.close()
+
+		# sampletable.sgc.txt
+		out3 = open("sampletable.sgc.txt", "w")
+		out3.write("identifier\thomepolygon\n")
+		for species, polygon in result.getSampletable():
+			out3.write("%s\t%s\n" % (species.replace(" ", "_"), polygon.replace(" ", "_")))
+		out3.close()
+
+		# speciestable.sgc.txt
+		out4 = open("speciestable.sgc.txt", "w")
+		# Headers 
+		header = "Species\t"
+		for name in result.getPolygonNames():
+			header += "%s\t" % name
+		header += "\n"
+		out4.write(header)
+
+		# Species names and character matrix
+		for species in result.getResult():
+			string = "%s\t" % species
+			for record in result.getResult()[species]:
+				string += "%s\t" % record 
+			string += "\n"
+			out4.write(string)
+		out4.close()
+
+
+	"""
 		try:
 			import rpy2.robjects as ro
 		except:
@@ -509,7 +560,7 @@ def main():
 #		ro.r('WriteTablesSpGeo(dummy)')													# Devel.
 #		ro.r('OutPlotSpPoly(dummy)')													# Devel.
 
-
+"""
 
 
 if __name__ == "__main__":
