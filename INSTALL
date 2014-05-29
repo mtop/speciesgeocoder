@@ -28,6 +28,7 @@ sudo make install
 Python module argparse (included in python v2.7) 
 make
 gcc
+R (only needed if you want to use the plot functions)
 
 *The programs 'make' and 'gcc' are only needed if the pre-compiled 
 versions of gdalinfo and gdallocationinfo does now work on your system. 
