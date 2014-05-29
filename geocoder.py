@@ -21,8 +21,19 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import argparse
 import sys
+try:
+	import argparse
+except ImportError:
+	sys.stderr.write("[Error] The python module \"argparse\" is not installed\n")
+	sys.stderr.write("[--] Would you like to install it now [Y/N]? ")
+	answer = sys.stdin.readline()
+	if answer[0].lower() == "y":
+		sys.stderr.write("[--] Running \"sudo easy_install argparse\"\n")
+		from subprocess import call
+		call(["sudo", "easy_install", "argparse"])
+	else:
+		sys.stderr("[--] Exiting due to missing dependency \"argparser\"")
 from lib.exceptions import *
 import subprocess
 
@@ -376,8 +387,9 @@ def main():
 		polyName_list = []
 		polyLong_list = []
 		polyLat_list = []
-		import os 														# Devel.
-		source_root =  os.path.dirname(os.path.abspath(__file__))		# Devel.
+		polygonList = []
+		import os 														
+		source_root =  os.path.dirname(os.path.abspath(__file__))		
 		ro.r('source("%s/R/SpeciesGeoCodeR.R")' % source_root)
 
 		# Localities
@@ -392,26 +404,79 @@ def main():
 		ro.r('spLatitudes <- c("%s")' % spLat_list)
 		# ...and finally a data frame.
 		ro.r('coordinates <- data.frame(identifier = speciesNames, XCOOR = spLongitudes, YCOOR = spLatitudes)')
-		ro.r('png(filename="test_plot-1.png")')		# Devel.
-		ro.r('plot(coordinates)')					# Devel.
-		ro.r('dev.off()')							# Devel.
+
+#		ro.r('write(spLatitudes, stderr())')
 
 		# Polygons
 		# Store polygon names long. and lat. data in separate lists...
 		for polygon in polygons.getPolygons():
 			polyName_list.append(polygon[0])
-			polyLong_list.append(polygon[1])
-			polyLat_list.append(polygon[2])
-		# ...then transform these lists into separate R objects...
-		ro.r('polygonNames <- c("%s")' % polyName_list)
-		ro.r('polygonLong <- c("%s")' % polyLong_list)
-		ro.r('polyLat <- c("%s")' % polyLat_list)
-		# ...and finally a data frame.
-		ro.r('polygons <- data.frame(identifier = polygonNames, XCOOR = polygonLong, YCOOR = polyLat)')
-		ro.r('png(filename="test_plot-2.png")')     # Devel.
-		ro.r('plot(polygons)')                   	# Devel.
-		ro.r('dev.off()')                           # Devel.
+#			print "Polygon: ", polygon[0]
+#			polyName_list += polygon[0]
+#			polyName_list += " "
+#			polyName_list.append(polygon[0])
+			for coordPair in polygon[1]:
+				polyLong_list.append(coordPair.split(',')[0])
+				polyLat_list.append(coordPair.split(',')[1])
+#				polyLong_list += coordPair.split(',')[0]
+#				polyLong_list += " "
+#				polyLat_list += coordPair.split(',')[1]
+#				polyLat_list += " "
+#		print polyLong_list
+#		print polyName_list
+
+#		print polyLong_list
+#		print polyLat_list
 #		sys.exit()
+
+#			print "Polygon: ", polygon
+#			print polygon[1]
+###			for coordPair in polygon[1]:
+###				entry = (polygonName,
+###						 float(coordPair.split(',')[0]),
+###						 float(coordPair.split(',')[1]))
+#						 polyLong_list.append(float(coordPair.split(',')[0])),
+#						 polyLat_list.append(float(coordPair.split(',')[1])))
+###				polygonList.append(entry)
+#		print polygonList
+#		print polyLong_list
+#		print polyLat_list
+#			polyLong_list.append(polygon[1])
+#			polyLat_list.append(polygon[2])
+		# ...then transform these lists into separate R objects...
+		ro.r('polygonNames <- as.vector(c("%s%s"))' % (''.join(polyName_list), " "))
+		ro.r('polyLong <- c("%s%s")' % (''.join(polyLong_list), " "))
+		ro.r('polyLat <- c("%s%s")' % (''.join(polyLat_list), " "))
+
+#		print polyName_list
+		
+#		print ''.join(polyName_list)
+
+		ro.r('write(polygonNames), stderr())')
+#		ro.r('write(polyLong), stderr())')
+#		ro.r('write(unlist(strsplit(polyLong, " ")), stderr())')
+#		ro.r('write(unlist(strsplit(polyLat, " ")), stderr())')
+
+
+		# ...and finally a data frame.
+#		ro.r('polygons <- data.frame(identifier = unlist(strsplit(polygonNames, " ")), XCOOR = unlist(strsplit(polyLong, " ")), YCOOR = unlist(strsplit(polyLat, " "))')
+		ro.r('polygons <- data.frame(identifier = polygonNames, XCOOR = polyLong, YCOOR = polyLat')
+#		ro.r('write(polygons, stderr())')
+
+#		ro.r('png(filename="test_plot-2.png")')     # Devel.
+#		ro.r('plot(polygons)')                   	# Devel.
+#		ro.r('dev.off()')                           # Devel.
+#		sys.exit()
+		
+###		ro.r('polygons <- data.frame(c("identifier", "XCOOR", "YCOOR"))')
+###		for polygon in polygonList:		# Get this from the class instead
+###			print polygon
+#			ro.r('newrow <- c("%s")' % p)			# FUBAR
+###			ro.r('newProw <- c("%s, %s, %s")' % (polygon[0], polygon[1], polygon[2]))
+###			ro.r('polygons <- rbind(polygons, newProw)')
+#		ro.r('png(filename="test_polygon.png")')    # Devel.
+#		ro.r('plot(polygons)')                      # Devel.
+#		ro.r('dev.off()')                           # Devel.
 	
 		# Sampletable
 		Rspecies = []
@@ -422,19 +487,27 @@ def main():
 		ro.r('sampleSpecies <- c("%s")' % Rspecies)
 		ro.r('samplePolygon <- c("%s")' % Rpolygon)
 		ro.r('sampletable <- data.frame(species = sampleSpecies, polygon = samplePolygon)')
-		ro.r('png(filename="test_sampletable.png")')    # Devel.
-		ro.r('plot(sampletable)')                      	# Devel.
-		ro.r('dev.off()')                           	# Devel.		
+#		ro.r('png(filename="test_sampletable.png")')    # Devel.
+#		ro.r('plot(sampletable)')                      	# Devel.
+#		ro.r('dev.off()')                           	# Devel.		
 
 		# Speciestable
 		ro.r('speciestable <- data.frame(c("%s"))' % polygons.getPolygonNames())
 #		ro.r('names(speciestable) <- c("%s")' % polygons.getPolygonNames())
-		for name in localities.getSpeciesNames():
-			ro.r('newrow <- c("%s")' % result.result[name]) 
-			ro.r('speciestable <- rbind(speciestable, newrow)')
-		ro.r('png(filename="test_speciestable.png")')   # Devel.
-		ro.r('plot(sampletable)')                       # Devel.
-		ro.r('dev.off()')                               # Devel.
+###		for name in localities.getSpeciesNames():
+###			ro.r('newrow <- c(as.numeric("%s"))' % result.result[name]) 
+###			ro.r('speciestable <- rbind(speciestable, c("%s"))' % result.result[name])		# FUBAR
+#		ro.r('png(filename="test_speciestable.png")')   # Devel.
+#		ro.r('plot(sampletable)')                       # Devel.
+#		ro.r('dev.off()')                               # Devel.
+###		ro.r('write(speciestable[1,], stderr())')
+##		sys.exit()
+
+		# TEST
+		ro.r('dummy <- GetPythonIn(coordinates, polygons, sampletable, speciestable)')	# Devel.
+		ro.r('dummy <- CoExClass(dummy)')												# Devel.
+#		ro.r('WriteTablesSpGeo(dummy)')													# Devel.
+#		ro.r('OutPlotSpPoly(dummy)')													# Devel.
 
 
 
