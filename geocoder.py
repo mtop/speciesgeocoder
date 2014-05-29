@@ -408,22 +408,40 @@ def main():
 		out3.close()
 
 		# speciestable.sgc.txt
+		# Number of occurrences per polygon
 		out4 = open("speciestable.sgc.txt", "w")
 		# Headers 
 		header = "Species\t"
 		for name in result.getPolygonNames():
-			header += "%s\t" % name
+			header += "%s\t" % name.replace(" ", "_")
 		header += "\n"
 		out4.write(header)
-
 		# Species names and character matrix
 		for species in result.getResult():
-			string = "%s\t" % species
+			string = "%s\t" % species.replace(" ", "_")
 			for record in result.getResult()[species]:
 				string += "%s\t" % record 
 			string += "\n"
 			out4.write(string)
 		out4.close()
+
+		# occurences.sgc.txt
+		# Occurreces in binary form
+		out5 = open("occurences.sgc.txt", "w")
+		# Headers
+		header = "Species\t"
+		for name in result.getPolygonNames():
+			header += "%s\t" % name.replace(" ", "_")
+		header += "\n"
+		out5.write(header)
+		# Species names and character matrix
+		for name in sorted(result.getResult()):
+			string = "%s\t" % name.replace(" ", "_")
+			for record in result.resultToStr(result.result[name]):
+				string += "%s\t" % record
+			string += "\n"
+			out5.write(string)
+		out5.close()
 
 
 	"""
