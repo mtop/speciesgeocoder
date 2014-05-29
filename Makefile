@@ -65,6 +65,9 @@ uninstall:
 	@-rm $(PREFIX)/speciesgeocoder 
 	@-rm -r $(PREFIX)/$(INSTALLDIR)
 
+dependencies:
+	@sudo easy_install argparse
+
 clean:
 	make clean -C $(PROJ4DIR)
 	make clean -C $(GDALDIR)
