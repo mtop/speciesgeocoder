@@ -29,7 +29,7 @@ the installation process of a Cygwin system on Windows XP/Vista/7/.
 	Devel/gcc-g++
 	Devel/make
 	Interpreters/python
-	Net/wget
+	Web/wget
 	Science/R
 
 You may also like to install the following packages (optional):
