@@ -46,7 +46,7 @@ Preferences -> Downloads -> Components -> Command Line Tools, and
 install the commandline tools of Xcode. Then follow these steps:
 
 a. Direct your browser to the following URL (a compressed file will 
-	thenbe automatically downloaded):
+	then be automatically downloaded):
 
 	https://github.com/mtop/speciesgeocoder/archive/master.zip
 
