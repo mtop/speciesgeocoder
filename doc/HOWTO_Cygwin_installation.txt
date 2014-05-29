@@ -1,6 +1,9 @@
-This file file describes how to do a minimal Cygwin installation, 
-that still includes all dependencies of SpeciesGeoCoder.
+This file describes how to do a minimal Cygwin installation, that 
+still includes all dependencies of SpeciesGeoCoder. You can use the
+same instructions to install the dependencies on an existing Cygwin 
+installation.
 
+======================================================================
 A few extra programs needs to be installed on a Windows computer to 
 make it run SpeciesGeoCoder. These programs inscudes a command 
 interpreter, also known as a shell, the programming language Python 
@@ -11,7 +14,8 @@ GNU/Linux-like environment on a Widows computer. This HOWTO describes
 the installation process of a Cygwin system on Windows XP/Vista/7/.
 
 
-1. Go to www.cygwin.com and download the binary "setup.exe".
+1. Go to www.cygwin.com and download the binary "setup-x86.exe" (for 
+   32-bit systems) or "setup-x86_64.exe" (for 64 bit systems).
 3. Run the downloaded setup program and accept all defaults until 
    the "Choose A Download Site" page appears. Choose a server close 
    to your location and click "next".
@@ -40,6 +44,19 @@ You may also like to install the following packages (optional):
 7. Click the Cygwin desktop icon and type in the command from the 
    "INSTALL" file distributed with SpeciesGeoCoder.
 
-In addition you may also whant to create a symbolic link directory on 
-e.g. your Desktop, where you can place the files needed for your analysis. 
-Instructions for that will follow ...
+======================================================================
+In addition to installing Cygwin, you may also whant to create a 
+symbolic link to your Cygwin home directory on e.g. your Desktop, where 
+you can place the files needed for your analysis.
+
+1. Right click on the Desktop and select "new/Shortcut"
+2. Click "Browse" and use the file manager to find you Cygwin home 
+   directory (e.g. C:\cygwin\home\USER, where "USER" is your Cygwin 
+   username). 
+3. Click "next" and give your link a name (e.g. "Cygwin_Home"), then 
+   click "Finish".
+You can now drag and drop the files you need for your analysis to the 
+newly created shortcut, as well as easily retreving the results after 
+the analysis.
+
+
