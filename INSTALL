@@ -67,7 +67,7 @@ f.	Then run the command 'sudo make install' to install the package
 4.) Installing on Windows using Cygwin
 ======================================
 Follow the instructions in the file doc/HOWTO_Cygwin_installation.txt
-to install Cygwin and all dependencies to SpeciesGeoCoder.
+to install Cygwin and all dependencies of SpeciesGeoCoder.
 
 # Copy and paste the following commands in a Cygwin terminal window
 wget https://github.com/mtop/speciesgeocoder/archive/master.zip
