@@ -5,7 +5,7 @@ installation.
 
 ======================================================================
 A few extra programs needs to be installed on a Windows computer to 
-make it run SpeciesGeoCoder. These programs inscudes a command 
+make it run SpeciesGeoCoder. These programs includes a command 
 interpreter, also known as a shell, the programming language Python 
 as well as a number of tools for compiling the GDAL library, that is 
 used for extracting elevation data from geotif files. The Cygwin 
