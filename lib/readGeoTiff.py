@@ -80,14 +80,23 @@ class Geotiff(object):
 		return "MinX: ", self.minx(), "MaxX: ", self.maxx(), "MinY: ", self.miny(), "MaxY: ", self.maxy()
 
 	def get_elevation(self, lon, lat):
-		from os.path import abspath, dirname, join
-		if sys.platform.startswith('linux2'):
-			binary = abspath(join(dirname(__file__), "../bin/gdallocationinfo_linux2"))
-		if sys.platform.startswith('darwin'):
-			binary = abspath(join(dirname(__file__), "../bin/gdallocationinfo_darwin"))
-		if sys.platform.startswith('cygwin'):
-			binary = abspath(join(dirname(__file__), "../bin/gdallocationinfo_cygwin"))
-		elevation = subprocess.check_output([binary, "-valonly", "-wgs84", self.tiffile, lon, lat])
+		try:
+			# Use preinstalled verwion of "gdallocationinfo" if exists...
+			elevation = subprocess.check_output(["gdallocationinfo", "-valonly", "-wgs84", self.tiffile, lon, lat])
+		except:
+			try:
+				# ...else, try the precompiled version of "gdallocationinfo".
+				from os.path import abspath, dirname, join
+				if sys.platform.startswith('linux2'):
+					binary = abspath(join(dirname(__file__), "../bin/gdallocationinfo_linux2"))
+				if sys.platform.startswith('darwin'):
+					binary = abspath(join(dirname(__file__), "../bin/gdallocationinfo_darwin"))
+				if sys.platform.startswith('cygwin'):
+					binary = abspath(join(dirname(__file__), "../bin/gdallocationinfo_cygwin"))
+				elevation = subprocess.check_output([binary, "-valonly", "-wgs84", self.tiffile, lon, lat])
+			except:
+				# If that does not work, promt the user to compile GDAL.
+				sys.exit("\n\n[ERROR] Could not find the program \"gdallocationinfo\" that \n\tis needed for SpeciesGeoCoder to extract elevation \n\tdata from geotif files. Please read the INSTALL file \n\tfor instructions on how to install GDAL.\n")
 		return int(elevation)	
 
 	
