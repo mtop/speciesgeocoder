@@ -3,7 +3,7 @@
 
 ===========================================
 # Content of this file
-1.) For the impatient (if it doesn't work: try the other options!)
+1.) For the impatient 
 2.) Dependencies
 3.) Installing on Mac OSX.
 4.) Installing on Windows using Cygwin
@@ -13,7 +13,7 @@
 ===========================================
 
 =====================
-1.) For the impatient
+1.) For the impatient (if it doesn't work: try the other options!)
 =====================
 wget https://github.com/mtop/speciesgeocoder/archive/master.zip
 unzip master.zip
