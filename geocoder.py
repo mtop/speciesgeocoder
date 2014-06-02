@@ -49,7 +49,6 @@ parser.add_argument("--plot", help="Produce graphical output illustrating coexis
 
 ### Stochastic mapping ###
 mapping_group = parser.add_argument_group('Stochastic_mapping')
-
 mapping_group.add_argument("--stochastic_mapping", help="Do stochastic mapping", action="store_true")
 mapping_group.add_argument("--distribution_table", help="Path to species distribution table produced by SpeciesGeoCoder", default="occurences.sgc.txt")
 mapping_group.add_argument("--tree", help="Set path to NEXUS tree file")
