@@ -581,7 +581,7 @@ GetPythonIn <- function(inpt){
   
   coord <- read.table(inpt[1],header = T, sep = "\t")
   idi <- coord[, 1]
-  coords <- as.matrix(coord[, c(2, 3)])
+  coords <- coord[, c(2, 3)]
   
   polyg <- read.table(inpt[2], header = T, sep = "\t")
   poly <- Cord2Polygon(polyg)
@@ -599,7 +599,7 @@ GetPythonIn <- function(inpt){
   
   
   outo <- list(identifier_in = idi, species_coordinates_in = coords, polygons = poly, 
-               sample_table = , spec_table = spectab, polygon_table = poltab, 
+               sample_table = samtab, spec_table = spectab, polygon_table = polytab, 
                not_classified_samples = noclass, coexistence_classified = "NA")
   class(outo) <- "spgeoOUT"
   return(outo)  

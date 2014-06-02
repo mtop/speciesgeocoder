@@ -1,10 +1,24 @@
 #!/usr/bin/env Rscript
 # Created by Daniele Silvestro on 29/05/2014
 # Thanks to Martha Serrano-Serrano and Ruud Scharn
-library(ape)
-library(phytools)
-library(geiger)
-library(optparse)
+pkload <- function(x)
+{
+  if (!require(x,character.only = TRUE))
+  {
+    install.packages(x,dep=TRUE)
+    if(!require(x,character.only = TRUE)) stop("Package not found")
+  }
+}
+
+pkload("ape")
+pkload("phytools")
+pkload("geiger")
+pkload("optparse")
+# 
+# library(ape)
+# library(phytools)
+# library(geiger)
+# library(optparse)
 
 ####################################################################################
 option_list <- list(
