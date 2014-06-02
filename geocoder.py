@@ -41,11 +41,24 @@ parser = argparse.ArgumentParser(prog="speciesgeocoder")
 locality_group = parser.add_mutually_exclusive_group(required=True)
 polygon_group = parser.add_mutually_exclusive_group(required=True)
 polygon_group.add_argument("-p", "--polygons", help="Set path to file containing polygon coordinates")
-polygon_group.add_argument("-s", "--shape", help="Set path to shape file containing polygons")
+#polygon_group.add_argument("-s", "--shape", help="Set path to shape file containing polygons")
 locality_group.add_argument("-l", "--localities", help="Set path to file containing species locality data")
 locality_group.add_argument("-g", "--gbif", help="Set path to file containing species locality data downloaded from GBIF")
 parser.add_argument("-t", "--tif", help="Set path to geotiff file(s)", nargs="*")
 parser.add_argument("--plot", help="Produce graphical output illustrating coexistance, distribution etc.", action="store_true", default="False")
+
+### Stochastic mapping ###
+mapping_group = parser.add_argument_group('Stochastic_mapping')
+
+mapping_group.add_argument("--stochastic_mapping", help="Do stochastic mapping", action="store_true")
+mapping_group.add_argument("--distribution_table", help="Path to species distribution table produced by SpeciesGeoCoder", default="occurences.sgc.txt")
+mapping_group.add_argument("--tree", help="Set path to NEXUS tree file")
+mapping_group.add_argument("--m_out", help="Name of the output file from the stochastic mapping analysis")
+mapping_group.add_argument("--n_rep", help="Number of stochastic maps", default=100)
+mapping_group.add_argument("--map_model", help="Transition model", choices=['ER', 'SYM', 'ARD'], default="SYM") 
+mapping_group.add_argument("--max_run_time", help="Max run time for 1 stochastic map (in seconds).", default=60)
+##########################
+
 #parser.add_argument("-o", "--out", help="Name of optional output file. Output is sent to STDOUT by default")
 parser.add_argument("-v", "--verbose", action="store_true", help="Report how many times a species is found in each polygon")
 parser.add_argument("-b", "--binomial", action="store_true", help="Treats first two words in species names as genus name and species epithet. Use with care as this option is LIKELY TO LEAD TO ERRONEOUS RESULTS if names in input data are not in binomial form.")
@@ -425,8 +438,16 @@ def main():
 			out4.write(string)
 		out4.close()
 
+
+	if args.stochastic_mapping == True:
+		import os
+		# Test if the tree file exists.
+		try:
+			open(args.tree, "r")
+		except IOError:
+			sys.exit("[Error] Unable to open tree file \"%s\"" % args.tree) 
+		# Prepare the data for the stochastic mapping analysis.
 		# occurences.sgc.txt
-		# Occurreces in binary form
 		out5 = open("occurences.sgc.txt", "w")
 		# Headers
 		header = "Species\t"
@@ -442,6 +463,21 @@ def main():
 			string += "\n"
 			out5.write(string)
 		out5.close()
+
+		wd = os.getcwd()  					# Working directory
+		tbl_file = args.distribution_table	# Species distribution table from SpeciesGeoCoder
+		tree_file = args.tree				# Tree file
+		out_file = args.m_out				# Stem name output files. Default: "migration_plot"
+		n_rep = args.n_rep					# Number of stochastic maps. Default: 100
+		map_model = args.map_model			# Transition model, "ER", "SYM" or "ARD". Default: "SYM"
+		max_run_time = args.max_run_time	# Max run time for 1 stochastic map (in seconds). Default: 60 sec. 
+   			                                # This limit does not apply to the first map
+
+		# launch R script
+#		print "\nThe following R libraries are required: ape, phytools, geiger, optparse.\n"
+		cmd="Rscript R/map_migrations_times.R %s %s %s --o %s --m %s --r %s --s %s" \
+		% (wd,tbl_file,tree_file,out_file,map_model,n_rep,max_run_time)
+		os.system(cmd)
 
 
 	"""
