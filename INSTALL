@@ -3,7 +3,7 @@
 
 ===========================================
 # Content of this file
-1.) For the impatient
+1.) For the impatient (if it doesn't work: try the other options!)
 2.) Dependencies
 3.) Installing on Mac OSX.
 4.) Installing on Windows using Cygwin
@@ -52,7 +52,8 @@ a. Direct your browser to the following URL (a compressed file will
 
 b. Unzip the file by clicking on it.
 c. Open a terminal window and use the command "cd" and move into the 
-	directory "speciesgeocoder-master/"
+	directory "speciesgeocoder-master/" (this is easily done by
+	dragging the folder to command line in the Terminal window)
 d. Type 'make' to compile GDAL binaries.
 e. Copy and paste the following command into your terminal window
 	to make sure everything works as expected:
