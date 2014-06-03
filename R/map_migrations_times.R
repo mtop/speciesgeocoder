@@ -79,7 +79,7 @@ F_calc <- function(res2){
 	M <- apply(x, 2, max)     #M = q[5,]
 	a <- apply(x, 2, mean)    #a = q[3,]
 	age=-h1$mids 
-	return(as.data.frame(cbind(m,M,a,age)))
+	return(as.data.frame(cbind(m,M,a,age)))		
 }
 
 F_plot <- function(L,title="Migrations through time"){
@@ -89,7 +89,7 @@ F_plot <- function(L,title="Migrations through time"){
 }
 
 run_SM <- function(tree, trait,max_run){
-	setTimeLimit(cpu = Inf, elapsed = max_run, transient = TRUE)
+	setTimeLimit(cpu = Inf, elapsed = max_run, transient = T)
 	map=suppressMessages(make.simmap(tree, trait[,1],pi="estimated",model=map_model))
 	return(map)
 }
@@ -115,6 +115,7 @@ for (replicate in 1:n_rep){
 	}
 
 	rownames(trait)=taxa
+	no_potential_states=length(tbl[1,])-1
 	
 	if (length(taxa)==0) {stop("\nAll taxa have empty ranges!\n")}
 		
@@ -139,7 +140,7 @@ for (replicate in 1:n_rep){
 				)
 		}
 	sink(file=NULL)
-	
+	setTimeLimit(cpu = Inf, elapsed = Inf, transient = T)
 	
 	if (!is.null(map)){
 		# make table migration times
@@ -168,10 +169,11 @@ for (replicate in 1:n_rep){
 		RES_temp[[1]]=F_calc(res)
 		i=1
 		directions=as.vector("global")
-		for (f in 1:max(res$to)){
-			for (t in 1:max(res$to)) {
+		for (f in 1:no_potential_states){
+			for (t in 1:no_potential_states) {
 				if  (f != t) {
 					i = i+1
+					#cat("\n",f,t,replicate)
 					res2=res[res$from==f & res$to==t,]
 					RES_temp[[i]]=F_calc(res2)
 					directions[i]=sprintf("Migrations through time: %s -> %s",area_name[f+1],area_name[t+1])
@@ -179,7 +181,7 @@ for (replicate in 1:n_rep){
 				}
 			}
 		}
-		# average results over SMs
+		## average results over SMs
 		if (replicate==1){
 			RES=RES_temp
 			}else{

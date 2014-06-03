@@ -8,7 +8,7 @@ tbl_file      = "occurences.sgc.txt"                              # species dist
 tree_file     = "tree.nex"                               # tree file
 out_file      = "test"                              # Stem name output files. Default: "migration_plot"
 n_rep         = 3                                             # Number of stochastic maps. Default: 100
-map_model     = "ARD"                                         # Transition model, here are the options: "ER", "SYM", "ARD". Default: "SYM"
+map_model     = "ER"                                         # Transition model, here are the options: "ER", "SYM", "ARD". Default: "SYM"
 max_run_time  = 5                                            # Max run time for 1 stochastic map (in seconds). Default: 60 sec. 
                                                               # The limit does not apply to the first map
 
