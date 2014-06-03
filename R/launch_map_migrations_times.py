@@ -3,13 +3,13 @@
 import os 
 
 ############## @MATS: these are the variables that need to be passed by the user/SpeciesGeoCoder
-wd            = "/Users/daniele/Desktop/map_migration_time/"  # working directory where input files (table and tree) are and output will be saved
-tbl_file      = "CAHighlands_SA.txt"                              # species distribution table from SpeciesGeoCoder
-tree_file     = "1birdtree.nex"                               # tree file
-out_file      = "migration_plot_CAH_SA"                              # Stem name output files. Default: "migration_plot"
+wd            = "/Users/daniele/speciesgeocoder/R/"  # working directory where input files (table and tree) are and output will be saved
+tbl_file      = "occurences.sgc.txt"                              # species distribution table from SpeciesGeoCoder
+tree_file     = "tree.nex"                               # tree file
+out_file      = "test"                              # Stem name output files. Default: "migration_plot"
 n_rep         = 3                                             # Number of stochastic maps. Default: 100
 map_model     = "ARD"                                         # Transition model, here are the options: "ER", "SYM", "ARD". Default: "SYM"
-max_run_time  = 60                                            # Max run time for 1 stochastic map (in seconds). Default: 60 sec. 
+max_run_time  = 5                                            # Max run time for 1 stochastic map (in seconds). Default: 60 sec. 
                                                               # The limit does not apply to the first map
 
 

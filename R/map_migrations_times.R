@@ -3,7 +3,7 @@
 # Thanks to Martha Serrano-Serrano and Ruud Scharn
 pkload <- function(x)
 {
-  if (!require(x,character.only = TRUE))
+  if (!suppressMessages(require(x,character.only = TRUE)))
   {
     install.packages(x,dep=TRUE)
     if(!require(x,character.only = TRUE)) stop("Package not found")
@@ -88,17 +88,18 @@ F_plot <- function(L,title="Migrations through time"){
 	lines(y=L$a, x=L$age, col = "#504A4B", border = NULL)
 }
 
-run_SM <- function(tree, trait,max_run_time){
-	setTimeLimit(cpu = Inf, elapsed = max_run_time, transient = TRUE)
-	map=make.simmap(tree, trait[,1],pi="estimated",model=map_model)
-	map
+run_SM <- function(tree, trait,max_run){
+	setTimeLimit(cpu = Inf, elapsed = max_run, transient = TRUE)
+	map=suppressMessages(make.simmap(tree, trait[,1],pi="estimated",model=map_model))
+	return(map)
 }
 
 ####################################################################################
 RES=list()
+effective_rep=0
 for (replicate in 1:n_rep){
 	
-	cat("\nreplicate:", replicate,"\n")
+	cat("\nreplicate:", replicate,"\t")
 	
 	# resample widespread taxa (not allowed in SM) to randomly assign one area
 	trait=data.frame()
@@ -107,83 +108,91 @@ for (replicate in 1:n_rep){
 	for (i in 1:length(tbl[,1]) ){
 		state = which(tbl[i,] == 1)-1 # 
 		if (length(state)>0){
-			trait[j,1]=sample(state,1)
-			taxa[j]=tbl$Species[i]
+			trait[j,1]=state[sample(length(state),1)]
+			taxa[j]=tbl[i,1]
 			j=j+1	
 		}
 	}
 
 	rownames(trait)=taxa
-
+	
+	if (length(taxa)==0) {stop("\nAll taxa have empty ranges!\n")}
+		
 	# prune tree to match taxa in the table
-	treetrait <-treedata(tree,trait)
+	treetrait <-suppressWarnings(treedata(tree,trait))
 	tree <- treetrait$phy
 	trait <- treetrait$data
-	cat(sprintf("\nfound %s matching taxa\n", length(trait)))
+	if (length(trait)==0) {stop("\nNo matching taxa!\n")}
+	#cat(sprintf("\nfound %s matching taxa\n", length(trait)))
 	branchtimes= branching.times(tree)
 	bins=0:ceiling(max(branchtimes))
-	
-	# stochastic mapping | stop after max_run_time
-	tryCatch({
-		if (replicate==1){
-			map=run_SM(tree, trait,Inf)	
-		}else{map=run_SM(tree, trait,max_run_time)}
-	}
-		,error = function(e) {
-			map=map
-			cat("Time limit reached!")}
-		)
-	
-	# make table migration times
-	res=data.frame()
 
-	j=1
-	for (i in 1:length(map$maps)){ 
-	    y=map$maps[[i]]
-	    if (identical(names(y[1]), names(y[length(y)]))==FALSE) {
-	    	res[j,1]=i
-		res[j,2]=branchtimes[[as.character(tree$edge[i,1])]] 
-		if (tree$edge[i,][2]<=length(tree$tip.label)) { 
-		      res[j,3]=0   # when branch finish in a tip (at present zero age)
-		      } else { 
-		      res[j,3]=branchtimes[[as.character(tree$edge[i,2])]]
-		      } 
-		res[j,4]=names(y[1])
-		res[j,5]=names(y[length(y)])
-		j = j+1
-		} 
-	}
-	colnames(res)=c("edge", "age0", "age1","from","to")
+	map=NULL
+	sink(file=out_table,type = c("output", "message"))
+	if (replicate==1){
+		map=run_SM(tree, trait,Inf) #map=make.simmap(tree, trait[,1],pi="estimated",model=map_model)
+		}else{
+			tryCatch({ # stochastic mapping | stop after max_run_time
+				map=run_SM(tree, trait,max_run_time)
+			}
+				,error = function(e) {NULL}
+				)
+		}
+	sink(file=NULL)
 	
-	# calc mean, 95% CI migration events
-	RES_temp=list()
-	RES_temp[[1]]=F_calc(res)
-	i=1
-	directions=as.vector("global")
-	for (f in 1:max(res$to)){
-		for (t in 1:max(res$to)) {
-			if  (f != t) {
-				i = i+1
-				res2=res[res$from==f & res$to==t,]
-				RES_temp[[i]]=F_calc(res2)
-				directions[i]=sprintf("Migrations through time: %s -> %s",area_name[f+1],area_name[t+1])
-				#F_plot(L,)
+	
+	if (!is.null(map)){
+		# make table migration times
+		res=data.frame()
+		effective_rep=effective_rep+1
+		j=1
+		for (i in 1:length(map$maps)){ 
+		    y=map$maps[[i]]
+		    if (identical(names(y[1]), names(y[length(y)]))==F) {
+		    	res[j,1]=i
+			res[j,2]=branchtimes[[as.character(tree$edge[i,1])]] 
+			if (tree$edge[i,][2]<=length(tree$tip.label)) { 
+			      res[j,3]=0   # when branch finish in a tip (at present zero age)
+			      } else { 
+			      res[j,3]=branchtimes[[as.character(tree$edge[i,2])]]
+			      } 
+			res[j,4]=names(y[1])
+			res[j,5]=names(y[length(y)])
+			j = j+1
+			} 
+		}
+		colnames(res)=c("edge", "age0", "age1","from","to")
+	
+		# calc mean, 95% CI migration events
+		RES_temp=list()
+		RES_temp[[1]]=F_calc(res)
+		i=1
+		directions=as.vector("global")
+		for (f in 1:max(res$to)){
+			for (t in 1:max(res$to)) {
+				if  (f != t) {
+					i = i+1
+					res2=res[res$from==f & res$to==t,]
+					RES_temp[[i]]=F_calc(res2)
+					directions[i]=sprintf("Migrations through time: %s -> %s",area_name[f+1],area_name[t+1])
+					#F_plot(L,)
+				}
 			}
 		}
-	}
-	# average results over SMs
-	if (replicate==1){
-		RES=RES_temp
-		}else{
-			for (i in 1:length(RES)){RES[[i]]=RES[[i]]+ RES_temp[[i]]}
-		}
+		# average results over SMs
+		if (replicate==1){
+			RES=RES_temp
+			}else{
+				for (i in 1:length(RES)){RES[[i]]=RES[[i]]+ RES_temp[[i]]}
+			}		
+	}else{cat("Time limit reached!")}
 }
 
-cat(sprintf("# Headers: min, max, and average (m, M, a) number of migration events through time (age) averaged over %s stochastic maps.\n", n_rep),file=out_table)
+cat(sprintf("# Headers: min, max, and average (m, M, a) number of migration events through time (age) averaged over %s stochastic maps.\n", effective_rep),file=out_table)
 
 # make plots/output table
 for (i in 1:length(RES)){
-	counts=RES[[i]]/n_rep
+	counts=RES[[i]]/effective_rep
 	F_plot(counts,directions[i])
 	cat(sprintf("# Table %s (%s).\n",i,directions[i]), file=out_table,append = T)
 	row.names(counts)=paste0(row.names(counts), sep="_",rep(directions[i], length(counts[,1])))
@@ -193,7 +202,7 @@ for (i in 1:length(RES)){
 	
 }
 
-dev.off()	
+suppressMessages((dev.off())
 
 
 
