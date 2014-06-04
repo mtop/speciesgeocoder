@@ -52,9 +52,9 @@ mapping_group = parser.add_argument_group('Stochastic_mapping')
 mapping_group.add_argument("--stochastic_mapping", help="Do stochastic mapping", action="store_true")
 mapping_group.add_argument("--distribution_table", help="Path to species distribution table produced by SpeciesGeoCoder", default="occurences.sgc.txt")
 mapping_group.add_argument("--tree", help="Set path to NEXUS tree file")
-mapping_group.add_argument("--m_out", help="Name of the output file from the stochastic mapping analysis")
+mapping_group.add_argument("--m_out", help="Name of the output file from the stochastic mapping analysis", default="Stochastic_mapping")
 mapping_group.add_argument("--n_rep", help="Number of stochastic maps", default=100)
-mapping_group.add_argument("--map_model", help="Transition model", choices=['ER', 'SYM', 'ARD'], default="SYM") 
+mapping_group.add_argument("--map_model", help="Transition model", choices=['ER', 'SYM', 'ARD'], default="ER") 
 mapping_group.add_argument("--max_run_time", help="Max run time for 1 stochastic map (in seconds).", default=60)
 ##########################
 
@@ -471,6 +471,14 @@ def main():
 		map_model = args.map_model			# Transition model, "ER", "SYM" or "ARD". Default: "SYM"
 		max_run_time = args.max_run_time	# Max run time for 1 stochastic map (in seconds). Default: 60 sec. 
    			                                # This limit does not apply to the first map
+
+#		print "PWD: ", wd								# Devel.
+#		print "Distribution table: ", tbl_file			# Devel.
+#		print "Tree file: ", tree_file					# Devel.
+#		print "Out file: ", out_file					# Devel.
+#		print "Nr. reps.: ", n_rep						# Devel.
+#		print "Map model: ", map_model					# Devel.
+#		print "Max run time: ", max_run_time			# Devel.
 
 		# launch R script
 #		print "\nThe following R libraries are required: ape, phytools, geiger, optparse.\n"
