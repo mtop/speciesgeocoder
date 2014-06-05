@@ -9,35 +9,30 @@ pkload <- function(x)
     if(!require(x,character.only = TRUE)) stop("Package not found")
   }
 }
-
-pkload("ape")
-pkload("phytools")
-pkload("geiger")
 pkload("optparse")
-# 
-# library(ape)
-# library(phytools)
-# library(geiger)
-# library(optparse)
-
 ####################################################################################
 option_list <- list(
 
     make_option("--r", type="integer", default=100,
-        help="Frequency of sampling [default %default]",
-        metavar="Freq_of_Sampling"),
+        help="Number of replicates [default %default]"),
+
+    make_option("--c", type="integer", default=100,
+        help="Number of random samples per replicate [default %default]"),
 
     make_option("--s", type="integer", default=60,
-        help=("Max run time for 1 stochastic map [default %default]."),
-        metavar="Burnin"),
+        help="Max run time for 1 stochastic map [default %default]."),
 
     make_option("--m", default="SYM",
-        help=("Model: 'ER','SYM','ARD' [default %default]."),
-        metavar="Prnt_freq"),
+        help="Model: 'ER','SYM','ARD' [default %default]."),
 
     make_option("--o", default="migration_plot",
-        help=("Name output file (pdf) [default %default]."),
-        metavar="Prnt_freq")
+        help="Name output file (pdf) [default %default]."),
+
+    make_option("--t", default=0,
+        help="if t>0 map trait [default %default]."),
+
+    make_option("--d", default=F,type="logical",
+        help="Verbose [default %default].")
 
     )
 
@@ -57,6 +52,21 @@ out_table=sprintf("%s.txt", opt$options$o)
 n_rep=opt$options$r
 map_model=opt$options$m
 max_run_time=opt$options$s 
+verbose=opt$options$d
+no_char=opt$options$t
+
+print(verbose)
+
+if (verbose==T){
+	library(ape)
+	library(phytools)
+	library(geiger)
+	}else{
+		pkload("ape")
+		pkload("phytools")
+		pkload("geiger")
+	}
+
 
 ####################################################################################
 setwd(wd)
@@ -68,7 +78,7 @@ pdf(file=out_file,width=10, height=7)
 ####################################################################################
 F_calc <- function(res2){
 	M_ages=NULL 
-	for (i in 1:1000){
+	for (i in 1:100){		
 		# draw rand uniform numbers
 		M_age=runif(n=length(res2[,1]),max=res2$age0,min=res2$age1)
 		h1=hist(M_age, breaks=bins,plot=F)
@@ -82,6 +92,8 @@ F_calc <- function(res2){
 	return(as.data.frame(cbind(m,M,a,age)))		
 }
 
+
+
 F_plot <- function(L,title="Migrations through time"){
 	plot(L$age,L$a,type = 'n', ylim = c(0, max(L$M)), xlim = c(min(L$age),0), ylab = 'migration events', xlab = 'Ma',main=title)
 	polygon(c(L$age, rev(L$age)), c(L$M, rev(L$m)), col = "#E5E4E2", border = NA)
@@ -90,7 +102,9 @@ F_plot <- function(L,title="Migrations through time"){
 
 run_SM <- function(tree, trait,max_run){
 	setTimeLimit(cpu = Inf, elapsed = max_run, transient = T)
-	map=suppressMessages(make.simmap(tree, trait[,1],pi="estimated",model=map_model))
+	if (verbose==T){
+		map=make.simmap(tree, trait[,1],pi="estimated",model=map_model)
+		}else{map=suppressMessages(make.simmap(tree, trait[,1],pi="estimated",model=map_model))}
 	return(map)
 }
 
@@ -100,36 +114,53 @@ effective_rep=0
 for (replicate in 1:n_rep){
 	
 	cat("\nreplicate:", replicate,"\t")
+	#print(no_char)
 	
 	# resample widespread taxa (not allowed in SM) to randomly assign one area
 	trait=data.frame()
 	taxa=vector()
 	j=1
 	for (i in 1:length(tbl[,1]) ){
-		state = which(tbl[i,] == 1)-1 # 
-		if (length(state)>0){
-			trait[j,1]=state[sample(length(state),1)]
-			taxa[j]=tbl[i,1]
-			j=j+1	
+		if (no_char==0) {
+			state = which(tbl[i,] == 1)-1 # 
+			if (length(state)>0){
+				trait[j,1]=state[sample(length(state),1)]
+				taxa[j]=tbl[i,1]
+				j=j+1	
+		}
+		}else{
+			trait[i,1]=tbl[i,no_char+1]
+			taxa[i]=tbl[i,1]
 		}
 	}
 
+
 	rownames(trait)=taxa
-	no_potential_states=length(tbl[1,])-1
+	if (no_char==0){
+		min_state=1
+		no_potential_states=length(tbl[1,])-1
+		}else{
+			min_state=min(trait[,1])
+			no_potential_states=max(trait[,1])
+		}
 	
 	if (length(taxa)==0) {stop("\nAll taxa have empty ranges!\n")}
 		
 	# prune tree to match taxa in the table
-	treetrait <-suppressWarnings(treedata(tree,trait))
+	if (verbose==T){
+		treetrait <- treedata(tree,trait)
+		}else{ treetrait <- suppressWarnings(treedata(tree,trait)) }
 	tree <- treetrait$phy
 	trait <- treetrait$data
 	if (length(trait)==0) {stop("\nNo matching taxa!\n")}
-	#cat(sprintf("\nfound %s matching taxa\n", length(trait)))
+	
 	branchtimes= branching.times(tree)
 	bins=0:ceiling(max(branchtimes))
 
 	map=NULL
-	sink(file=out_table,type = c("output", "message"))
+	if (verbose==F){
+		sink(file=out_table,type = c("output", "message"))
+		}else{cat(sprintf("\nfound %s matching taxa\n", length(trait)))}
 	if (replicate==1){
 		map=run_SM(tree, trait,Inf) #map=make.simmap(tree, trait[,1],pi="estimated",model=map_model)
 		}else{
@@ -139,7 +170,7 @@ for (replicate in 1:n_rep){
 				,error = function(e) {NULL}
 				)
 		}
-	sink(file=NULL)
+	if (verbose==F){sink(file=NULL)}
 	setTimeLimit(cpu = Inf, elapsed = Inf, transient = T)
 	
 	if (!is.null(map)){
@@ -169,15 +200,16 @@ for (replicate in 1:n_rep){
 		RES_temp[[1]]=F_calc(res)
 		i=1
 		directions=as.vector("global")
-		for (f in 1:no_potential_states){
-			for (t in 1:no_potential_states) {
+		for (f in min_state:no_potential_states){
+			for (t in min_state:no_potential_states) {
 				if  (f != t) {
 					i = i+1
 					#cat("\n",f,t,replicate)
 					res2=res[res$from==f & res$to==t,]
 					RES_temp[[i]]=F_calc(res2)
-					directions[i]=sprintf("Migrations through time: %s -> %s",area_name[f+1],area_name[t+1])
-					#F_plot(L,)
+					if (no_char==0){
+						directions[i]=sprintf("Migrations through time: %s -> %s",area_name[f+1],area_name[t+1])
+						}else{directions[i]=sprintf("Transition: %s -> %s",f,t)}
 				}
 			}
 		}
