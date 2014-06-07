@@ -471,6 +471,11 @@ def main():
 		map_model = args.map_model			# Transition model, "ER", "SYM" or "ARD". Default: "SYM"
 		max_run_time = args.max_run_time	# Max run time for 1 stochastic map (in seconds). Default: 60 sec. 
    			                                # This limit does not apply to the first map
+		trait= 0
+		if args.dev == True:
+			verbose = 'T'
+		else:
+			verbose = 'F'
 
 #		print "PWD: ", wd								# Devel.
 #		print "Distribution table: ", tbl_file			# Devel.
@@ -482,8 +487,10 @@ def main():
 
 		# launch R script
 #		print "\nThe following R libraries are required: ape, phytools, geiger, optparse.\n"
-		cmd="Rscript R/map_migrations_times.R %s %s %s --o %s --m %s --r %s --s %s" \
-		% (wd,tbl_file,tree_file,out_file,map_model,n_rep,max_run_time)
+###		cmd="Rscript R/map_migrations_times.R %s %s %s --o %s --m %s --r %s --s %s" \
+###		% (wd,tbl_file,tree_file,out_file,map_model,n_rep,max_run_time)
+		cmd="Rscript R/map_migrations_times.R %s %s %s --o %s --m %s --r %s --s %s --d %s --t %s" \
+		% (wd,tbl_file,tree_file,out_file,map_model,n_rep,max_run_time,verbose,trait)
 		os.system(cmd)
 
 
