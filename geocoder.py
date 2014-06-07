@@ -477,14 +477,6 @@ def main():
 		else:
 			verbose = 'F'
 
-#		print "PWD: ", wd								# Devel.
-#		print "Distribution table: ", tbl_file			# Devel.
-#		print "Tree file: ", tree_file					# Devel.
-#		print "Out file: ", out_file					# Devel.
-#		print "Nr. reps.: ", n_rep						# Devel.
-#		print "Map model: ", map_model					# Devel.
-#		print "Max run time: ", max_run_time			# Devel.
-
 		# launch R script
 #		print "\nThe following R libraries are required: ape, phytools, geiger, optparse.\n"
 ###		cmd="Rscript R/map_migrations_times.R %s %s %s --o %s --m %s --r %s --s %s" \
@@ -493,142 +485,6 @@ def main():
 		% (wd,tbl_file,tree_file,out_file,map_model,n_rep,max_run_time,verbose,trait)
 		os.system(cmd)
 
-
-	"""
-		try:
-			import rpy2.robjects as ro
-		except:
-			sys.exit("[ Error ] rpy2 is not installed. Ploting the result will not be possible")
-		
-		spName_list = []
-		spLong_list = []
-		spLat_list = []
-		polyName_list = []
-		polyLong_list = []
-		polyLat_list = []
-		polygonList = []
-		import os 														
-		source_root =  os.path.dirname(os.path.abspath(__file__))		
-		ro.r('source("%s/R/SpeciesGeoCodeR.R")' % source_root)
-
-		# Localities
-		# Store species names, long. and lat. data in separate lists...
-		for locality in localities.getLocalities():
-			spName_list.append(locality[0])
-			spLong_list.append(locality[1])
-			spLat_list.append(locality[2])
-		# ...then transform these lists into separate R objects...
-		ro.r('speciesNames <- c("%s")' % spName_list)
-		ro.r('spLongitudes <- c("%s")' % spLong_list)
-		ro.r('spLatitudes <- c("%s")' % spLat_list)
-		# ...and finally a data frame.
-		ro.r('coordinates <- data.frame(identifier = speciesNames, XCOOR = spLongitudes, YCOOR = spLatitudes)')
-
-#		ro.r('write(spLatitudes, stderr())')
-
-		# Polygons
-		# Store polygon names long. and lat. data in separate lists...
-		for polygon in polygons.getPolygons():
-			polyName_list.append(polygon[0])
-#			print "Polygon: ", polygon[0]
-#			polyName_list += polygon[0]
-#			polyName_list += " "
-#			polyName_list.append(polygon[0])
-			for coordPair in polygon[1]:
-				polyLong_list.append(coordPair.split(',')[0])
-				polyLat_list.append(coordPair.split(',')[1])
-#				polyLong_list += coordPair.split(',')[0]
-#				polyLong_list += " "
-#				polyLat_list += coordPair.split(',')[1]
-#				polyLat_list += " "
-#		print polyLong_list
-#		print polyName_list
-
-#		print polyLong_list
-#		print polyLat_list
-#		sys.exit()
-
-#			print "Polygon: ", polygon
-#			print polygon[1]
-###			for coordPair in polygon[1]:
-###				entry = (polygonName,
-###						 float(coordPair.split(',')[0]),
-###						 float(coordPair.split(',')[1]))
-#						 polyLong_list.append(float(coordPair.split(',')[0])),
-#						 polyLat_list.append(float(coordPair.split(',')[1])))
-###				polygonList.append(entry)
-#		print polygonList
-#		print polyLong_list
-#		print polyLat_list
-#			polyLong_list.append(polygon[1])
-#			polyLat_list.append(polygon[2])
-		# ...then transform these lists into separate R objects...
-		ro.r('polygonNames <- as.vector(c("%s%s"))' % (''.join(polyName_list), " "))
-		ro.r('polyLong <- c("%s%s")' % (''.join(polyLong_list), " "))
-		ro.r('polyLat <- c("%s%s")' % (''.join(polyLat_list), " "))
-
-#		print polyName_list
-		
-#		print ''.join(polyName_list)
-
-		ro.r('write(polygonNames), stderr())')
-#		ro.r('write(polyLong), stderr())')
-#		ro.r('write(unlist(strsplit(polyLong, " ")), stderr())')
-#		ro.r('write(unlist(strsplit(polyLat, " ")), stderr())')
-
-
-		# ...and finally a data frame.
-#		ro.r('polygons <- data.frame(identifier = unlist(strsplit(polygonNames, " ")), XCOOR = unlist(strsplit(polyLong, " ")), YCOOR = unlist(strsplit(polyLat, " "))')
-		ro.r('polygons <- data.frame(identifier = polygonNames, XCOOR = polyLong, YCOOR = polyLat')
-#		ro.r('write(polygons, stderr())')
-
-#		ro.r('png(filename="test_plot-2.png")')     # Devel.
-#		ro.r('plot(polygons)')                   	# Devel.
-#		ro.r('dev.off()')                           # Devel.
-#		sys.exit()
-		
-###		ro.r('polygons <- data.frame(c("identifier", "XCOOR", "YCOOR"))')
-###		for polygon in polygonList:		# Get this from the class instead
-###			print polygon
-#			ro.r('newrow <- c("%s")' % p)			# FUBAR
-###			ro.r('newProw <- c("%s, %s, %s")' % (polygon[0], polygon[1], polygon[2]))
-###			ro.r('polygons <- rbind(polygons, newProw)')
-#		ro.r('png(filename="test_polygon.png")')    # Devel.
-#		ro.r('plot(polygons)')                      # Devel.
-#		ro.r('dev.off()')                           # Devel.
-	
-		# Sampletable
-		Rspecies = []
-		Rpolygon = []
-		for sample in result.getSampletable():
-			Rspecies.append(sample[0])
-			Rpolygon.append(sample[1])
-		ro.r('sampleSpecies <- c("%s")' % Rspecies)
-		ro.r('samplePolygon <- c("%s")' % Rpolygon)
-		ro.r('sampletable <- data.frame(species = sampleSpecies, polygon = samplePolygon)')
-#		ro.r('png(filename="test_sampletable.png")')    # Devel.
-#		ro.r('plot(sampletable)')                      	# Devel.
-#		ro.r('dev.off()')                           	# Devel.		
-
-		# Speciestable
-		ro.r('speciestable <- data.frame(c("%s"))' % polygons.getPolygonNames())
-#		ro.r('names(speciestable) <- c("%s")' % polygons.getPolygonNames())
-###		for name in localities.getSpeciesNames():
-###			ro.r('newrow <- c(as.numeric("%s"))' % result.result[name]) 
-###			ro.r('speciestable <- rbind(speciestable, c("%s"))' % result.result[name])		# FUBAR
-#		ro.r('png(filename="test_speciestable.png")')   # Devel.
-#		ro.r('plot(sampletable)')                       # Devel.
-#		ro.r('dev.off()')                               # Devel.
-###		ro.r('write(speciestable[1,], stderr())')
-##		sys.exit()
-
-		# TEST
-		ro.r('dummy <- GetPythonIn(coordinates, polygons, sampletable, speciestable)')	# Devel.
-		ro.r('dummy <- CoExClass(dummy)')												# Devel.
-#		ro.r('WriteTablesSpGeo(dummy)')													# Devel.
-#		ro.r('OutPlotSpPoly(dummy)')													# Devel.
-
-"""
 
 
 if __name__ == "__main__":
@@ -643,7 +499,6 @@ if __name__ == "__main__":
 			from lib.testData import testPolygons
 			polygons = Polygons()
 			testPolygons(polygons, args.polygons)
-
 
 	else:
 		if args.dev:
