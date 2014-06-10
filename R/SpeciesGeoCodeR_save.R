@@ -1,9 +1,9 @@
 # dependencies
 pkload <- function(x)
 {
-  if (!require(x,character.only = TRUE, quietly = T))
+  if (!require(x,character.only = TRUE))
   {
-    install.packages(x,dep=TRUE, quiet = T)
+    install.packages(x,dep=TRUE)
     if(!require(x,character.only = TRUE)) stop("Package not found")
   }
 }
@@ -91,12 +91,7 @@ ReadPoints<- function(x, y) {
   if(class(y) != "SpatialPolygonsDataFrame" && class(y) != "SpatialPolygons")
   {
     cat("Reading in polygon coordinates. \n")
-    if(class(y) == "character"){
-      polycord <- read.table(y, sep = "\t", header = T)
-    }
-    if(class(y) == "data.frame"){
-      polycord <- y
-    }
+    polycord <- read.table(y, sep = "\t", header = T)
     if (dim(polycord)[2] !=  3){
       stop(paste("Wrong input format: \n", 
                  "Inputfile for polygons must be a tab-delimited text file with three columns", sep  = ""))
@@ -594,7 +589,6 @@ GetPythonIn <- function(inpt){
   samtab <- read.table(inpt[3], header = T, sep = "\t")
   
   spectab <- read.table(inpt[4], header = T, sep = "\t")
-  names(spectab)[1] <- "identifier"
   
   polytab <- SpPerPolH(spectab)
   
@@ -1082,10 +1076,10 @@ BarChartSpec <- function(x, mode = c("percent", "total"), plotout = F, ...){
       par(mar = c(10, 4, 3, 3))
       for(i in 1:leng){
         cat(paste("Creating barchart for species ", i, "/", leng, ": ", liste[i], "\n", sep = ""))
-        spsub <- as.matrix(subset(x$spec_table, x$spec_table$identifier ==  liste[i])[, 2:dim(x$spec_table)[2]])
+        spsub <- as.matrix(subset(x$spec_table, x$spec_table$identifier ==  liste[i])[, 2:leng2])
         if (sum(spsub) > 0){
           barplot(spsub, las = 2, ylim = c(0, (max(spsub) + max(spsub) / 10)), 
-                  ylab = "Number of occurrences", ...)
+                  ylab = "Number of occurrences" , ...)
           title(liste[i])
         }
       }
@@ -1371,9 +1365,10 @@ MapPerSpecies <- function(x, moreborders = F, plotout = FALSE, ...){
   layout(matrix(c(1, 1, 1, 1), ncol = 1, nrow = 1))
   if (plotout ==  FALSE){par(ask = T)}
   dat <- data.frame(x$sample_table, x$species_coordinates_in)
-  names(dat) <- c("identifier","XCOOR","YCOOR")
+  names(dat) <- c("identifier", "homepolygon","XCOOR","YCOOR")
   liste <- levels(dat$identifier)
-    
+  
+  
   for(i in 1:length(liste)){
     cat(paste("Mapping species: ", i, "/", length(liste), ": ", liste[i], "\n",sep = ""))
     kk <- subset(dat, dat$identifier ==  liste[i])

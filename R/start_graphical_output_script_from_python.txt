@@ -1,0 +1,2 @@
+cmd="cd %s; Rscript graphical_output.R %s %s %s %s" \
+% (wd,occurences.sgc.txt, polygons.sgc.txt,sampletable.sgc.txt,speciestable.sgc.txt)
