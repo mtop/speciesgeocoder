@@ -13,7 +13,7 @@ map_model     = "ER"                                         # Transition model,
 max_run_time  = 5                                            # Max run time for 1 stochastic map (in seconds). Default: 60 sec. 
                                                               # The limit does not apply to the first map
 verbose = 'T'
-trait= 0
+trait= 0                            # if trait>0 it indicates the number of the character to be analyzed
 
 
 # launch R script

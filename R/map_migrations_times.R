@@ -1,6 +1,8 @@
 #!/usr/bin/env Rscript
 # Created by Daniele Silvestro on 29/05/2014
 # Thanks to Martha Serrano-Serrano and Ruud Scharn
+require(methods)
+
 pkload <- function(x)
 {
   if (!suppressMessages(require(x,character.only = TRUE)))
@@ -94,8 +96,8 @@ F_calc <- function(res2){
 
 
 
-F_plot <- function(L,title="Migrations through time"){
-	plot(L$age,L$a,type = 'n', ylim = c(0, max(L$M)), xlim = c(min(L$age),0), ylab = 'migration events', xlab = 'Ma',main=title)
+F_plot <- function(L,title="Migrations through time",y_lim_M=10){
+	plot(L$age,L$a,type = 'n', ylim = c(0, y_lim_M), xlim = c(min(L$age),0), ylab = 'migration events', xlab = 'Ma',main=title)
 	polygon(c(L$age, rev(L$age)), c(L$M, rev(L$m)), col = "#E5E4E2", border = NA)
 	lines(y=L$a, x=L$age, col = "#504A4B", border = NULL)
 }
@@ -111,6 +113,7 @@ run_SM <- function(tree, trait,max_run){
 ####################################################################################
 RES=list()
 effective_rep=0
+y_lim_M=0
 for (replicate in 1:n_rep){
 	
 	cat("\nreplicate:", replicate,"\t")
@@ -133,8 +136,7 @@ for (replicate in 1:n_rep){
 			taxa[i]=tbl[i,1]
 		}
 	}
-
-
+	
 	rownames(trait)=taxa
 	if (no_char==0){
 		min_state=1
@@ -199,6 +201,8 @@ for (replicate in 1:n_rep){
 		RES_temp=list()
 		RES_temp[[1]]=F_calc(res)
 		i=1
+		y_lim_M=max(y_lim_M,max(RES_temp[[1]]$M)) 
+		
 		directions=as.vector("global")
 		for (f in min_state:no_potential_states){
 			for (t in min_state:no_potential_states) {
@@ -206,10 +210,12 @@ for (replicate in 1:n_rep){
 					i = i+1
 					#cat("\n",f,t,replicate)
 					res2=res[res$from==f & res$to==t,]
+					print(res2)
 					RES_temp[[i]]=F_calc(res2)
 					if (no_char==0){
-						directions[i]=sprintf("Migrations through time: %s -> %s",area_name[f+1],area_name[t+1])
-						}else{directions[i]=sprintf("Transition: %s -> %s",f,t)}
+						directions[i]=sprintf("Migrations through time: %s -> %s (%s)",
+						area_name[f+1],area_name[t+1],length(res2[,1]))
+						}else{directions[i]=sprintf("Transition: %s -> %s (%s)",f,t,length(res2[,1]))} 
 				}
 			}
 		}
@@ -227,7 +233,7 @@ cat(sprintf("# Headers: min, max, and average (m, M, a) number of migration even
 # make plots/output table
 for (i in 1:length(RES)){
 	counts=RES[[i]]/effective_rep
-	F_plot(counts,directions[i])
+	F_plot(counts,directions[i],y_lim_M)
 	cat(sprintf("# Table %s (%s).\n",i,directions[i]), file=out_table,append = T)
 	row.names(counts)=paste0(row.names(counts), sep="_",rep(directions[i], length(counts[,1])))
 	if (i==1){
