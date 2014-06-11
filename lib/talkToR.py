@@ -21,71 +21,46 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-	if args.plot == True:
-	### Go to R ###
-	### Do tests of cutoff values and call R + functions
-		try:
-			import rpy2.robjects as ro
-		except:
-			sys.exit("[ Error ] rpy2 is not installed. Ploting the result will not be possible")
-		
-		spName_list = []
-		spLong_list = []
-		spLat_list = []
-		polyName_list = []
-		polyLong_list = []
-		polyLat_list = []
+def stochastic_mapping(args, result):
+	import os
+	# Test if the tree file exists.
+	try:
+		open(args.tree, "r")
+	except IOError:
+		sys.exit("[Error] Unable to open tree file \"%s\"" % args.tree) 
+	# Prepare the data for the stochastic mapping analysis.
+	# occurences.sgc.txt
+	out = open("occurences.sgc.txt", "w")
+	# Headers
+	header = "Species\t"
+	for name in result.getPolygonNames():
+		header += "%s\t" % name.replace(" ", "_")
+	header += "\n"
+	out.write(header)
+	# Species names and character matrix
+	for name in sorted(result.getResult()):
+		string = "%s\t" % name.replace(" ", "_")
+		for record in result.resultToStr(result.result[name]):
+			string += "%s\t" % record
+		string += "\n"
+		out.write(string)
+	out.close()
 
-		# Localities
-		# Store species names, long. and lat. data in separate lists...
-		for locality in localities.getLocalities():
-			spName_list.append(locality[0])
-			spLong_list.append(locality[1])
-			spLat_list.append(locality[2])
-		# ...then transform these lists into separate R objects...
-		ro.r('speciesNames <- c("%s")' % spName_list)
-		ro.r('spLongitudes <- c("%s")' % spLong_list)
-		ro.r('spLatitudes <- c("%s")' % spLat_list)
-		# ...and finally a data frame.
-		ro.r('coordinates <- data.frame(identifier = speciesNames, XCOOR = spLongitudes, YCOOR = spLatitudes)')
-		ro.r('png(filename="test_plot-1.png")')		# Devel.
-		ro.r('plot(coordinates)')					# Devel.
-		ro.r('dev.off()')							# Devel.
-
-		# Polygons
-		# Store polygon names long. and lat. data in separate lists...
-		for polygon in polygons.getPolygons():
-			polyName_list.append(polygon[0])
-			polyLong_list.append(polygon[1])
-			polyLat_list.append(polygon[2])
-		# ...then transform these lists into separate R objects...
-		ro.r('polygonNames <- c("%s")' % polyName_list)
-		ro.r('polygonLong <- c("%s")' % polyLong_list)
-		ro.r('polyLat <- c("%s")' % polyLat_list)
-		# ...and finally a data frame.
-		ro.r('polygons <- data.frame(identifier = polygonNames, XCOOR = polygonLong, YCOOR = polyLat)')
-		ro.r('png(filename="test_plot-2.png")')     # Devel.
-		ro.r('plot(polygons)')                   	# Devel.
-		ro.r('dev.off()')                           # Devel.
-		sys.exit()
-	
-
-if __name__ == "__main__":
-	
-	if args.test == True:
-		if args.localities:
-			from lib.testData import testLocality
-			localities = MyLocalities()
-			testLocality(localities, args.localities)
-
-		if args.polygons:
-			from lib.testData import testPolygons
-			polygons = Polygons()
-			testPolygons(polygons, args.polygons)
-
+	wd = os.getcwd()  					# Working directory
+	tbl_file = args.distribution_table	# Species distribution table from SpeciesGeoCoder
+	tree_file = args.tree				# Tree file
+	out_file = args.m_out				# Stem name output files. Default: "migration_plot"
+	n_rep = args.n_rep					# Number of stochastic maps. Default: 100
+	map_model = args.map_model			# Transition model, "ER", "SYM" or "ARD". Default: "SYM"
+	max_run_time = args.max_run_time	# Max run time for 1 stochastic map (in seconds). Default: 60 sec. 
+		                                # This limit does not apply to the first map
+	trait= 0
+	if args.dev == True:
+		verbose = 'T'
 	else:
-		if args.dev:
-			import cProfile
-			cProfile.run("main()")
-		else:
-			main()
+		verbose = 'F'
+
+	# launch R script
+	cmd="Rscript R/map_migrations_times.R %s %s %s --o %s --m %s --r %s --s %s --d %s --t %s" \
+	% (wd,tbl_file,tree_file,out_file,map_model,n_rep,max_run_time,verbose,trait)
+	os.system(cmd)
