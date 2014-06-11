@@ -440,50 +440,9 @@ def main():
 
 	if args.stochastic_mapping == True:
 		import os
-		# Test if the tree file exists.
-		try:
-			open(args.tree, "r")
-		except IOError:
-			sys.exit("[Error] Unable to open tree file \"%s\"" % args.tree) 
-		# Prepare the data for the stochastic mapping analysis.
-		# occurences.sgc.txt
-		out5 = open("occurences.sgc.txt", "w")
-		# Headers
-		header = "Species\t"
-		for name in result.getPolygonNames():
-			header += "%s\t" % name.replace(" ", "_")
-		header += "\n"
-		out5.write(header)
-		# Species names and character matrix
-		for name in sorted(result.getResult()):
-			string = "%s\t" % name.replace(" ", "_")
-			for record in result.resultToStr(result.result[name]):
-				string += "%s\t" % record
-			string += "\n"
-			out5.write(string)
-		out5.close()
-
-		wd = os.getcwd()  					# Working directory
-		tbl_file = args.distribution_table	# Species distribution table from SpeciesGeoCoder
-		tree_file = args.tree				# Tree file
-		out_file = args.m_out				# Stem name output files. Default: "migration_plot"
-		n_rep = args.n_rep					# Number of stochastic maps. Default: 100
-		map_model = args.map_model			# Transition model, "ER", "SYM" or "ARD". Default: "SYM"
-		max_run_time = args.max_run_time	# Max run time for 1 stochastic map (in seconds). Default: 60 sec. 
-   			                                # This limit does not apply to the first map
-		trait= 0
-		if args.dev == True:
-			verbose = 'T'
-		else:
-			verbose = 'F'
-
-		# launch R script
-#		print "\nThe following R libraries are required: ape, phytools, geiger, optparse.\n"
-###		cmd="Rscript R/map_migrations_times.R %s %s %s --o %s --m %s --r %s --s %s" \
-###		% (wd,tbl_file,tree_file,out_file,map_model,n_rep,max_run_time)
-		cmd="Rscript R/map_migrations_times.R %s %s %s --o %s --m %s --r %s --s %s --d %s --t %s" \
-		% (wd,tbl_file,tree_file,out_file,map_model,n_rep,max_run_time,verbose,trait)
-		os.system(cmd)
+		from lib.talkToR import stochastic_mapping
+		# Run the stochastic mapping analysis
+		stochastic_mapping(args, result)
 
 
 
