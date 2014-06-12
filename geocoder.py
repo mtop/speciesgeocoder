@@ -357,6 +357,7 @@ def main():
 								result.setResult(locality[0], polygon[0])
 	
 	if args.gbif:
+		### Under development
 		gbifData = GbifLocalities()
 		result.setSpeciesNames(gbifData)
 		# For each GBIF locality record ...
@@ -440,9 +441,9 @@ def main():
 
 	if args.stochastic_mapping == True:
 		import os
-		from lib.talkToR import stochastic_mapping
+		import lib.stochasticMapping as stochasticMapping
 		# Run the stochastic mapping analysis
-		stochastic_mapping(args, result)
+		stochasticMapping.main(args, result)
 
 
 
