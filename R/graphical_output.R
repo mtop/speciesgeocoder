@@ -16,7 +16,7 @@ opti <- parse_args(parser_object, args = commandArgs(trailingOnly = TRUE), posit
 wd <- opti$args[1]
 setwd(wd)
 
-source("SpeciesGeoCodeR.R")
+source("R/SpeciesGeoCodeR.R")
 
 python_out <- GetPythonIn(c(opti$args[2],opti$args[3], opti$args[4], opti$args[5]))
 
