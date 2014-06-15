@@ -439,6 +439,13 @@ def main():
 			out4.write(string)
 		out4.close()
 
+		### Test of the plot function
+		import os
+		wd = os.getcwd()                    # Working directory
+		cmd="Rscript R/graphical_output.R %s %s %s %s %s" \
+		% (wd, "occurences.sgc.txt", "polygons.sgc.txt", "sampletable.sgc.txt", "speciestable.sgc.txt")
+		os.system(cmd)
+
 
 	if args.stochastic_mapping == True:
 		import os
