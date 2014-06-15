@@ -56,6 +56,7 @@ mapping_group.add_argument("--m_out", help="Name of the output file from the sto
 mapping_group.add_argument("--n_rep", help="Number of stochastic maps", default=100)
 mapping_group.add_argument("--map_model", help="Transition model", choices=['ER', 'SYM', 'ARD'], default="ER") 
 mapping_group.add_argument("--max_run_time", help="Max run time for 1 stochastic map (in seconds).", default=60)
+mapping_group.add_argument("--trait", help="Trait >0 indicates the number of the character to be analyzed", default=0)
 ##########################
 
 #parser.add_argument("-o", "--out", help="Name of optional output file. Output is sent to STDOUT by default")
