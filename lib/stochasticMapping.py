@@ -54,7 +54,7 @@ def main(args, result):
 	map_model = args.map_model			# Transition model, "ER", "SYM" or "ARD". Default: "SYM"
 	max_run_time = args.max_run_time	# Max run time for 1 stochastic map (in seconds). Default: 60 sec. 
 		                                # This limit does not apply to the first map
-	trait= 0
+	trait= args.trait					# Trait >0 indicates the number of the character to be analyzed
 	if args.dev == True:
 		verbose = 'T'
 	else:
