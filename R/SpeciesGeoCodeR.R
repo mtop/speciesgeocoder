@@ -854,7 +854,7 @@ MapGrid <- function(rast){
   
 }
 
-MapDiversity <- function(x, scale, leg = "continuous", lim = "polygons", show.occ = F){
+MapDiversity <- function(x, scale = "CUSTOM", leg = "continuous", lim = "polygons", show.occ = F){
   if (!class(x) ==  "spgeoOUT"){
     stop("This function is only defined for class spgeoOUT")
   }
@@ -1053,14 +1053,15 @@ PlotSpPoly <- function(x, ...){
     num <- length(names(x$polygon_table))
     dat <- sort(x$polygon_table)
     counter <- num/10
-         if (length(x$polygon_table) != 0){
-    par(mar = c(10, 4, 2, 2))
-    barplot(as.matrix(dat[1,]), 
-            ylim = c(0, round((max(dat) + max(dat)/4), 0)), 
-            ylab = "Number of Species per Polygon", las = 2, )# ...)
-         }else{
-    cat("No point in any polygon")  
-           }
+    if (length(x$polygon_table) != 0){
+      par(mar = c(10, 4, 2, 2))
+      barplot(as.matrix(dat[1,]), 
+              ylim = c(0, round((max(dat) + max(dat)/4), 0)), 
+              ylab = "Number of Species per Polygon", las = 2, ...)
+      box("plot")
+    }else{
+      cat("No point in any polygon")  
+    }
   }
   else{
     stop("This function is only defined for class <spgeoOUT>")
