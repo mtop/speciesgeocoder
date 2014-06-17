@@ -21,13 +21,19 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+import sys
+
 def main(args, result):
-	import os
 	# Test if the tree file exists.
 	try:
 		open(args.tree, "r")
-	except IOError:
-		sys.exit("[Error] Unable to open tree file \"%s\"" % args.tree) 
+	except:
+		# If the --tree was not used
+		if args.tree == None:
+			sys.exit("[Error] The stochastic mapping analysis requires a tree file as input.")
+		else:
+			sys.exit("[Error] Unable to open tree file \"%s\"" % args.tree) 
 	# Prepare the data for the stochastic mapping analysis.
 	# occurences.sgc.txt
 	out = open("occurences.sgc.txt", "w")
@@ -35,14 +41,14 @@ def main(args, result):
 	header = "Species\t"
 	for name in result.getPolygonNames():
 		header += "%s\t" % name.replace(" ", "_")
-	header += "\n"
+	header = header[:-1] + "\n"
 	out.write(header)
 	# Species names and character matrix
 	for name in sorted(result.getResult()):
 		string = "%s\t" % name.replace(" ", "_")
 		for record in result.resultToStr(result.result[name]):
 			string += "%s\t" % record
-		string += "\n"
+		string = string[:-1] + "\n"
 		out.write(string)
 	out.close()
 

@@ -428,14 +428,14 @@ def main():
 		header = "Species\t"
 		for name in result.getPolygonNames():
 			header += "%s\t" % name.replace(" ", "_")
-		header += "\n"
+		header = header[:-1] + "\n"
 		out4.write(header)
 		# Species names and character matrix
 		for species in result.getResult():
 			string = "%s\t" % species.replace(" ", "_")
 			for record in result.getResult()[species]:
 				string += "%s\t" % record 
-			string += "\n"
+			string = string[:-1] + "\n"
 			out4.write(string)
 		out4.close()
 
@@ -443,7 +443,7 @@ def main():
 		import os
 		wd = os.getcwd()                    # Working directory
 		cmd="Rscript R/graphical_output.R %s %s %s %s %s" \
-		% (wd, "occurences.sgc.txt", "polygons.sgc.txt", "sampletable.sgc.txt", "speciestable.sgc.txt")
+		% (wd, "coordinates.sgc.txt", "polygons.sgc.txt", "sampletable.sgc.txt", "speciestable.sgc.txt")
 		os.system(cmd)
 
 
