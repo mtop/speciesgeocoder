@@ -1,4 +1,4 @@
-setwd("C:\\Users\\xzizal\\Desktop\\GitHub\\geocoder\\benchmarking_results\\")
+setwd("C:\\Users\\xzizal\\Desktop\\GitHub\\geocoder\\dev\\benchmarking_results\\")
 
 datR <-read.table("python_results_summary.txt", header = T)
 datR_graph <- subset(datR,datR$graphs == "yes")
