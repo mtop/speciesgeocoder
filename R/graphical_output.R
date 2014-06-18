@@ -19,7 +19,6 @@ setwd(wd)
 source("R/SpeciesGeoCodeR.R")
 
 python_out <- GetPythonIn(c(opti$args[2],opti$args[3], opti$args[4], opti$args[5]))
-<<<<<<< HEAD
 save(python_out, file = "python_out.Rdata")
 
 #possibly insert cutoff values here
