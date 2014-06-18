@@ -57,8 +57,8 @@ class Result(object):
 	def getPolygonNames(self):
 		return self.polygonNames
 
-	def setResult(self, speciesName, polygonName):
-		list = self.result[speciesName]
+	def setResult(self, Locality, polygonName):
+		list = self.result[Locality[0]]
 		newList = []
 		index = 0
 		for i in list:
@@ -69,8 +69,8 @@ class Result(object):
 			else:
 				newList.append(i)
 				index += 1
-		self.result[speciesName] = newList
-		self.sampletable.append((speciesName, polygonName))
+		self.result[Locality[0]] = newList
+		self.sampletable.append((Locality[0], polygonName, Locality[2], Locality[1]))
 	
 	def getSampletable(self):
 		return self.sampletable
