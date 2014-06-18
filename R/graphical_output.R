@@ -28,9 +28,9 @@ OutBarChartPoly(python_out)
 OutBarChartSpec(python_out)
 OutMapAll(python_out) 
 
-if(dim(python_out$sample_table)[1] == dim(python$species_coordinates_in)){
+if(dim(python_out$sample_table)[1] == dim(python_out$species_coordinates_in)[1]){
   OutMapPerSpecies(lala)
   OutMapPerPoly(lala)
 }else{
-  warning("SpeciesGeocoder maps currently do not support overlapping polygons. No maps created."
+  warning("SpeciesGeocoder maps currently do not support overlapping polygons. No maps created.")
 }
