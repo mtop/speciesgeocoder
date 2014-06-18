@@ -344,12 +344,12 @@ def main():
 						if args.tif:
 							if elevationTest(locality[1], locality[2], polygon, index) == True:
 								# Store the result
-								result.setResult(locality[0], polygon[0])		
+								result.setResult(locality, polygon[0])		
 #								print locality[0], polygon[0]						# Devel.
 						else:
 							# Store the result
-							result.setResult(locality[0], polygon[0])
-#							print locality[0], polygon[0]                     	# Devel.
+							result.setResult(locality, polygon[0])
+#							print locality[0], polygon[0], locality[1], locality[2]                     	# Devel.
 				else:
 					# locality[0] = species name, locality[1] = longitude, locality[2] =  latitude
 					if pointInPolygon(polygon[1], locality[1], locality[2]) == True:
@@ -416,9 +416,9 @@ def main():
 
 		# sampletable.sgc.txt
 		out3 = open("sampletable.sgc.txt", "w")
-		out3.write("identifier\thomepolygon\n")
-		for species, polygon in result.getSampletable():
-			out3.write("%s\t%s\n" % (species.replace(" ", "_"), polygon.replace(" ", "_")))
+		out3.write("identifier\thomepolygon\tXCOOR\tYCOOR\n")
+		for species, polygon, longitude, latitude in result.getSampletable():
+			out3.write("%s\t%s\t%s\t%s\n" % (species.replace(" ", "_"), polygon.replace(" ", "_"), longitude, latitude))
 		out3.close()
 
 		# speciestable.sgc.txt
