@@ -23,11 +23,17 @@ save(python_out, file = "python_out.Rdata")
 
 #possibly insert cutoff values here
 WriteTablesSpGeo(python_out)
-NexusOut(python_out)
 OutPlotSpPoly(python_out)
 OutBarChartPoly(python_out)
 OutBarChartSpec(python_out)
 OutMapAll(python_out) 
 OutMapPerSpecies(python_out)
 OutMapPerPoly(python_out)
+
+if(length(unique(python_out$identifier_in)) < 41) {
+  coextab <- CoExClassH(python_out$spec_table)
+  OutHeatCoEx(coextab)
+}
+
+
 
