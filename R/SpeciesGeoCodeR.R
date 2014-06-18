@@ -3,7 +3,7 @@ pkload <- function(x)
 {
   if (!require(x,character.only = TRUE, quietly = T))
   {
-    install.packages(x,dep=TRUE, quiet = T)
+    install.packages(x,dep=TRUE, quiet = T, repos='http://cran.us.r-project.org')
     if(!require(x,character.only = TRUE)) stop("Package not found")
   }
 }
