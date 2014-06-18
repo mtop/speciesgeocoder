@@ -1298,11 +1298,8 @@ MapPerPoly <- function(x, scale, plotout = FALSE){
         ymax <- min(max(bbox(x$polygons[i])[2, 2]) + 5, 90)
         ymin <- max(min(bbox(x$polygons[i])[2, 1]) - 5, -90)
        }
-      
-        
-    po <- data.frame(x$sample_table, x$species_coordinates_in)
-    subpo <- subset(po, as.character(po$homepolygon) ==  as.character(chopo))
-    
+              
+    subpo <- subset(x$sample_table, as.character(x$sample_table$homepolygon) ==  as.character(chopo))
     subpo <- subpo[order(subpo$identifier), ]  
     
     liste <- unique(subpo$identifier)
@@ -1371,21 +1368,24 @@ MapPerSpecies <- function(x, moreborders = F, plotout = FALSE, ...){
   }
   layout(matrix(c(1, 1, 1, 1), ncol = 1, nrow = 1))
   if (plotout ==  FALSE){par(ask = T)}
-  dat <- data.frame(x$sample_table, x$species_coordinates_in)
-  names(dat) <- c("identifier","XCOOR","YCOOR")
+# dat <- data.frame(x$sample_table, x$species_coordinates_in)
+# names(dat) <- c("identifier","XCOOR","YCOOR")
+  dat <- x$sample_table
   liste <- levels(dat$identifier)
+  alle <- data.frame(identifier = x$identifier_in, x$species_coordinates_in)
     
   for(i in 1:length(liste)){
     cat(paste("Mapping species: ", i, "/", length(liste), ": ", liste[i], "\n",sep = ""))
     kk <- subset(dat, dat$identifier ==  liste[i])
 
     inside <- kk[!is.na(kk$homepolygon),]
-    outside <- kk[is.na(kk$homepolygon),]
+#     outside <- kk[is.na(kk$homepolygon),]
+    outside <- subset(alle, alle$identifier == liste[i])
     
-    xmax <- min(max(dat$XCOOR) + 2, 180)
-    xmin <- max(min(dat$XCOOR) - 2, -180)
-    ymax <- min(max(dat$YCOOR) + 2, 90)
-    ymin <- max(min(dat$YCOOR) - 2, -90)
+    xmax <- min(max(alle$XCOOR) + 2, 180)
+    xmin <- max(min(alle$XCOOR) - 2, -180)
+    ymax <- min(max(alle$YCOOR) + 2, 90)
+    ymin <- max(min(alle$YCOOR) - 2, -90)
     
     map ("world", xlim = c(xmin, xmax), ylim = c(ymin, ymax))
     axis(1)
@@ -1393,15 +1393,13 @@ MapPerSpecies <- function(x, moreborders = F, plotout = FALSE, ...){
     title(liste[i])
     if (moreborders == T) {plot(wrld_simpl, add = T)}
     plot(x$polygons, col = "grey60", add = T)
-    
+    points(outside$XCOOR, outside$YCOOR, 
+            cex = 0.7, pch = 3 , col = "red")
     if(length(inside) > 0){
       points(inside$XCOOR, inside$YCOOR, 
              cex = 0.7, pch = 3 , col = "blue")
     }
-    if(length(outside) >0){
-      points(outside$XCOOR, outside$YCOOR, 
-             cex = 0.7, pch = 3 , col = "red")
-    }
+
     box("plot")
   }
   par(ask = F)

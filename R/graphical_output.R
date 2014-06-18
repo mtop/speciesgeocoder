@@ -20,6 +20,7 @@ source("R/SpeciesGeoCodeR.Rdata")
 
 python_out <- GetPythonIn(c(opti$args[2],opti$args[3], opti$args[4], opti$args[5]))
 save(python_out, file = "python_out.R")
+
 #possibly insert cutoff values here
 WriteTablesSpGeo(python_out)
 NexusOut(python_out)
@@ -27,10 +28,6 @@ OutPlotSpPoly(python_out)
 OutBarChartPoly(python_out)
 OutBarChartSpec(python_out)
 OutMapAll(python_out) 
+OutMapPerSpecies(python_out)
+OutMapPerPoly(python_out)
 
-if(dim(python_out$sample_table)[1] == dim(python_out$species_coordinates_in)[1]){
-  OutMapPerSpecies(python_out)
-  OutMapPerPoly(python_out)
-}else{
-  warning("SpeciesGeocoder maps currently do not support overlapping polygons. No maps created.")
-}
