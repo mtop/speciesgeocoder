@@ -364,6 +364,11 @@ def main():
 		### Under development
 		gbifData = GbifLocalities()
 		result.setSpeciesNames(gbifData)
+
+#		localities = MyLocalities()			# Devel.
+#		numLoc = localities.getQuant()			# Devel.
+#		result.setSpeciesNames(localities)		# Devel.
+
 		# For each GBIF locality record ...
 		for locality in gbifData.getLocalities():
 			# Under development
@@ -371,6 +376,10 @@ def main():
 #			progress = (done/float(self.getQuant()))*100
 #			sys.stderr.write("Progress: {0:.0f}%     \r".format(progress))
 #			localities.getProgress(done)
+
+#			done += 1
+#			progress = (done/float(numLoc))*100
+#			sys.stderr.write("Point in polygon test: {0:.0f}%     \r".format(progress))
 			# ... and for each polygon ...
 			for polygon in polygons.getPolygons():
 				# ... test if the locality record is found in the polygon.
