@@ -33,7 +33,7 @@ except ImportError:
 		from subprocess import call
 		call(["sudo", "easy_install", "argparse"])
 	else:
-		sys.stderr.write("[--] Exiting due to missing dependency \"argparser\"")
+		sys.exit("[EE] Exiting due to missing dependency \"argparser\"")
 from lib.exceptions import *
 import subprocess
 
