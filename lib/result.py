@@ -99,7 +99,9 @@ class Result(object):
 		print "\tMatrix"
 		# Print the species names and character matrix
 		for name in sorted(self.getResult()):
-			print name.replace(" ","_"), '\t\t', self.resultToStr(self.result[name])
+			# Make sure result from empty names are not reported
+			if len(name) > 0:
+				print name.replace(" ","_"), '\t\t', self.resultToStr(self.result[name])
 		print '\t;'
 		print 'End;'
 
