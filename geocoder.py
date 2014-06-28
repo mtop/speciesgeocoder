@@ -385,6 +385,7 @@ def main():
 					else:
 						# Store the result
 						result.setResult(locality, polygon[0])
+		print result.getResult()
 						
 	sys.stderr.write("\n")
 	result.printNexus()
