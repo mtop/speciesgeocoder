@@ -218,20 +218,23 @@ class GbifLocalities(Localities):
 
 		for line in lines:
 			# Make sure the record has both lat. and long. data.
-			if len(line.split("\t")[5]) > 0 and len(line.split("\t")[6]) > 0:
-				if line.split("\t")[5] == "Latitude":
+			if len(line.split("\t")[77]) > 0 and len(line.split("\t")[78]) > 0:
+				# Simple check if the names of the columns are sane
+				if line.split("\t")[77] == "decimalLatitude" and line.split("\t")[78] == "decimalLongitude":
 					continue
 			try:
-				float(line.split("\t")[5])
-				float(line.split("\t")[6])
+				float(line.split("\t")[77])
+				float(line.split("\t")[78])
 			except:
 				continue
-			if args.binomial:
-				species = self.getBinomialName(line.split("\t")[3])
-			else:
-				species = line.split("\t")[3]
-			latitude = line.split("\t")[5]
-			longitude = line.split("\t")[6]
+			# Under development
+#			if args.binomial:
+#				species = self.getBinomialName(line.split("\t")[3])
+#			else:
+#				species = line.split("\t")[219]
+			species = line.split("\t")[219]
+			latitude = line.split("\t")[77]
+			longitude = line.split("\t")[78]
 			yield species.replace("  ", " "), latitude, longitude
 
 	def setSpeciesNames(self, name):
@@ -363,26 +366,25 @@ def main():
 		result.setSpeciesNames(gbifData)
 		# For each GBIF locality record ...
 		for locality in gbifData.getLocalities():
+			# Under development
 #			done += 1
-
 #			progress = (done/float(self.getQuant()))*100
 #			sys.stderr.write("Progress: {0:.0f}%     \r".format(progress))
-
 #			localities.getProgress(done)
 			# ... and for each polygon ...
 			for polygon in polygons.getPolygons():
 				# ... test if the locality record is found in the polygon.
 				if pointInPolygon(polygon[1], locality[2], locality[1]) == True:
-					result.setResult(locality[0], polygon[0])
+					result.setResult(locality, polygon[0])
 					
 					# Test if elevation files are available.
 					if args.tif:
 						if elevationTest(locality[1], locality[2], polygon, index) == True:
 							# Store the result
-							result.setResult(locality[0], polygon[0])
-						else:
-							# Store the result
-							result.setResult(locality[0], polygon[0])
+							result.setResult(locality, polygon[0])
+					else:
+						# Store the result
+						result.setResult(locality, polygon[0])
 						
 	sys.stderr.write("\n")
 	result.printNexus()
