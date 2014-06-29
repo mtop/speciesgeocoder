@@ -43,7 +43,8 @@ class Result(object):
 			self.result = {}
 
 		for name in dataObject.getSpeciesNames():
-			if name not in self.result:
+			# Make sure the species name is not empty
+			if name not in self.result and len(name) > 0:
 				self.result[name] = self.initialList
 			else:
 				continue
@@ -58,19 +59,21 @@ class Result(object):
 		return self.polygonNames
 
 	def setResult(self, Locality, polygonName):
-		list = self.result[Locality[0]]
-		newList = []
-		index = 0
-		for i in list:
-			if index == self.polygonNumber(polygonName):
-				newVal = i+1
-				newList.append(newVal)
-				index += 1
-			else:
-				newList.append(i)
-				index += 1
-		self.result[Locality[0]] = newList
-		self.sampletable.append((Locality[0], polygonName, Locality[2], Locality[1]))
+		# Make sure the record has a species name associated with it
+		if len(Locality[0]) > 0:
+			list = self.result[Locality[0]]
+			newList = []
+			index = 0
+			for i in list:
+				if index == self.polygonNumber(polygonName):
+					newVal = i+1
+					newList.append(newVal)
+					index += 1
+				else:
+					newList.append(i)
+					index += 1
+			self.result[Locality[0]] = newList
+			self.sampletable.append((Locality[0], polygonName, Locality[2], Locality[1]))
 	
 	def getSampletable(self):
 		return self.sampletable
@@ -99,9 +102,7 @@ class Result(object):
 		print "\tMatrix"
 		# Print the species names and character matrix
 		for name in sorted(self.getResult()):
-			# Make sure result from empty names are not reported
-			if len(name) > 0:
-				print name.replace(" ","_"), '\t\t', self.resultToStr(self.result[name])
+			print name.replace(" ","_"), '\t\t', self.resultToStr(self.result[name])
 		print '\t;'
 		print 'End;'
 
