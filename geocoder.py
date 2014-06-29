@@ -159,15 +159,20 @@ class MyLocalities(Localities):
 		try:
 			f = open(self.localityFile, "rU")
 			lines = f.readlines()
+			if lines[0][0] == "#":
+				pass
+			else:
+				sys.exit("[ Error ] \'%s\' does not start with a header line." % self.localityFile)
 		except IOError:
 			sys.exit("[ Error ] No such file \'%s\'" % self.localityFile)
+
 		for line in lines:
 			if not line:
 				break
-			# Determine the Lat/Long column order
+			# Determine the Lat/Long column order.
 			if line[0] == "#":
 				strings = ["Latitude", "latitude", "Lat.", "lat.", "Lat", "lat"]
-				# Dev-note: Test for other delimiters than \t
+				# Dev-note: Test for other delimiters then \t
 				if line.split("\t")[1] not in strings:
 					self.order = "long-lat"
 				else:
