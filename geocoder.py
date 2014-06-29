@@ -137,6 +137,12 @@ class Localities(object):
 			pass
 		return name
 
+	def getQuant(self):
+		nr = 0
+		for i in self.getLocalities():
+			nr += 1
+		return nr
+
 class MyLocalities(Localities):
 	# Object that contains the locality data
 	# read from a tab-delimited *.csv file.
@@ -192,13 +198,6 @@ class MyLocalities(Localities):
 
 	def getLocalityFileName(self):
 		return self.localityFile
-
-	def getQuant(self):
-		nr = 0
-		for i in self.getLocalities():
-			nr += 1
-		return nr
-
 
 class GbifLocalities(Localities):
 	# Object that contains the locality data in the form
@@ -348,11 +347,9 @@ def main():
 							if elevationTest(locality[1], locality[2], polygon, index) == True:
 								# Store the result
 								result.setResult(locality, polygon[0])		
-#								print locality[0], polygon[0]						# Devel.
 						else:
 							# Store the result
 							result.setResult(locality, polygon[0])
-#							print locality[0], polygon[0], locality[1], locality[2]                     	# Devel.
 				else:
 					# locality[0] = species name, locality[1] = longitude, locality[2] =  latitude
 					if pointInPolygon(polygon[1], locality[1], locality[2]) == True:
@@ -364,22 +361,14 @@ def main():
 		### Under development
 		gbifData = GbifLocalities()
 		result.setSpeciesNames(gbifData)
-
-#		localities = MyLocalities()			# Devel.
-#		numLoc = localities.getQuant()			# Devel.
-#		result.setSpeciesNames(localities)		# Devel.
+		numLoc = gbifData.getQuant()
 
 		# For each GBIF locality record ...
 		for locality in gbifData.getLocalities():
-			# Under development
-#			done += 1
-#			progress = (done/float(self.getQuant()))*100
-#			sys.stderr.write("Progress: {0:.0f}%     \r".format(progress))
-#			localities.getProgress(done)
-
-#			done += 1
-#			progress = (done/float(numLoc))*100
-#			sys.stderr.write("Point in polygon test: {0:.0f}%     \r".format(progress))
+			# Print progress report to STDERR (Thanks Martin Zackrisson for code snippet)
+			done += 1
+			progress = (done/float(numLoc))*100
+			sys.stderr.write("Point in polygon test: {0:.0f}%     \r".format(progress))
 			# ... and for each polygon ...
 			for polygon in polygons.getPolygons():
 				# ... test if the locality record is found in the polygon.
@@ -394,7 +383,6 @@ def main():
 					else:
 						# Store the result
 						result.setResult(locality, polygon[0])
-		print result.getResult()
 						
 	sys.stderr.write("\n")
 	result.printNexus()
