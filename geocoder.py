@@ -143,6 +143,7 @@ class Localities(object):
 			nr += 1
 		return nr
 
+
 class MyLocalities(Localities):
 	# Object that contains the locality data
 	# read from a tab-delimited *.csv file.
@@ -397,8 +398,7 @@ def main():
 		# coordinates.sgc.txt
 		out1 = open("coordinates.sgc.txt", "w")
 		out1.write("identifier\tXCOOR\tYCOOR\n")
-		localities = MyLocalities()
-		for species, latitude, longitude in localities.getLocalities():
+		for species, polygon, longitude, latitude in result.getSampletable():
 			# Note that the latitude/longitude order has shifted 
 			# in order to fit the requirements of the R code.
 			out1.write("%s\t%s\t%s\n" % (species.replace(" ", "_") , longitude, latitude))
