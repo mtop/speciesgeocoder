@@ -69,7 +69,53 @@ args = parser.parse_args()
 
 
 class Polygons(object):
-	# Object that contains all polygons.
+	# Object that contains polygons exported from QGIS.
+	def __init__(self):
+		self.polygonFile = args.polygons
+		self.polygonNames = []
+		for polygon in self.getPolygons():
+			self.setPolygonNames(polygon[0])
+	
+	def getPolygons(self):
+		try:
+			f = open(self.polygonFile, "rU")
+			lines = f.readlines()
+		except IOError:
+			sys.exit("[ Error ] No such file \'%s\'" % self.polygonFile)
+		
+		for line in lines:
+			if line[:7] == "POLYGON":
+				low = None
+				high = None
+				splitline = line.split('\t')
+				name = splitline[1].rstrip()
+				polygon = splitline[0].lstrip("POLYGON((").rstrip("))").split(", ")
+				# Check if polygon has elevation restrictions
+				try:
+					if splitline[2]:
+						if "-" in splitline[2]:
+							low = splitline[2].split("-")[0].rstrip("\n")
+							high = splitline[2].split("-")[1].rstrip("\n")
+						if ">" in splitline[2]:
+							low = splitline[2].split(">")[1].rstrip("\n")
+						if "<" in splitline[2]:
+							high = splitline[2].split("<")[1].rstrip("\n")
+				except:
+					low = None
+					high = None
+				yield name, polygon, low, high
+
+	def setPolygonNames(self, name):
+		if name not in self.polygonNames:
+			self.polygonNames.append(name)
+
+	def getPolygonNames(self):
+		return self.polygonNames
+
+
+class LEGACY_Polygons(object):
+	# Object that contains polygons in legacy format.
+	# This class will be removed in future releases.
 	def __init__(self):
 		self.polygonFile = args.polygons # [0]
 		self.polygonNames = []
@@ -266,12 +312,15 @@ def pointInPolygon(poly, x, y):
 		sys.stderr.write("[ Warning ] \'%s\' is not a number\n" % y)
 	n = len(poly)
 	inside = False
-	p1x,p1y = poly[0].split(',')
+#	p1x,p1y = poly[0].split(',')		# Legacy
+	p1x,p1y = poly[0].split(' ')
 	p1x = float(p1x)
 	p1y = float(p1y)
 	for i in range(n+1):
-		p2x = float('%s' % poly[i % n].split(',')[0])
-		p2y = float('%s' % poly[i % n].split(',')[1])
+#		p2x = float('%s' % poly[i % n].split(',')[0])		# Legacy
+#		p2y = float('%s' % poly[i % n].split(',')[1])		# Legacy
+		p2x = float('%s' % poly[i % n].split(' ')[0])
+		p2y = float('%s' % poly[i % n].split(' ')[1])
 		if y > min(p1y,p2y):
 			if y <= max(p1y,p2y):
 				if x <= max(p1x,p2x):
