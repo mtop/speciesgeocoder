@@ -465,7 +465,7 @@ def main():
 			for coordPair in polygon[1]:
 				# Note that the latitude/longitude order has shifted
 				# in order to fit the requirements of the R code.
-				out2.write("%s\t%s\t%s\n" % (polygon[0].replace(" ", "_"), coordPair.split(',')[0], coordPair.split(',')[1]))
+				out2.write("%s\t%s\t%s\n" % (polygon[0].replace(" ", "_"), coordPair.split(' ')[0], coordPair.split(' ')[1]))
 		out2.close()
 
 		# sampletable.sgc.txt
