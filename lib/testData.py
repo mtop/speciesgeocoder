@@ -19,8 +19,20 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
+
 def testLocality(localities, fileName):	
 	result = []
+	
+	# Make sure the locality file has a header line.
+	infile = open(fileName, "rU")
+	firstLine = infile.readline()
+	if firstLine[0] == "#":
+		pass
+	else:
+		string = "[ Error ] \'%s\' does not start with a header line.\n" % fileName
+		result.append(string)
+
 	for locality in localities.getLocalities():
 		for i in locality:
 			# Check that the species names, first and second 
@@ -44,9 +56,10 @@ def testLocality(localities, fileName):
 
 	if result: 	
 		for string in result:
-			print str(string)
+			sys.stderr.write(str(string))
 	else:
-		print "[--] \'%s\' passed all tests." % fileName
+		sys.stderr.write("[--] \'%s\' passed all tests.\n" % fileName)
+
 
 def testPolygons(polygons, fileName):
 	result = []
@@ -60,7 +73,7 @@ def testPolygons(polygons, fileName):
 				break
 
 		for latLong in polygon[1]:
-			x, y = latLong.split(",")
+			x, y = latLong.split(" ")
 			try:
 				float(x)
 				float(y)
@@ -88,6 +101,6 @@ def testPolygons(polygons, fileName):
 
 	if result:
 		for string in result:
-			print str(string)
+			sys.stderr.write(str(string))
 	else:
-		print "[--] \'%s\' passed all tests." % fileName
+		sys.stderr.write("[--] \'%s\' passed all tests.\n" % fileName)
