@@ -39,8 +39,9 @@ import subprocess
 
 parser = argparse.ArgumentParser(prog="speciesgeocoder")
 locality_group = parser.add_mutually_exclusive_group(required=True)
-polygon_group = parser.add_mutually_exclusive_group(required=True)
-polygon_group.add_argument("-p", "--polygons", help="Set path to file containing polygon coordinates")
+#polygon_group = parser.add_mutually_exclusive_group(required=True)
+#polygon_group.add_argument("-p", "--polygons", help="Set path to file containing polygon coordinates")
+parser.add_argument("-p", "--polygons", help="Set path to file containing polygon coordinates", required=True)
 #polygon_group.add_argument("-s", "--shape", help="Set path to shape file containing polygons")
 locality_group.add_argument("-l", "--localities", help="Set path to file containing species locality data")
 locality_group.add_argument("-g", "--gbif", help="Set path to file containing species locality data downloaded from GBIF")
