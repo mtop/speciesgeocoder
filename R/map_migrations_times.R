@@ -34,10 +34,10 @@ option_list <- list(
         help="if t>0 map trait [default %default]."),
 
     make_option("--d", default=F,type="logical",
-        help="Verbose [default %default].")
-	
-	make_option("--b", default=1,type="integer",
-        help="Adjust binsize [default %default].")
+        help="Verbose [default %default]."),
+
+    make_option("--b", default=1,type="integer",
+        help="Adjust bin size [default %default].")
 
     )
 
@@ -61,7 +61,7 @@ map_model=opt$options$m
 max_run_time=opt$options$s 
 verbose=opt$options$d
 no_char=opt$options$t
-agegap=$options$b 
+agegap=opt$options$b 
 
 print(verbose)
 
@@ -80,12 +80,17 @@ if (verbose==T){
 setwd(wd)
 tbl= read.table(tbl_file,header=T,stringsAsFactors=F) # , sep="\t"
 area_name=colnames(tbl)
-tree <- read.nexus(tree_file)
+tree_obj <- read.nexus(tree_file)
+
+
+
 #pdf(file=out_file,width=10, height=7)
 
 #############################################################################################################
+if (class(tree_obj)=="multiPhylo"){current_tree=tree_obj[[1]]
+}else{current_tree=tree_obj}
 
-branchtimes = branching.times(tree)
+branchtimes = branching.times(current_tree)
 maxmilcatogories = ceiling(max(branchtimes)/agegap)
 milgaps_mod=matrix(ncol=2, nrow=maxmilcatogories, 0)
 colnames(milgaps_mod)=c("time","tot_brl")
@@ -163,8 +168,13 @@ y_lim_M=0
 y_lim_MB=0
 
 for (replicate in 1:n_rep){
+
+	if (class(tree_obj)=="multiPhylo"){
+		S=sample(length(tree_obj),1)
+		current_tree=tree_obj[[S]]
+	}else{current_tree=tree_obj}
 	
-	cat("\nreplicate:", replicate,"\t")
+	cat("\nreplicate:", replicate, "tree:", S, "\t")
 	#print(no_char)
 	
 	# resample widespread taxa (not allowed in SM) to randomly assign one area
@@ -199,8 +209,8 @@ for (replicate in 1:n_rep){
 		
 	# prune tree to match taxa in the table
 	if (verbose==T){
-		treetrait <- treedata(tree,trait)
-		}else{ treetrait <- suppressWarnings(treedata(tree,trait)) }
+		treetrait <- treedata(current_tree,trait)
+		}else{ treetrait <- suppressWarnings(treedata(current_tree,trait)) }
 	tree <- treetrait$phy
 	trait <- treetrait$data
 	if (length(trait)==0) {stop("\nNo matching taxa!\n")}
