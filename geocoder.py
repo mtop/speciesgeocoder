@@ -34,7 +34,7 @@ except ImportError:
 		call(["sudo", "easy_install", "argparse"])
 	else:
 		sys.exit("[Error] Exiting due to missing dependency \"argparser\"")
-from lib.exceptions import *
+# from lib.exceptions import *
 # import subprocess
 
 parser = argparse.ArgumentParser(prog="speciesgeocoder")
