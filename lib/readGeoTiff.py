@@ -27,8 +27,10 @@ class Geotiff(object):
 	def __init__(self, tiffile):
 		self.tiffile = tiffile
 		try:
+#			print "[--] Trying to use python GDAL"		# Devel.
 			from osgeo import gdal
-#			import zzz							# Devel.
+#			import zzz									# Devel.
+#			print "[--] Using python GDAL"				# Devel.
 			my_file = gdal.Open(self.tiffile)
 			self.width = my_file.RasterXSize
 			self.height = my_file.RasterYSize
@@ -39,6 +41,7 @@ class Geotiff(object):
 			self.MAXY = self.gt[3]
 		except:
 			from os.path import abspath, dirname, join
+#			print "[--] Using C GDAL instead"			# Devel.
 			if sys.platform.startswith('linux2'):
 				binary = abspath(join(dirname(__file__), "../bin/gdalinfo_linux"))
 #				sys.exit("GDAL not installed")				# For now
