@@ -91,9 +91,7 @@ class Polygons(object):
 				splitline = line.split('\t')
 				name = splitline[1].rstrip()
 				splitline[0] = splitline[0].replace(", ", ",")
-#				print splitline[0]
 				polygon = splitline[0].lstrip("POLYGON((").rstrip("))").split(",")
-				print polygon
 				# Check if polygon has elevation restrictions
 				try:
 					if splitline[2]:
