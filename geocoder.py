@@ -90,7 +90,10 @@ class Polygons(object):
 				high = None
 				splitline = line.split('\t')
 				name = splitline[1].rstrip()
-				polygon = splitline[0].lstrip("POLYGON((").rstrip("))").split(", ")
+				splitline[0] = splitline[0].replace(", ", ",")
+#				print splitline[0]
+				polygon = splitline[0].lstrip("POLYGON((").rstrip("))").split(",")
+				print polygon
 				# Check if polygon has elevation restrictions
 				try:
 					if splitline[2]:
@@ -279,7 +282,7 @@ class GbifLocalities(Localities):
 				float(line.split("\t")[78])
 			except:
 				continue
-			# Under development
+			# Under development.
 #			if args.binomial:
 #				species = self.getBinomialName(line.split("\t")[3])
 #			else:
@@ -313,13 +316,10 @@ def pointInPolygon(poly, x, y):
 		sys.stderr.write("[ Warning ] \'%s\' is not a number\n" % y)
 	n = len(poly)
 	inside = False
-#	p1x,p1y = poly[0].split(',')		# Legacy
 	p1x,p1y = poly[0].split(' ')
 	p1x = float(p1x)
 	p1y = float(p1y)
 	for i in range(n+1):
-#		p2x = float('%s' % poly[i % n].split(',')[0])		# Legacy
-#		p2y = float('%s' % poly[i % n].split(',')[1])		# Legacy
 		p2x = float('%s' % poly[i % n].split(' ')[0])
 		p2y = float('%s' % poly[i % n].split(' ')[1])
 		if y > min(p1y,p2y):
@@ -347,11 +347,8 @@ def elevationTest(lat, lon, polygon, index):
 #	if not correct_file and polygon[2] == None:
 #		return True	
 	if correct_file:
-
-
 		new_tiff = Geotiff(correct_file)
 		elevation = new_tiff.get_elevation(lon.rstrip("\n"), lat.rstrip("\n"))
-
 		if not polygon[2]:
 			low = -1000000					# A really low elevation.
 		else:
@@ -364,14 +361,21 @@ def elevationTest(lat, lon, polygon, index):
 	else:
 		# Notify the user that no elevation data is available for a locality.
 		sys.stderr.write("[ Warning ] No elevation data available for locality %s, %s\n" % (lon.rstrip("\n"), lat.rstrip("\n")))
-	
+
+def print_progress(done, numLoc):
+	# Print progress report to STDERR (Thanks Martin Zackrisson for code snippet)
+	done += 1
+	progress = (done/float(numLoc))*100
+	sys.stderr.write("Point in polygon test: {0:.0f}%     \r".format(progress))
+	return done
+
 def main():
 	from lib.result import Result
 	# Create list to store the geotif objects in.
-	done = 0
 	polygons = Polygons()
 	result = Result(polygons, args)
-	# Index the geotiff files if appropriate.
+	done = 0
+	# Index the geotiff files if available.
 	if args.tif:
 		from lib.readGeoTiff import indexTiffs
 		try:
@@ -387,10 +391,7 @@ def main():
 		numLoc = localities.getQuant()
 		result.setSpeciesNames(localities)
 		for locality in localities.getLocalities():
-			# Print progress report to STDERR (Thanks Martin Zackrisson for code snippet)
-			done += 1
-			progress = (done/float(numLoc))*100
-			sys.stderr.write("Point in polygon test: {0:.0f}%     \r".format(progress))
+			done = print_progress(done, numLoc)
 			# ... and for each polygon ...
 			for polygon in polygons.getPolygons():
 				# ... test if the locality record is found in the polygon.
@@ -414,17 +415,13 @@ def main():
 								result.setResult(locality[0], polygon[0])
 	
 	if args.gbif:
-		### Under development
 		gbifData = GbifLocalities()
 		result.setSpeciesNames(gbifData)
 		numLoc = gbifData.getQuant()
 
 		# For each GBIF locality record ...
 		for locality in gbifData.getLocalities():
-			# Print progress report to STDERR (Thanks Martin Zackrisson for code snippet)
-			done += 1
-			progress = (done/float(numLoc))*100
-			sys.stderr.write("Point in polygon test: {0:.0f}%     \r".format(progress))
+			done = print_progress(done, numLoc)
 			# ... and for each polygon ...
 			for polygon in polygons.getPolygons():
 				# ... test if the locality record is found in the polygon.
