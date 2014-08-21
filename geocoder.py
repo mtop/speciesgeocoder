@@ -21,7 +21,8 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
+import sys,os
+
 try:
 	import argparse
 except ImportError:
@@ -66,6 +67,10 @@ parser.add_argument("-b", "--binomial", action="store_true", help="Treats first 
 parser.add_argument("-n", "--number", help="Set the minimum number of occurrences (localities) needed for considering a species to be present in a polygon", nargs="*")
 parser.add_argument("--test", help="Test if the input data is in the right format", action="store_true")
 parser.add_argument("--dev", help="Be extra verbose", action="store_true")
+#__ GUI STUFF
+parser.add_argument("--dir_output", help="Directory for output R plots", default=os.getcwd())
+parser.add_argument("--path_script", help="Path to R script", default=os.getcwd())
+
 args = parser.parse_args()
 
 
@@ -443,9 +448,13 @@ def main():
 		import os
 		from lib.plot import prepare_plots
 		prepare_plots(result, polygons)
-		wd = os.getcwd()                    # Working directory
-		cmd="Rscript R/graphical_output.R %s %s %s %s %s" \
-		% (wd, "coordinates.sgc.txt", "polygons.sgc.txt", "sampletable.sgc.txt", "speciestable.sgc.txt")
+		#__ GUI STUFF
+		dir_output = args.dir_output         # Working directory
+		path_script = args.path_script
+		cmd="Rscript %s/R/graphical_output.R %s %s/%s %s/%s %s/%s %s/%s %s" \
+		% (path_script,path_script, path_script,"coordinates.sgc.txt",path_script,"polygons.sgc.txt",path_script,"sampletable.sgc.txt",path_script, "speciestable.sgc.txt",dir_output)
+		
+		print "JHGFDSKJHGFD:",cmd
 		os.system(cmd)
 
 

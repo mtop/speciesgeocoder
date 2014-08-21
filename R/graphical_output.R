@@ -13,10 +13,13 @@ parser_object <- OptionParser(usage = "Usage: %prog [Working directory] [occuren
                               description="")
 opti <- parse_args(parser_object, args = commandArgs(trailingOnly = TRUE), positional_arguments = 5)
 
-wd <- opti$args[1]
+#__ GUI STUFF
+source(paste(opti$args[1],"/R/SpeciesGeoCodeR.R",sep=""))
+
+#__ GUI STUFF
+wd <- opti$args[6]
 setwd(wd)
 
-source("R/SpeciesGeoCodeR.R")
 
 python_out <- GetPythonIn(c(opti$args[2],opti$args[3], opti$args[4], opti$args[5]))
 save(python_out, file = "python_out.Rdata")
