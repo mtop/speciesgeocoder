@@ -5,103 +5,90 @@
 # Content of this file
 1.) For the impatient 
 2.) Dependencies
-3.) Installing on Mac OSX.
-4.) Installing on Windows using Cygwin
-5.) Installing on GNU/Linux
-6.) Installing the development version
-7.) Example data
+3.) Installing the GUI version
+4.) Installing on Mac OSX
+5.) Installing on Windows
+6.) Installing on GNU/Linux
+7.) Installing the development version
+8.) Example data
 ===========================================
 
 =====================
-1.) For the impatient (if it doesn't work: try the other options!)
+1.) For the impatient (if this doesn't work: try the other options!)
 =====================
-wget https://github.com/mtop/speciesgeocoder/archive/master.zip
-unzip master.zip
-cd speciesgeocoder-master/
-make
-sudo make install
+Downloade the latest version from https://github.com/mtop/speciesgeocoder/releases
+unzip speciesgeocoder-x.x.x.zip
+cd speciesgeocoder-x.x.x
+./geocoder.py -l example_data/localities.csv -p example_data/polygons.txt -t example_data/*.tif
 
 
 =================
-2.) Dependencies*
+2.) Dependencies
 =================
-argparse (Module included in python v2.7) 
-make
-gcc
-R (only needed if you want to use the plot functions)
+argparse (Module included in python v2.7. Available at https://pypi.python.org/pypi/argparse) 
+osgeo (The GDAL library available at https://pypi.python.org/pypi/GDAL/)
+R (only needed if you want to use the plot functions or do stochastic mapping. Available from http://www.r-project.org/)
 
-*The programs 'make' and 'gcc' are only needed if the pre-compiled 
-versions of gdalinfo and gdallocationinfo does now work on your system. 
-Both 'make' and 'gcc' should be installed on a regular GNU/Linux 
-system. Mac OSX and Windows/Cygwin users can find installation 
-instructions below.
+
+==============================
+3.) Installing SpeciesGeoCoder with a Graphical User Interface (GUI)
+==============================
+The recomended way of running SpeciesGeoCoder is from the commandline, as that version of the code contains the latest bug fixes and features. However, a GUI version for (Windows, Mac OSX and GNU/Linux) with the basic functions of the program is available at http://sourceforge.net/projects/speciesgeocodergui/
 
 
 ==========================
-3.) Installing on Mac OSX.
+4.) Installing on Mac OSX.
 ==========================
-'make' and 'gcc' are part of the package 'Xcode' that is available on 
-Appstore. After installation, open Xcode and go to: 
-Preferences -> Downloads -> Components -> Command Line Tools, and 
-install the commandline tools of Xcode. Then follow these steps:
 
-a. Direct your browser to the following URL (a compressed file will 
-	then be automatically downloaded):
-
-	https://github.com/mtop/speciesgeocoder/archive/master.zip
-
+a. Downloade the latest version from https://github.com/mtop/speciesgeocoder/releases
 b. Unzip the file by clicking on it.
-c. Open a terminal window and use the command "cd" and move into the 
-	directory "speciesgeocoder-master/" (this is easily done by
-	dragging the folder to command line in the Terminal window)
-d. Type 'make' to compile GDAL binaries.
-e. Copy and paste the following command into your terminal window
-	to make sure everything works as expected:
+c. Open a terminal window and use the command "cd" to move into the directory "speciesgeocoder-x.x.x" (where "x.x.x" will indicate the version number of the latest release).
+d. Copy and paste the following command into your terminal window to make sure everything works as expected:
 
 	./geocoder.py -l example_data/localities.csv -p example_data/polygons.txt -t example_data/*.tif
 
-f.	Then run the command 'sudo make install' to install the package 
-	in /usr/local/bin
 
+=========================
+5.) Installing on Windows
+=========================
 
-======================================
-4.) Installing on Windows using Cygwin
-======================================
-Follow the instructions in the file doc/HOWTO_Cygwin_installation.txt
-to install Cygwin and all dependencies of SpeciesGeoCoder.
+a. Download and install the Latest Python 2 Release from https://www.python.org/downloads/windows/
+b. Direct your browser to http://www.lfd.uci.edu/~gohlke/pythonlibs/ and then download and install GDAL for python 2.7
+c. Download and install R from http://cran.r-project.org/bin/windows/base/
 
-# Copy and paste the following commands in a Cygwin terminal window
-wget https://github.com/mtop/speciesgeocoder/archive/master.zip
-unzip master.zip
-cd speciesgeocoder-master/
-make 
-make install 
+Add R to your path
+;C:\Program Files\R\R-3.1.1\bin
+
+Change permissions to the R "library" directory in the following way: (this is nessesary as SpeciesGeoCoder will have to automatically install install additional R packages).
+
+d. Right click on "C:\Program Files\R\R-3.1.1\library" and select properties -> Security
+e. Click "Edit"
+f. In "Group our user names" select your name
+g. Mark the "Full control" checkbox
+h. Click OK
 
 ===========================
-5.) Installing on GNU/Linux
+6.) Installing on GNU/Linux
 ===========================
-wget https://github.com/mtop/speciesgeocoder/archive/master.zip
-unzip master.zip
-cd speciesgeocoder-master/
-make
-sudo make install
+Downloade the latest version from https://github.com/mtop/speciesgeocoder/releases
+unzip speciesgeocoder-x.x.x.zip
+cd speciesgeocoder-x.x.x
+./geocoder.py -l example_data/localities.csv -p example_data/polygons.txt -t example_data/*.tif
+
+Optionally you can make a symbolic link from a directory in your PATH to the file "speciesgeocoder" in the "speciesgeocoder-x.x.x" directory. 
 
 
 ======================================
-6.) Installing the development version
+7.) Installing the development version
 ======================================
 git clone git@github.com:mtop/speciesgeocoder.git
 cd speciesgeocoder/
-make distclean
-make
 
 
 ================
-7.) Example data
+8.) Example data
 ================
-Examples of the the type of input files used by 'speciesgeocoder' 
-is located in the directory example_data/. You can test the program 
-by typing the following command in the 'speciesgeocoder' directory.
+Examples of the type of input files used by 'speciesgeocoder' is located in the directory "example_data/". You can test the program by typing the following command in the 'speciesgeocoder' directory.
 
 ./geocoder.py -l example_data/localities.csv -p example_data/polygons.txt -t example_data/*.tif
 
