@@ -56,16 +56,22 @@ a. Download and install the Latest Python 2 Release from https://www.python.org/
 b. Direct your browser to http://www.lfd.uci.edu/~gohlke/pythonlibs/ and then download and install GDAL for python 2.7
 c. Download and install R from http://cran.r-project.org/bin/windows/base/
 
-Add R to your path
-;C:\Program Files\R\R-3.1.1\bin
+   In addition, you'll also have to add the R executables to your PATH (in order for SpeciesGeoCoder to find it).
+   I. 	Find the directory that the R program is installed in (e.g "C:\Program Files\R\R-3.1.1")
+   II. 	From the desktop, right-click My Computer and click Properties.
+   III.	In the System Properties window, click on the Advanced tab.
+   IV.	In the Advanced section, click the Environment Variables button.
+   V.	Click the Environment Variables button, highlight the Path variable in the Systems Variable section and click the Edit button. 
+   VI.	Add ";C:\Program Files\R\R-3.1.1\bin" (if that is where the R executables are found, dont forget the preceding ";" character) to the end of line and ckick "Ok".
 
-Change permissions to the R "library" directory in the following way: (this is nessesary as SpeciesGeoCoder will have to automatically install install additional R packages).
+Change permissions to the R "library" directory in the following way: (this is nessesary as SpeciesGeoCoder will have to automatically install additional R packages).
 
-d. Right click on "C:\Program Files\R\R-3.1.1\library" and select properties -> Security
-e. Click "Edit"
-f. In "Group our user names" select your name
-g. Mark the "Full control" checkbox
-h. Click OK
+d. Right click on "C:\Program Files\R\R-3.1.1\library" and select properties -> Security.
+e. Click "Edit".
+f. In "Group our user names" select your name.
+g. Mark the "Full control" checkbox.
+h. Click "Ok".
+
 
 ===========================
 6.) Installing on GNU/Linux
