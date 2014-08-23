@@ -1,3 +1,5 @@
+# Please note that running SpeciesGeoCoder under Cygwin requires you to compile the GDAL library, and instuctions for that is not yet included in this document. 
+
 This file describes how to do a minimal Cygwin installation, that 
 still includes all dependencies of SpeciesGeoCoder. You can use the
 same instructions to install the dependencies on an existing Cygwin 
@@ -16,13 +18,13 @@ the installation process of a Cygwin system on Windows XP/Vista/7/.
 
 1. Go to www.cygwin.com and download the binary "setup-x86.exe" (for 
    32-bit systems) or "setup-x86_64.exe" (for 64 bit systems).
-3. Run the downloaded setup program and accept all defaults until 
+2. Run the downloaded setup program and accept all defaults until 
    the "Choose A Download Site" page appears. Choose a server close 
    to your location and click "next".
-4. Ignore the installation alert If this is the first time you install 
+3. Ignore the installation alert If this is the first time you install 
    Cygwin on your computer.
-5. When the page "Select packages to install" appears, select the 
-   following programs (dependencis):
+4. When the page "Select packages to install" appears, select the 
+   following programs (dependencies):
 	
 	Archive/unzip
 	Devel/gcc-core
@@ -39,13 +41,13 @@ You may also like to install the following packages (optional):
 	Devel/git
 	Net/openssh
 
-6. Click "next" twice and sit back while the packages are downloaded 
+5. Click "next" twice and sit back while the packages are downloaded 
    and installed on your computer.
-7. Click the Cygwin desktop icon and type in the command from the 
+6. Click the Cygwin desktop icon and type in the command from the 
    "INSTALL" file distributed with SpeciesGeoCoder.
 
 ======================================================================
-In addition to installing Cygwin, you may also whant to create a 
+In addition to installing Cygwin, you may also want to create a 
 symbolic link to your Cygwin home directory on e.g. your Desktop, where 
 you can place the files needed for your analysis.
 
