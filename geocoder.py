@@ -66,10 +66,10 @@ parser.add_argument("-v", "--verbose", action="store_true", help="Report how man
 parser.add_argument("-b", "--binomial", action="store_true", help="Treats first two words in species names as genus name and species epithet. Use with care as this option is LIKELY TO LEAD TO ERRONEOUS RESULTS if names in input data are not in binomial form.")
 parser.add_argument("-n", "--number", help="Set the minimum number of occurrences (localities) needed for considering a species to be present in a polygon", nargs="*")
 parser.add_argument("--test", help="Test if the input data is in the right format", action="store_true")
-parser.add_argument("--dev", help="Be extra verbose", action="store_true")
+parser.add_argument("--dev", help=argparse.SUPPRESS, action="store_true")
 #__ GUI STUFF
-parser.add_argument("--dir_output", help="Directory for output R plots", default=os.getcwd())
-parser.add_argument("--path_script", help="Path to R script", default=os.getcwd())
+parser.add_argument("--dir_output", help="Output directory for R plots", default=os.getcwd())
+parser.add_argument("--path_script", help=argparse.SUPPRESS, default=os.getcwd())
 
 args = parser.parse_args()
 
