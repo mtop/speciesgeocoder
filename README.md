@@ -11,17 +11,19 @@ The program provides a number of options that can be viewed by
 using the "--help" option.
 
 ```
-topel@Slartibartfasts:~/git/geocoder$ ./geocoder.py -h
-usage: speciesgeocoder [-h] (-p POLYGONS | -s SHAPE) -l LOCALITIES | -g GBIF)
-                       [-t [TIF [TIF ...]]] [--plot] [-v] [-b]
-                       [-n [NUMBER [NUMBER ...]]] [--test] [--dev]
+topel@Slartibartfasts:~/git/speciesgeocoder-master$ ./geocoder.py -h
+usage: speciesgeocoder [-h] -p POLYGONS (-l LOCALITIES | -g GBIF)
+                       [-t [TIF [TIF ...]]] [--plot] [--stochastic_mapping]
+                       [--tree TREE] [--m_out M_OUT] [--n_rep N_REP]
+                       [--map_model {ER,SYM,ARD}]
+                       [--max_run_time MAX_RUN_TIME] [--trait TRAIT] [-v] [-b]
+                       [-n [NUMBER [NUMBER ...]]] [--test]
+                       [--dir_output DIR_OUTPUT]
 
 optional arguments:
   -h, --help            show this help message and exit
   -p POLYGONS, --polygons POLYGONS
                         Set path to file containing polygon coordinates
-  -s SHAPE, --shape SHAPE
-                        Set path to shape file containing polygons
   -l LOCALITIES, --localities LOCALITIES
                         Set path to file containing species locality data
   -g GBIF, --gbif GBIF  Set path to file containing species locality data
@@ -41,6 +43,19 @@ optional arguments:
                         needed for considering a species to be present in a
                         polygon
   --test                Test if the input data is in the right format
-  --dev                 Be extra verbose
-```
+  --dir_output DIR_OUTPUT
+                        Output directory for R plots
 
+Stochastic_mapping:
+  --stochastic_mapping  Do stochastic mapping
+  --tree TREE           Set path to NEXUS tree file
+  --m_out M_OUT         Name of the output file from the stochastic mapping
+                        analysis
+  --n_rep N_REP         Number of stochastic maps
+  --map_model {ER,SYM,ARD}
+                        Transition model
+  --max_run_time MAX_RUN_TIME
+                        Max run time for 1 stochastic map (in seconds).
+  --trait TRAIT         Trait >0 indicates the number of the character to be
+                        analyzed
+```
