@@ -33,7 +33,7 @@ R (only needed if you want to use the plot functions or do stochastic mapping. A
 ==============================
 3.) Installing SpeciesGeoCoder with a Graphical User Interface (GUI)
 ==============================
-The recomended way of running SpeciesGeoCoder is from the commandline, as that version of the code contains the latest bug fixes and features. However, a GUI version for (Windows, Mac OSX and GNU/Linux) with the basic functions of the program is available at http://sourceforge.net/projects/speciesgeocodergui/
+The recomended way of running SpeciesGeoCoder is from the commandline, as that version of the code contains the latest bug fixes and features. However, a GUI for SpeciesGeoCoder (available for Windows, Mac OSX and GNU/Linux) with the basic functions of the program is available at http://sourceforge.net/projects/speciesgeocodergui/
 
 
 ==========================
