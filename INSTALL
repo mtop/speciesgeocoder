@@ -97,3 +97,4 @@ cd speciesgeocoder/
 Examples of the type of input files used by 'speciesgeocoder' is located in the directory "example_data/". You can test the program by typing the following command in the 'speciesgeocoder' directory.
 
 ./geocoder.py -l example_data/localities.csv -p example_data/polygons.txt -t example_data/*.tif
+
