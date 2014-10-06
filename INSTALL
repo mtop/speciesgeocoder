@@ -62,7 +62,7 @@ c. Download and install R from http://cran.r-project.org/bin/windows/base/
    III.	In the System Properties window, click on the Advanced tab.
    IV.	In the Advanced section, click the Environment Variables button.
    V.	Click the Environment Variables button, highlight the Path variable in the Systems Variable section and click the Edit button. 
-   VI.	Add ";C:\Program Files\R\R-3.1.1\bin" (if that is where the R executables are found, dont forget the preceding ";" character) to the end of line and ckick "Ok".
+   VI.	Add ";C:\Program Files\R\R-3.1.1\bin\i386" (if that is where the R executables are found, dont forget the preceding ";" character) to the end of line and ckick "Ok".
 
 Change permissions to the R "library" directory in the following way: (this is nessesary as SpeciesGeoCoder will have to automatically install additional R packages).
 
