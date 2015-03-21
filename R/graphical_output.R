@@ -11,7 +11,7 @@ pkload("optparse")
 
 parser_object <- OptionParser(usage = "Usage: %prog [Working directory] [occurences.sgc.txt] [polygons.sgc.txt] [sampletable.sgc.txt] [speciestable.sgc.txt]", 
                               description="")
-opti <- parse_args(parser_object, args = commandArgs(trailingOnly = TRUE), positional_arguments = 5)
+opti <- parse_args(parser_object, args = commandArgs(trailingOnly = TRUE), positional_arguments = 6)
 
 #__ GUI STUFF
 source(paste(opti$args[1],"/R/SpeciesGeoCodeR.R",sep=""))
