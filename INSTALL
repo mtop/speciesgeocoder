@@ -28,6 +28,7 @@ cd speciesgeocoder-x.x.x
 argparse (Module included in python v2.7. Available at https://pypi.python.org/pypi/argparse) 
 osgeo (The GDAL library available at https://pypi.python.org/pypi/GDAL/)
 R (only needed if you want to use the plot functions or do stochastic mapping. Available from http://www.r-project.org/)
+R-packages: rgeos, maptools, maps, mapdata, raster, optparse, ape, geiger, phytools
 
 
 ==============================
