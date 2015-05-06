@@ -451,10 +451,9 @@ def main():
 		#__ GUI STUFF
 		dir_output = args.dir_output         # Working directory
 		path_script = args.path_script
-		cmd="Rscript %s/R/graphical_output.R %s %s/%s %s/%s %s/%s %s/%s %s" \
-		% (path_script,path_script, path_script,"coordinates.sgc.txt",path_script,"polygons.sgc.txt",path_script,"sampletable.sgc.txt",path_script, "speciestable.sgc.txt",dir_output)
+		cmd="Rscript %s/R/graphical_output.R %s %s %s %s %s %s" \
+		% (path_script,path_script, "coordinates.sgc.txt", "polygons.sgc.txt", "sampletable.sgc.txt", "speciestable.sgc.txt",dir_output)
 		
-		print "JHGFDSKJHGFD:",cmd
 		os.system(cmd)
 
 
