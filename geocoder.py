@@ -61,7 +61,7 @@ mapping_group.add_argument("--max_run_time", help="Max run time for 1 stochastic
 mapping_group.add_argument("--trait", help="Trait >0 indicates the number of the character to be analyzed", default=0)
 ##########################
 
-#parser.add_argument("-o", "--out", help="Name of optional output file. Output is sent to STDOUT by default")
+parser.add_argument("-o", "--out", help="Name of optional output file. Output is sent to STDOUT by default")
 parser.add_argument("-v", "--verbose", action="store_true", help="Report how many times a species is found in each polygon")
 parser.add_argument("-b", "--binomial", action="store_true", help="Treats first two words in species names as genus name and species epithet. Use with care as this option is LIKELY TO LEAD TO ERRONEOUS RESULTS if names in input data are not in binomial form.")
 parser.add_argument("-n", "--number", help="Set the minimum number of occurrences (localities) needed for considering a species to be present in a polygon", nargs="*")
@@ -441,7 +441,7 @@ def main():
 						result.setResult(locality, polygon[0])
 						
 	sys.stderr.write("\n")
-	result.printNexus()
+	result.printNexus(args.out)
 
 
 	if args.plot == True:
@@ -451,10 +451,9 @@ def main():
 		#__ GUI STUFF
 		dir_output = args.dir_output         # Working directory
 		path_script = args.path_script
-		cmd="Rscript %s/R/graphical_output.R %s %s/%s %s/%s %s/%s %s/%s %s" \
-		% (path_script,path_script, path_script,"coordinates.sgc.txt",path_script,"polygons.sgc.txt",path_script,"sampletable.sgc.txt",path_script, "speciestable.sgc.txt",dir_output)
+		cmd="Rscript %s/R/graphical_output.R %s %s %s %s %s %s" \
+		% (path_script,path_script, "coordinates.sgc.txt", "polygons.sgc.txt", "sampletable.sgc.txt", "speciestable.sgc.txt",dir_output)
 		
-		print "JHGFDSKJHGFD:",cmd
 		os.system(cmd)
 
 

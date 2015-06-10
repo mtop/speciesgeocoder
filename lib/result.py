@@ -21,6 +21,7 @@
 #	You should have received a copy of the GNU General Public License
 #	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
 
 class Result(object):
 	def __init__(self, polygons, args):
@@ -84,27 +85,36 @@ class Result(object):
 	def polygonNumber(self, polygonName):
 		return self.polygonNames.index(polygonName)
 
-	def printNexus(self):
-		# Print the results to stdOut in NEXUS format.
-		# Use a redirect to store in file.
-		print "#NEXUS\n"
-		print "Begin data;"
-		print "\tDimensions ntax=%s nchar=%s;" % (len(self.getSpeciesNames()), len(self.getPolygonNames()))
-		print "\tFormat datatype=standard symbols=\"01\" gap=-;"
-		print "\tCHARSTATELABELS"
+	def printNexus(self, outputfile=None):
+		if outputfile is None:
+			OUTHANDLE = sys.stdout
+                else:
+			OUTHANDLE = open(outputfile, 'w')
+
+		OUTHANDLE.write("#NEXUS\n\n")
+		OUTHANDLE.write("Begin data;\n")
+		OUTHANDLE.write("\tDimensions ntax=%s nchar=%s;\n" % (len(self.getSpeciesNames()), len(self.getPolygonNames())))
+		OUTHANDLE.write("\tFormat datatype=standard symbols=\"01\" gap=-;\n")
+		OUTHANDLE.write("\tCHARSTATELABELS\n")
+
 		# Print the names of the polygons
-		for i in range(len(self.getPolygonNames())):
-			if i+1 < len(self.getPolygonNames()):
-				print "\t%s %s"	% (i+1, self.getPolygonNames()[i]) + ','
-			if i+1 == len(self.getPolygonNames()):
-				print "\t%s %s" % (i+1, self.getPolygonNames()[i]) + ';'
-		print "\n"
-		print "\tMatrix"
+		polygons = self.getPolygonNames()
+		for i, name in enumerate(polygons):
+			separator = ','
+			# End the CHARSTATELABLES section in case it's the last polygon
+			if i+1 == len(polygons):
+				separator = ';'
+			OUTHANDLE.write("\t%s %s%s\n" % (i+1, name, separator))
+		OUTHANDLE.write("\n\n")
+
+		OUTHANDLE.write("\tMatrix\n")
 		# Print the species names and character matrix
 		for name in sorted(self.getResult()):
-			print name.replace(" ","_"), '\t\t', self.resultToStr(self.result[name])
-		print '\t;'
-		print 'End;'
+			OUTHANDLE.write("%s \t\t%s\n" % (name.replace(" ", "_"), self.resultToStr(self.result[name])))
+		OUTHANDLE.write("\t;\nEnd;\n")
+
+		if outputfile is not None:
+			OUTHANDLE.close()
 
 
 	def resultToStr(self, resultList):
