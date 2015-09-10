@@ -6,56 +6,76 @@ Input:  See the example files localities.txt and polygons.txt.
 
 Output: See the example file ivesioids_out.nex.
 
-================================================================
-The program provides a number of options that can be viewed by 
-using the "--help" option.
-
+# For the impatient 
+Download the latest version from https://github.com/mtop/speciesgeocoder/releases
+```bash
+unzip speciesgeocoder-x.x.x.zip
+cd speciesgeocoder-x.x.x
+./geocoder.py -l example_data/localities.csv -p example_data/polygons.txt -t example_data/*.tif
 ```
-topel@Slartibartfasts:~/git/speciesgeocoder-master$ ./geocoder.py -h
-usage: speciesgeocoder [-h] -p POLYGONS (-l LOCALITIES | -g GBIF)
-                       [-t [TIF [TIF ...]]] [--plot] [--stochastic_mapping]
-                       [--tree TREE] [--m_out M_OUT] [--n_rep N_REP]
-                       [--map_model {ER,SYM,ARD}]
-                       [--max_run_time MAX_RUN_TIME] [--trait TRAIT] [-v] [-b]
-                       [-n [NUMBER [NUMBER ...]]] [--test]
-                       [--dir_output DIR_OUTPUT]
 
-optional arguments:
-  -h, --help            show this help message and exit
-  -p POLYGONS, --polygons POLYGONS
-                        Set path to file containing polygon coordinates
-  -l LOCALITIES, --localities LOCALITIES
-                        Set path to file containing species locality data
-  -g GBIF, --gbif GBIF  Set path to file containing species locality data
-                        downloaded from GBIF
-  -t [TIF [TIF ...]], --tif [TIF [TIF ...]]
-                        Set path to geotiff file(s)
-  --plot                Produce graphical output illustrating coexistance,
-                        distribution etc.
-  -v, --verbose         Report how many times a species is found in each
-                        polygon
-  -b, --binomial        Treats first two words in species names as genus name
-                        and species epithet. Use with care as this option is
-                        LIKELY TO LEAD TO ERRONEOUS RESULTS if names in input
-                        data are not in binomial form.
-  -n [NUMBER [NUMBER ...]], --number [NUMBER [NUMBER ...]]
-                        Set the minimum number of occurrences (localities)
-                        needed for considering a species to be present in a
-                        polygon
-  --test                Test if the input data is in the right format
-  --dir_output DIR_OUTPUT
-                        Output directory for R plots
+# Dependencies
+The following package is required for SpeciesGeoCoder to run:
 
-Stochastic_mapping:
-  --stochastic_mapping  Do stochastic mapping
-  --tree TREE           Set path to NEXUS tree file
-  --m_out M_OUT         Name of the output file from the stochastic mapping
-                        analysis
-  --n_rep N_REP         Number of stochastic maps
-  --map_model {ER,SYM,ARD}
-                        Transition model
-  --max_run_time MAX_RUN_TIME
-                        Max run time for 1 stochastic map (in seconds).
-  --trait TRAIT         Trait >0 indicates the number of the character to be
-                        analyzed
+* argparse (Module included in python v2.7. Available at https://pypi.python.org/pypi/argparse)
+
+The following packages are optional and will depend on which kind of analyses you will do:
+* osgeo (The GDAL library available at https://pypi.python.org/pypi/GDAL/). Required for altitudinal coding
+* R (Available from http://www.r-project.org/). Required if you want to use the plot functions or do stochastic mapping
+* R-packages: rgeos, maptools, maps, mapdata, raster, optparse, ape, geiger, phytools (R will prompt you for the missing packages)
+
+# Installing on Mac OSX
+
+Download the latest version from https://github.com/mtop/speciesgeocoder/releases
+
+1. Unzip the file by double-clicking on it.
+2. Open a terminal window and use the command "cd" to move into the directory "speciesgeocoder-x.x.x" (where "x.x.x" will indicate the version number of the latest release; tips: instead of writing the path, you can just 'drag' the folder to your terminal window)
+3. Copy and paste the following command into your terminal window to make sure everything works as expected:
+
+```bash
+./geocoder.py -l example_data/localities.csv -p example_data/polygons.txt -t example_data/*.tif
+```
+
+# Installing on Windows
+
+1. Download and install the Latest Python 2 Release from https://www.python.org/downloads/windows/
+2. Direct your browser to http://www.lfd.uci.edu/~gohlke/pythonlibs/ and then download and install GDAL for python 2.7
+3. Download and install R from http://cran.r-project.org/bin/windows/base/
+
+In addition, you'll also have to add the R executables to your PATH (in order for SpeciesGeoCoder to find it).
+
+1. Find the directory that the R program is installed in (e.g "C:\Program Files\R\R-3.1.1")
+2. From the desktop, right-click My Computer and click Properties.
+3. In the System Properties window, click on the Advanced tab.
+4. In the Advanced section, click the Environment Variables button.
+5. Click the Environment Variables button, highlight the Path variable in the Systems Variable section and click the Edit button. 
+6. Add ";C:\Program Files\R\R-3.1.1\bin" (if that is where the R executables are found, don't forget the preceding ";" character) to the end of line and click "Ok".
+
+Change permissions to the R "library" directory in the following way: (this is nessesary as SpeciesGeoCoder will have to automatically install additional R packages).
+
+1. Right click on "C:\Program Files\R\R-3.1.1\library" and select properties -> Security.
+2. Click "Edit".
+3. In "Group our user names" select your name.
+4. Mark the "Full control" checkbox.
+5. Click "Ok".
+
+# Installing on GNU/Linux
+
+Download the latest version from https://github.com/mtop/speciesgeocoder/releases
+
+```bash
+unzip speciesgeocoder-x.x.x.zip
+cd speciesgeocoder-x.x.x
+./geocoder.py -l example_data/localities.csv -p example_data/polygons.txt -t example_data/*.tif
+````
+
+Optionally you can make a symbolic link from a directory in your PATH to the file "speciesgeocoder" in the "speciesgeocoder-x.x.x" directory. 
+
+
+# Installing and running the development version
+
+```bash
+git clone git@github.com:mtop/speciesgeocoder.git
+cd speciesgeocoder/
+./geocoder.py -l example_data/localities.csv -p example_data/polygons.txt -t example_data/*.tif
 ```
