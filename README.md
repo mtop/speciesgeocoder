@@ -8,7 +8,7 @@ Output: See the example file ivesioids_out.nex.
 
 # Installing and running
 
-### For the impatient 
+## For the impatient 
 Download the latest version from https://github.com/mtop/speciesgeocoder/releases
 ```bash
 unzip speciesgeocoder-x.x.x.zip
@@ -26,7 +26,7 @@ The following packages are optional and will depend on which kind of analyses yo
 * R (Available from http://www.r-project.org/). Required if you want to use the plot functions or do stochastic mapping
 * R-packages: rgeos, maptools, maps, mapdata, raster, optparse, ape, geiger, phytools (R will prompt you for the missing packages)
 
-# Installing on Mac OSX
+## Installing on Mac OSX
 
 Download the latest version from https://github.com/mtop/speciesgeocoder/releases
 
@@ -38,7 +38,7 @@ Download the latest version from https://github.com/mtop/speciesgeocoder/release
 ./geocoder.py -l example_data/localities.csv -p example_data/polygons.txt -t example_data/*.tif
 ```
 
-# Installing on Windows
+## Installing on Windows
 
 1. Download and install the Latest Python 2 Release from https://www.python.org/downloads/windows/
 2. Direct your browser to http://www.lfd.uci.edu/~gohlke/pythonlibs/ and then download and install GDAL for python 2.7
@@ -61,7 +61,7 @@ Change permissions to the R "library" directory in the following way: (this is n
 4. Mark the "Full control" checkbox.
 5. Click "Ok".
 
-# Installing on GNU/Linux
+## Installing on GNU/Linux
 
 Download the latest version from https://github.com/mtop/speciesgeocoder/releases
 
@@ -74,7 +74,7 @@ cd speciesgeocoder-x.x.x
 Optionally you can make a symbolic link from a directory in your PATH to the file "speciesgeocoder" in the "speciesgeocoder-x.x.x" directory. 
 
 
-# Installing and running the development version
+## Installing and running the development version
 
 ```bash
 git clone git@github.com:mtop/speciesgeocoder.git
