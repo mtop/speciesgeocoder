@@ -6,7 +6,9 @@ Input:  See the example files localities.txt and polygons.txt.
 
 Output: See the example file ivesioids_out.nex.
 
-# For the impatient 
+# Installing and running
+
+### For the impatient 
 Download the latest version from https://github.com/mtop/speciesgeocoder/releases
 ```bash
 unzip speciesgeocoder-x.x.x.zip
@@ -14,7 +16,7 @@ cd speciesgeocoder-x.x.x
 ./geocoder.py -l example_data/localities.csv -p example_data/polygons.txt -t example_data/*.tif
 ```
 
-# Dependencies
+## Dependencies
 The following package is required for SpeciesGeoCoder to run:
 
 * argparse (Module included in python v2.7. Available at https://pypi.python.org/pypi/argparse)
