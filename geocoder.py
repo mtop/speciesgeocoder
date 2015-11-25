@@ -90,13 +90,14 @@ class Polygons(object):
 			sys.exit("[ Error ] No such file \'%s\'" % self.polygonFile)
 		
 		for line in lines:
-			if line[:7] == "POLYGON":
+			if line[:7].lower() == "polygon":
 				low = None
 				high = None
+				# Identify the name of the polygon
 				splitline = line.split('\t')
 				name = splitline[1].rstrip()
 				splitline[0] = splitline[0].replace(", ", ",")
-				polygon = splitline[0].lstrip("POLYGON((").rstrip("))").split(",")
+				polygon = splitline[0].split("((", 1)[-1].rstrip("))").split(",")
 				# Check if polygon has elevation restrictions
 				try:
 					if splitline[2]:
