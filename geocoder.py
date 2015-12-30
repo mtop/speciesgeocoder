@@ -23,55 +23,58 @@
 
 import sys,os
 
-try:
-	import argparse
-except ImportError:
-	sys.stderr.write("[Error] The python module \"argparse\" is not installed\n")
-	sys.stderr.write("[--] Would you like to install it now using 'sudo easy_install' [Y/N]? ")
-	answer = sys.stdin.readline()
-	if answer[0].lower() == "y":
-		sys.stderr.write("[--] Running \"sudo easy_install argparse\"\n")
-		from subprocess import call
-		call(["sudo", "easy_install", "argparse"])
-	else:
-		sys.exit("[Error] Exiting due to missing dependency \"argparser\"")
-# from lib.exceptions import *
-# import subprocess
+def parse_args(args):
 
-parser = argparse.ArgumentParser(prog="speciesgeocoder")
-locality_group = parser.add_mutually_exclusive_group(required=True)
-#polygon_group = parser.add_mutually_exclusive_group(required=True)
-#polygon_group.add_argument("-p", "--polygons", help="Set path to file containing polygon coordinates")
-parser.add_argument("-p", "--polygons", help="Set path to file containing polygon coordinates", required=True)
-#polygon_group.add_argument("-s", "--shape", help="Set path to shape file containing polygons")
-locality_group.add_argument("-l", "--localities", help="Set path to file containing species locality data")
-locality_group.add_argument("-g", "--gbif", help="Set path to file containing species locality data downloaded from GBIF")
-parser.add_argument("-t", "--tif", help="Set path to geotiff file(s)", nargs="*")
-parser.add_argument("--plot", help="Produce graphical output illustrating coexistance, distribution etc.", action="store_true", default="False")
+	try:
+		import argparse
+	except ImportError:
+		sys.stderr.write("[Error] The python module \"argparse\" is not installed\n")
+		sys.stderr.write("[--] Would you like to install it now using 'sudo easy_install' [Y/N]? ")
+		answer = sys.stdin.readline()
+		if answer[0].lower() == "y":
+			sys.stderr.write("[--] Running \"sudo easy_install argparse\"\n")
+			from subprocess import call
+			call(["sudo", "easy_install", "argparse"])
+		else:
+			sys.exit("[Error] Exiting due to missing dependency \"argparser\"")
+	# from lib.exceptions import *
+	# import subprocess
 
-### Stochastic mapping ###
-mapping_group = parser.add_argument_group('Stochastic_mapping')
-mapping_group.add_argument("--stochastic_mapping", help="Do stochastic mapping", action="store_true")
-#mapping_group.add_argument("--distribution_table", help="Path to species distribution table produced by SpeciesGeoCoder", default="occurences.sgc.txt")
-mapping_group.add_argument("--tree", help="Set path to NEXUS tree file")
-mapping_group.add_argument("--m_out", help="Name of the output file from the stochastic mapping analysis", default="Stochastic_mapping")
-mapping_group.add_argument("--n_rep", help="Number of stochastic maps", default=100)
-mapping_group.add_argument("--map_model", help="Transition model", choices=['ER', 'SYM', 'ARD'], default="ER") 
-mapping_group.add_argument("--max_run_time", help="Max run time for 1 stochastic map (in seconds).", default=60)
-mapping_group.add_argument("--trait", help="Trait >0 indicates the number of the character to be analyzed", default=0)
-##########################
-
-parser.add_argument("-o", "--out", help="Name of optional output file. Output is sent to STDOUT by default")
-parser.add_argument("-v", "--verbose", action="store_true", help="Report how many times a species is found in each polygon")
-parser.add_argument("-b", "--binomial", action="store_true", help="Treats first two words in species names as genus name and species epithet. Use with care as this option is LIKELY TO LEAD TO ERRONEOUS RESULTS if names in input data are not in binomial form.")
-parser.add_argument("-n", "--number", help="Set the minimum number of occurrences (localities) needed for considering a species to be present in a polygon", nargs="*")
-parser.add_argument("--test", help="Test if the input data is in the right format", action="store_true")
-parser.add_argument("--dev", help=argparse.SUPPRESS, action="store_true")
-#__ GUI STUFF
-parser.add_argument("--dir_output", help="Output directory for R plots", default=os.getcwd())
-parser.add_argument("--path_script", help=argparse.SUPPRESS, default=os.getcwd())
-
-args = parser.parse_args()
+	parser = argparse.ArgumentParser(prog="SpeciesGeoCoder")
+	parser.add_argument('--version', action='version', version='%(prog)s 0.9.4')
+	locality_group = parser.add_mutually_exclusive_group(required=True)
+	#polygon_group = parser.add_mutually_exclusive_group(required=True)
+	#polygon_group.add_argument("-p", "--polygons", help="Set path to file containing polygon coordinates")
+	parser.add_argument("-p", "--polygons", help="Set path to file containing polygon coordinates", required=True)
+	#polygon_group.add_argument("-s", "--shape", help="Set path to shape file containing polygons")
+	locality_group.add_argument("-l", "--localities", help="Set path to file containing species locality data")
+	locality_group.add_argument("-g", "--gbif", help="Set path to file containing species locality data downloaded from GBIF")
+	parser.add_argument("-t", "--tif", help="Set path to geotiff file(s)", nargs="*")
+	parser.add_argument("--plot", help="Produce graphical output illustrating coexistance, distribution etc.", action="store_true", default="False")
+	
+	### Stochastic mapping ###
+	mapping_group = parser.add_argument_group('Stochastic_mapping')
+	mapping_group.add_argument("--stochastic_mapping", help="Do stochastic mapping", action="store_true")
+	#mapping_group.add_argument("--distribution_table", help="Path to species distribution table produced by SpeciesGeoCoder", default="occurences.sgc.txt")
+	mapping_group.add_argument("--tree", help="Set path to NEXUS tree file")
+	mapping_group.add_argument("--m_out", help="Name of the output file from the stochastic mapping analysis", default="Stochastic_mapping")
+	mapping_group.add_argument("--n_rep", help="Number of stochastic maps", default=100)
+	mapping_group.add_argument("--map_model", help="Transition model", choices=['ER', 'SYM', 'ARD'], default="ER") 
+	mapping_group.add_argument("--max_run_time", help="Max run time for 1 stochastic map (in seconds).", default=60)
+	mapping_group.add_argument("--trait", help="Trait >0 indicates the number of the character to be analyzed", default=0)
+	##########################
+	
+	parser.add_argument("-o", "--out", help="Name of optional output file. Output is sent to STDOUT by default")
+	parser.add_argument("-v", "--verbose", action="store_true", help="Report how many times a species is found in each polygon")
+	parser.add_argument("-b", "--binomial", action="store_true", help="Treats first two words in species names as genus name and species epithet. Use with care as this option is LIKELY TO LEAD TO ERRONEOUS RESULTS if names in input data are not in binomial form.")
+	parser.add_argument("-n", "--number", help="Set the minimum number of occurrences (localities) needed for considering a species to be present in a polygon", nargs="*")
+	parser.add_argument("--test", help="Test if the input data is in the right format", action="store_true")
+	parser.add_argument("--dev", help=argparse.SUPPRESS, action="store_true")
+	#__ GUI STUFF
+	parser.add_argument("--dir_output", help="Output directory for R plots", default=os.getcwd())
+	parser.add_argument("--path_script", help=argparse.SUPPRESS, default=os.getcwd())
+	
+	return parser.parse_args(args)
 
 
 class Polygons(object):
@@ -468,6 +471,10 @@ def main():
 
 if __name__ == "__main__":
 	
+	# Parse the command line arguments
+	# Curticy of Viktor Kerkez (http://stackoverflow.com/questions/18160078/how-do-you-write-tests-for-the-argparse-portion-of-a-python-module)
+	args = parse_args(sys.argv[1:])
+
 	if args.test == True:
 		if args.localities:
 			from lib.testData import testLocality
