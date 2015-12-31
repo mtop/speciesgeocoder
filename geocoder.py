@@ -78,7 +78,7 @@ args = parse_args(sys.argv[1:])
 
 class Polygons(object):
 	# Object that contains polygons exported from QGIS.
-	def __init__(self):
+	def __init__(self, args):
 		self.polygonFile = args.polygons
 		self.polygonNames = []
 		for polygon in self.getPolygons():
@@ -378,7 +378,7 @@ def print_progress(done, numLoc):
 def main():
 	from lib.result import Result
 	# Create list to store the geotif objects in.
-	polygons = Polygons()
+	polygons = Polygons(args)
 	result = Result(polygons, args)
 	done = 0
 	# Index the geotiff files if available.
@@ -482,7 +482,7 @@ if __name__ == "__main__":
 
 		if args.polygons:
 			from lib.testData import testPolygons
-			polygons = Polygons()
+			polygons = Polygons(args)
 			testPolygons(polygons, args.polygons)
 
 	else:
