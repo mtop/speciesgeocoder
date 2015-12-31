@@ -37,8 +37,6 @@ def parse_args(args):
 			call(["sudo", "easy_install", "argparse"])
 		else:
 			sys.exit("[Error] Exiting due to missing dependency \"argparser\"")
-	# from lib.exceptions import *
-	# import subprocess
 
 	parser = argparse.ArgumentParser(prog="SpeciesGeoCoder")
 	parser.add_argument('--version', action='version', version='%(prog)s 0.9.4')
@@ -76,6 +74,7 @@ def parse_args(args):
 	
 	return parser.parse_args(args)
 
+args = parse_args(sys.argv[1:])
 
 class Polygons(object):
 	# Object that contains polygons exported from QGIS.
@@ -473,7 +472,7 @@ if __name__ == "__main__":
 	
 	# Parse the command line arguments
 	# Curticy of Viktor Kerkez (http://stackoverflow.com/questions/18160078/how-do-you-write-tests-for-the-argparse-portion-of-a-python-module)
-	args = parse_args(sys.argv[1:])
+#	args = parse_args(sys.argv[1:])
 
 	if args.test == True:
 		if args.localities:
