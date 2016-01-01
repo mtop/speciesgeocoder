@@ -113,6 +113,7 @@ class Polygons(object):
 				except:
 					low = None
 					high = None
+#				print name, polygon, low, high		# Devel.
 				yield name, polygon, low, high
 
 	def setPolygonNames(self, name):
@@ -123,64 +124,6 @@ class Polygons(object):
 		return self.polygonNames
 
 
-class LEGACY_Polygons(object):
-	# Object that contains polygons in legacy format.
-	# This class will be removed in future releases.
-	def __init__(self):
-		self.polygonFile = args.polygons # [0]
-		self.polygonNames = []
-		for polygon in self.getPolygons():
-			self.setPolygonNames(polygon[0])
-
-	def getPolygons(self):
-		try:
-			f = open(self.polygonFile, "rU")
-			lines = f.readlines()
-		except IOError:
-			sys.exit("[ Error ] No such file \'%s\'" % self.polygonFile)
-
-		for line in lines:
-			low = None
-			high = None
-			if not line:
-				break
-			splitline = line.split(':')
-			name = splitline[0]
-			self.setPolygonNames(name)
-			polygon = self.prepare_poly(splitline[1])
-			# Check if polygon has elevation restrictions
-			try:
-				if splitline[2]:
-					if "-" in splitline[2]:
-						low = splitline[2].split("-")[0].rstrip("\n")
-						high = splitline[2].split("-")[1].rstrip("\n")
-					if ">" in splitline[2]:
-						low = splitline[2].split(">")[1].rstrip("\n")
-					if "<" in splitline[2]:
-						high = splitline[2].split("<")[1].rstrip("\n")
-			except:
-				low = None
-				hight = None
-			yield name, polygon, low, high
-
-	def setPolygonNames(self, name):
-		if name not in self.polygonNames:
-			self.polygonNames.append(name)
-
-	def getPolygonNames(self):
-		return self.polygonNames
-
-	def prepare_poly(self, poly):
-		poly = poly.split(' ')
-		poly_2 = []
-		for node in list(poly):
-			if not node:
-				pass
-			else:
-				mod = ('%s') % node
-				poly_2.append(mod.rstrip('\n'))
-		return poly_2
-									
 class Localities(object):
 	def getBinomialName(self, speciesName):
 		# Returns a string including only the genus name and species epithet.
