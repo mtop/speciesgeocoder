@@ -74,7 +74,6 @@ def parse_args(args):
 	
 	return parser.parse_args(args)
 
-#args = parse_args(sys.argv[1:])
 
 class Polygons(object):
 	# Object that contains polygons exported from QGIS.
@@ -147,12 +146,13 @@ class MyLocalities(Localities):
 	# Object that contains the locality data
 	# read from a tab-delimited *.csv file.
 	def __init__(self, args):
-		self.localityFile = args.localities # [0]
+		self.args = args
+		self.localityFile = self.args.localities # [0]
 		self.speciesNames = []
 		self.order = ""
 		self.progress = 0
 		for name in self.getLocalities():
-			self.setSpeciesNames(name[0])
+			self.setSpeciesName(name[0])
 
 	def getLocalities(self):
 		try:
@@ -179,11 +179,11 @@ class MyLocalities(Localities):
 				continue
 			splitline = line.split("\t")
 
-			if args.binomial:
+			if self.args.binomial:
 				species = self.getBinomialName(splitline[0])
 			else:
 				species = splitline[0].strip()
-			self.setSpeciesNames(species)
+			self.setSpeciesName(species)
 			try:
 				latitude = splitline[1]
 				longitude = splitline[2]
@@ -192,9 +192,10 @@ class MyLocalities(Localities):
 			yield species.replace("  ", " "), latitude, longitude
 	
 	def getCoOrder(self):
+		# Retur the order the localities are stored in input file
 		return self.order
 
-	def setSpeciesNames(self, name):
+	def setSpeciesName(self, name):
 		if name not in self.speciesNames:
 			self.speciesNames.append(name)
 
