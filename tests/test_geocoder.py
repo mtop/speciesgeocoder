@@ -81,9 +81,9 @@ class TestClassMyLocalities(TestClass):
 	def setup_TestMyLocalities(self):
 		self.args = self.setup_args()
 		self.TestMyLocalities = geocoder.MyLocalities(self.args)
-#		self.localities = list(self.TestMyLocalities.getLocalities())
 	
 	def test_speciesNames(self):
+# Perhaps redundant
 		# Test species names
         	self.setup_TestMyLocalities()
         	# Test first list that only contains the species names
@@ -121,6 +121,35 @@ class TestClassMyLocalities(TestClass):
 		self.setup_TestMyLocalities()
 		assert self.TestMyLocalities.getQuant() == 571
 
+
 class TestGbifLocalities(TestClass):
 
-	
+	def setup_TestGbifLocalities(self):
+		self.args = self.setup_args2()
+		self.TestGbifLocalities = geocoder.GbifLocalities(self.args)
+
+	def test_getLocalities(self):
+		self.setup_TestGbifLocalities()
+		assert list(self.TestGbifLocalities.getLocalities()) == SGC_output.gbifLocalities
+
+	def test_setSpeciesNames(self):
+		pass
+
+	def test_getSpeciesNames(self):
+		self.setup_TestGbifLocalities()
+#		print self.TestGbifLocalities.getSpeciesNames()
+		assert self.TestGbifLocalities.getSpeciesNames() == SGC_output.gbifSpeciesNames
+
+	def test_getgbifFile(self):
+		self.setup_TestGbifLocalities()
+		assert self.TestGbifLocalities.getgbifFile() == 'example_data/gbif_Ivesia_localities.txt'
+
+	def test_getQuant(self):
+		self.setup_TestGbifLocalities()
+		assert self.TestGbifLocalities.getQuant() == 3458
+
+
+class TestPointInPolygon:
+
+	def test_(self):
+		pass
