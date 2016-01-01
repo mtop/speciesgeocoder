@@ -146,7 +146,7 @@ class Localities(object):
 class MyLocalities(Localities):
 	# Object that contains the locality data
 	# read from a tab-delimited *.csv file.
-	def __init__(self):
+	def __init__(self, args):
 		self.localityFile = args.localities # [0]
 		self.speciesNames = []
 		self.order = ""
@@ -336,7 +336,7 @@ def main():
 	# are located in any of the polygons.
 	# For each locality record ...
 	if args.localities:
-		localities = MyLocalities()
+		localities = MyLocalities(args)
 		numLoc = localities.getQuant()
 		result.setSpeciesNames(localities)
 		for locality in localities.getLocalities():
@@ -420,7 +420,7 @@ if __name__ == "__main__":
 	if args.test == True:
 		if args.localities:
 			from lib.testData import testLocality
-			localities = MyLocalities()
+			localities = MyLocalities(args)
 			testLocality(localities, args.localities)
 
 		if args.polygons:
