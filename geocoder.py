@@ -136,6 +136,7 @@ class Localities(object):
 		return name
 
 	def getQuant(self):
+		# Return the number of localities
 		nr = 0
 		for i in self.getLocalities():
 			nr += 1
@@ -208,7 +209,7 @@ class MyLocalities(Localities):
 class GbifLocalities(Localities):
 	# Object that contains the locality data in the form
 	# that is delivered from http://data.gbif.org 
-	def __init__(self):
+	def __init__(self, args):
 		self.gbifFile = args.gbif
 		self.speciesNames = []
 		for name in self.getLocalities():
@@ -248,6 +249,9 @@ class GbifLocalities(Localities):
 	
 	def getSpeciesNames(self):
 		return self.speciesNames
+
+	def getgbifFile(self):
+		return self.gbifFile
 
 
 def pointInPolygon(poly, x, y):
@@ -365,7 +369,7 @@ def main():
 								result.setResult(locality[0], polygon[0])
 	
 	if args.gbif:
-		gbifData = GbifLocalities()
+		gbifData = GbifLocalities(args)
 		result.setSpeciesNames(gbifData)
 		numLoc = gbifData.getQuant()
 
