@@ -21,6 +21,9 @@ class TestClass:
 	def setup_args(self):
 		return geocoder.parse_args(['-p', 'example_data/polygons.txt', '-l', 'example_data/localities.csv'])
 
+	def setup_args2(self):
+		return geocoder.parse_args(['-p', 'example_data/polygons.txt', '-g', 'example_data/gbif_Ivesia_localities.txt'])
+
 class TestClassPolygons(TestClass):
 	# Test the class Polygons and at the same time the polygon file
 
@@ -118,4 +121,6 @@ class TestClassMyLocalities(TestClass):
 		self.setup_TestMyLocalities()
 		assert self.TestMyLocalities.getQuant() == 571
 
+class TestGbifLocalities(TestClass):
 
+	
