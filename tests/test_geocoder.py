@@ -103,8 +103,6 @@ class TestClassMyLocalities(TestClass):
 		self.setup_TestMyLocalities()
 		assert self.TestMyLocalities.getSpeciesNames() == SGC_output.speciesNames
 
-		pass
-
 	def test_getLocalityFileName(self):
 		self.setup_TestMyLocalities()
 		assert self.TestMyLocalities.getLocalityFileName() == 'example_data/localities.csv'
@@ -119,3 +117,5 @@ class TestClassMyLocalities(TestClass):
 	def test_getQuant(self):
 		self.setup_TestMyLocalities()
 		assert self.TestMyLocalities.getQuant() == 571
+
+
