@@ -264,10 +264,12 @@ def pointInPolygon(poly, x, y):
 		x = float(x)
 	except:
 		sys.stderr.write("[ Warning ] \'%s\' is not a number\n" % x)
+		return False
 	try:
 		y = float(y)
 	except:
 		sys.stderr.write("[ Warning ] \'%s\' is not a number\n" % y)
+		return False
 	n = len(poly)
 	inside = False
 	p1x,p1y = poly[0].split(' ')
