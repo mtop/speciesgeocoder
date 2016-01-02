@@ -149,7 +149,67 @@ class TestGbifLocalities(TestClass):
 		assert self.TestGbifLocalities.getQuant() == 3458
 
 
-class TestPointInPolygon:
+class TestPointInPolygon(TestClass):
 
-	def test_(self):
+	def setup_PipTest(self):
+		self.poly = ['-118.005656529728995 45.98799579322525233', '-115.69029553728493909 42.88839962592111021', '-113.48696814124947707 42.88839962592111021', '-113.82306893047521612 47.29505441799205556', '-115.31685021592299734 49.16228102480177853', '-118.37910185109095096 49.08759196052939444', '-118.0430010618651977 48.04194506071594617', '-116.58656430855361918 47.33239895012825116', '-118.005656529728995 45.98799579322525233']
+
+	def test_False(self):
+		self.setup_PipTest()
+		x = -120.42
+		y = 39.48
+#		print list(geocoder.pointInPolygon(poly, x, y))
+		assert geocoder.pointInPolygon(self.poly, x, y) == False
+	
+	def test_True1(self):
+		self.setup_PipTest()
+		x = -117.0
+		y = 46.0
+		assert geocoder.pointInPolygon(self.poly, x, y) == True
+
+	def test_True2(self):
+		self.setup_PipTest()
+		x = -117.1111111111111111111111111111111111111111111111
+		y = 46.1111111111111111111111111111111111111111111111
+		assert geocoder.pointInPolygon(self.poly, x, y) == True
+
+	def test_OnEdge(self):
+		self.setup_PipTest()
+		x = -118.005656529728995
+		y = 45.98799579322525233
+		assert geocoder.pointInPolygon(self.poly, x, y) == False
+
+	def test_NonFloat(self):
+		self.setup_PipTest()
+		x = 0
+		y = 1
+		assert geocoder.pointInPolygon(self.poly, x, y) == False
+
+	def test_NonNumber(self):
+		self.setup_PipTest()
+		x = 'yes'
+		y = 'no'
+		assert geocoder.pointInPolygon(self.poly, x, y) == False
+
+	def test_InputData(self):		
+		self.setup_args()
 		pass
+# Perhaps later
+
+
+class TestelevationTest:
+
+	def setup_stuff(self):
+		pass
+
+
+
+
+
+
+
+
+
+
+
+
