@@ -191,17 +191,45 @@ class TestPointInPolygon(TestClass):
 		y = 'no'
 		assert geocoder.pointInPolygon(self.poly, x, y) == False
 
-	def test_InputData(self):		
-		self.setup_args()
-		pass
+#	def test_InputData(self):		
+#		self.setup_args()
+#		pass
 # Perhaps later
 
 
 class TestelevationTest:
 
-	def setup_stuff(self):
+	def setup_elevationTest(self):
+		self.lat = 0 
+		self.lon = 0
+		self.polygon = ('Test Polygon', ['1.0 0.0', '1.0 1.0', '0.0 1.0', '0.0 0.0'], None, None)
+		self.polygons = SGC_output.polygons
+#		self.index = {'foo.tif': [17.9, 19.0, 56.9, 58.0]}
+		self.index = {'foo.tif': [0.0, 1.0, 0.0, 1.0]}
+
+	def test_NoElevation(self):
+		self.setup_elevationTest()
+		assert geocoder.elevationTest(self.lat, self.lon, self.polygon, self.index) == True
+
+	def test_CorrectFile(self):
+		pass		
+
+	def test_NotCorrectFile(self):
+		# [ Warning ] No elevation data available for locality -120.42, 39.48
 		pass
 
+
+class TestPrintProgress:
+	
+	def setup_printProgress(self):
+		pass
+
+
+class TestMain:
+
+	def setup_main(self):
+		pass
+		
 
 
 
