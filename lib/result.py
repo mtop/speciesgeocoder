@@ -143,8 +143,8 @@ class Result(object):
 					row += value
 				self.OUTHANDLE.write("%s%s" % (row, "\n"))
 			else:
-				
-				print self.resultToStr(self.result[species])		# Devel.
+				print self.result	
+#				print self.resultToStr(self.result[species])		# Devel.
 		
 		if args.out is not None:
 			self.OUTHANDLE.close()
@@ -154,13 +154,13 @@ class Result(object):
 
 	def resultToStr(self, resultList):
 		string = ''
-		for i in resultList:
+		for occurences in resultList:
 			if i > 0:
 				# If a minimum number of occurenses are required...
 				if self.args.number:
-					string = self.minOccurence(i, string)
+					string = self.minOccurence(occurences, string)
 				else:	
-					string = self.verbose(i, string)
+					string = self.verbose(occurences, string)
 			else:
 				string += "0"
 #		print "String: ", string								# Devel.
