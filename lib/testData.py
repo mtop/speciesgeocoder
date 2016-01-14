@@ -32,7 +32,9 @@ def testLocality(localities, fileName):
 	else:
 		string = "[ Error ] \'%s\' does not start with a header line.\n" % fileName
 		result.append(string)
-
+	
+	# Record number
+	nr = 1
 	for locality in localities.getLocalities():
 		for i in locality:
 			# Check that the species names, first and second 
@@ -40,9 +42,9 @@ def testLocality(localities, fileName):
 			try:
 				i.decode('ascii')
 			except UnicodeDecodeError:
-				string = "[ Warning ] A problem was detected on row [" + locality[0] + " " + locality[1] + " " + locality[2] + "]"
+				string = "[ Warning ] A problem was detected on row [" + locality[0] + " " + locality[1] + " " + locality[2] + "]\n"
 				result.append(string)
-				string = "[ Warning ] \'%s\' contains non-ascii characters" % i
+				string = "[ Warning ] \'%s\' contains non-ascii characters\n" % i
 				result.append(string)
 
 		# Check that the coordinates only contains legal characters 
@@ -50,8 +52,18 @@ def testLocality(localities, fileName):
 		try:
 			float(locality[1])
 		except:
-			string =  "[ Error ]   \'%s\' is not a decimal number." % locality[1]
+			string =  "[ Error in record nr. %s ]   \'%s\' is not a decimal number.\n" % (nr, locality[1])
 			result.append(string)
+
+		try:
+			float(locality[2])
+		except:
+			string =  "[ Error in record nr. %s ]   \'%s\' is not a decimal number.\n" % (nr, locality[2])
+			result.append(string)
+
+			nr += 1
+
+
 			
 
 	if result: 	
@@ -68,7 +80,7 @@ def testPolygons(polygons, fileName):
 			try:
 				i.decode('ascii')
 			except UnicodeDecodeError:
-				string = "[ Warning ] \'%s\' conains non-ascii characters" % polygon[0]
+				string = "[ Warning ] \'%s\' conains non-ascii characters\n" % polygon[0]
 				result.append(string)
 				break
 
@@ -78,7 +90,7 @@ def testPolygons(polygons, fileName):
 				float(x)
 				float(y)
 			except:
-				string = "[ Error ] Detected an error with coordinate pair \'%s\' in polygon \'%s\'" % (latLong, polygon[0])
+				string = "[ Error ] Detected an error with coordinate pair \'%s\' in polygon \'%s\'\n" % (latLong, polygon[0])
 				result.append(string)
 
 		# Test lower elevation boundary, if present.	
@@ -86,7 +98,7 @@ def testPolygons(polygons, fileName):
 			try:
 				float(polygon[2])
 			except:
-				string = "[ Error ] Detected an error with elevation limit \'%s\' for polygon \'%s\'" % (polygon[2], polygon[0])
+				string = "[ Error ] Detected an error with elevation limit \'%s\' for polygon \'%s\'\n" % (polygon[2], polygon[0])
 				result.append(string)
 
 		# Test high elevation boundary, if present.
@@ -94,7 +106,7 @@ def testPolygons(polygons, fileName):
 			try:
 				float(polygon[3])
 			except:
-				strint = "[ Error ] Detected an error with elevation limit \'%s\' for polygon \'%s\'" % (polygon[3], polygon[0])
+				strint = "[ Error ] Detected an error with elevation limit \'%s\' for polygon \'%s\'\n" % (polygon[3], polygon[0])
 				result.append(string)
 
 			
