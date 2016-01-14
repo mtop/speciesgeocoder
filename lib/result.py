@@ -29,6 +29,15 @@ class Result(object):
 		self.args = args
 		# Table to store info on which polygon a certain record was coded in
 		self.sampletable = []
+		
+		if args.out is None:
+			self.OUTHANDLE = sys.stdout
+		else:
+	#		self.OUTHANDLE = open(outputfile, 'w')
+			self.OUTHANDLE = open(args.out, 'w')
+
+
+
 	
 	def setSpeciesNames(self, dataObject):
 		# Create a dictionary where each key corresponds to 
@@ -85,17 +94,17 @@ class Result(object):
 	def polygonNumber(self, polygonName):
 		return self.polygonNames.index(polygonName)
 
-	def printNexus(self, outputfile=None):
-		if outputfile is None:
-			OUTHANDLE = sys.stdout
-                else:
-			OUTHANDLE = open(outputfile, 'w')
+	def printNexus(self, args): #outputfile=None):
+#		if outputfile is None:
+#			OUTHANDLE = sys.stdout
+#               else:
+#			OUTHANDLE = open(outputfile, 'w')
 
-		OUTHANDLE.write("#NEXUS\n\n")
-		OUTHANDLE.write("Begin data;\n")
-		OUTHANDLE.write("\tDimensions ntax=%s nchar=%s;\n" % (len(self.getSpeciesNames()), len(self.getPolygonNames())))
-		OUTHANDLE.write("\tFormat datatype=standard symbols=\"01\" gap=-;\n")
-		OUTHANDLE.write("\tCHARSTATELABELS\n")
+		self.OUTHANDLE.write("#NEXUS\n\n")
+		self.OUTHANDLE.write("Begin data;\n")
+		self.OUTHANDLE.write("\tDimensions ntax=%s nchar=%s;\n" % (len(self.getSpeciesNames()), len(self.getPolygonNames())))
+		self.OUTHANDLE.write("\tFormat datatype=standard symbols=\"01\" gap=-;\n")
+		self.OUTHANDLE.write("\tCHARSTATELABELS\n")
 
 		# Print the names of the polygons
 		polygons = self.getPolygonNames()
@@ -104,17 +113,43 @@ class Result(object):
 			# End the CHARSTATELABLES section in case it's the last polygon
 			if i+1 == len(polygons):
 				separator = ';'
-			OUTHANDLE.write("\t%s %s%s\n" % (i+1, name, separator))
-		OUTHANDLE.write("\n\n")
+			self.OUTHANDLE.write("\t%s %s%s\n" % (i+1, name, separator))
+		self.OUTHANDLE.write("\n\n")
 
-		OUTHANDLE.write("\tMatrix\n")
+		self.OUTHANDLE.write("\tMatrix\n")
 		# Print the species names and character matrix
 		for name in sorted(self.getResult()):
-			OUTHANDLE.write("%s \t\t%s\n" % (name.replace(" ", "_"), self.resultToStr(self.result[name])))
-		OUTHANDLE.write("\t;\nEnd;\n")
+			self.OUTHANDLE.write("%s \t\t%s\n" % (name.replace(" ", "_"), self.resultToStr(self.result[name])))
+		self.OUTHANDLE.write("\t;\nEnd;\n")
 
-		if outputfile is not None:
-			OUTHANDLE.close()
+		if args.out is not None:
+			self.OUTHANDLE.close()
+
+	def printTab(self, args):
+		# Generate the header line
+		header = "Species name"
+		for name in self.getPolygonNames():
+			header += "\t"
+			header += name
+		header += "\n"
+		self.OUTHANDLE.write(header) 
+
+		# Print the result
+		for species in self.getResult():
+			row = species
+			if not args.verbose:
+				for value in self.resultToStr(self.result[species]):
+					row += "\t"
+					row += value
+				self.OUTHANDLE.write("%s%s" % (row, "\n"))
+			else:
+				
+				print self.resultToStr(self.result[species])		# Devel.
+		
+		if args.out is not None:
+			self.OUTHANDLE.close()
+
+		
 
 
 	def resultToStr(self, resultList):
@@ -128,6 +163,7 @@ class Result(object):
 					string = self.verbose(i, string)
 			else:
 				string += "0"
+#		print "String: ", string								# Devel.
 		return string
 
 	def minOccurence(self, occurences, string):
@@ -137,9 +173,13 @@ class Result(object):
 			string += "0" + "[" + str(occurences) + "]"
 			return string
 
-	def verbose(self, i, string):
+	def verbose(self, occurences, string):
 		if self.args.verbose:
-			string += "1" + "[" + str(i) + "]"
+			# The tab-delimited format requires an additional "\t" character
+			if self.args.tab == True:
+				string += "1" + "[" + str(occurences) + "]\t"
+			else:
+				string += "1" + "[" + str(occurences) + "]"
 		else:
 			string += "1"
 		return string
