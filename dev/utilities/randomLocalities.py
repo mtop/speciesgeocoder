@@ -10,9 +10,18 @@
 import sys, random, string
 
 nrLoc = int(sys.argv[1])
+nrSpecies = 20
+
+# Generate a species list
+species = []
+for i in range(nrSpecies):
+	species.append(''.join(random.choice("abcdefghijklmnopqrstuvxyz") for x in range(8)))
+
+# Print the header
+print "# Species	Latitude	Longitude"
 
 for i in range(nrLoc):
-	name = ''.join(random.choice("abcdefghijklmnopqrstuvxyz") for i in range(8))
+	name = random.choice(species)
 	lat = random.uniform(-90.0, 90.0)
 	lon = random.uniform(-180.0, 180.0)
 
