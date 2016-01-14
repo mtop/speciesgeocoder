@@ -119,13 +119,15 @@ class Result(object):
 		self.OUTHANDLE.write("\tMatrix\n")
 		# Print the species names and character matrix
 		for name in sorted(self.getResult()):
-			self.OUTHANDLE.write("%s \t\t%s\n" % (name.replace(" ", "_"), self.resultToStr(self.result[name])))
+			self.OUTHANDLE.write("%s \t\t%s\n" % (name.replace(" ", "_"), self.resultToStr(self.result[name]).replace(",", "")))
 		self.OUTHANDLE.write("\t;\nEnd;\n")
 
 		if args.out is not None:
 			self.OUTHANDLE.close()
 
+
 	def printTab(self, args):
+		# Print the result in tab-delimited format.
 		# Generate the header line
 		header = "Species name"
 		for name in self.getPolygonNames():
@@ -137,52 +139,38 @@ class Result(object):
 		# Print the result
 		for species in self.getResult():
 			row = species
-			if not args.verbose:
-				for value in self.resultToStr(self.result[species]):
-					row += "\t"
-					row += value
-				self.OUTHANDLE.write("%s%s" % (row, "\n"))
-			else:
-				print self.result	
-#				print self.resultToStr(self.result[species])		# Devel.
+			for value in self.resultToStr(self.result[species]).replace(",", "\t"):
+				row += value
+			self.OUTHANDLE.write("%s%s" % (row, "\n"))
 		
 		if args.out is not None:
 			self.OUTHANDLE.close()
-
-		
 
 
 	def resultToStr(self, resultList):
 		string = ''
 		for occurences in resultList:
-			if i > 0:
+			if occurences > 0:
 				# If a minimum number of occurenses are required...
 				if self.args.number:
 					string = self.minOccurence(occurences, string)
 				else:	
 					string = self.verbose(occurences, string)
 			else:
-				string += "0"
-#		print "String: ", string								# Devel.
+				string += "0,"
 		return string
 
+
 	def minOccurence(self, occurences, string):
-		if int(occurences) > int(self.args.number[0]):
+		if int(occurences) >= int(self.args.number[0]):
 			return self.verbose(occurences, string)
 		else:
-			string += "0" + "[" + str(occurences) + "]"
+			string += "0" + "[" + str(occurences) + "],"
 			return string
 
 	def verbose(self, occurences, string):
 		if self.args.verbose:
-			# The tab-delimited format requires an additional "\t" character
-			if self.args.tab == True:
-				string += "1" + "[" + str(occurences) + "]\t"
-			else:
-				string += "1" + "[" + str(occurences) + "]"
+			string += "1" + "[" + str(occurences) + "],"
 		else:
-			string += "1"
+			string += "1,"
 		return string
-
-#	def setSampletable(self, locality, polygon):
-#		locality
