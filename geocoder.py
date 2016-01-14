@@ -60,15 +60,16 @@ def parse_args(args):
 	mapping_group.add_argument("--map_model", help="Transition model", choices=['ER', 'SYM', 'ARD'], default="ER") 
 	mapping_group.add_argument("--max_run_time", help="Max run time for 1 stochastic map (in seconds).", default=60)
 	mapping_group.add_argument("--trait", help="Trait >0 indicates the number of the character to be analyzed", default=0)
-	##########################
 	
 	parser.add_argument("-o", "--out", help="Name of optional output file. Output is sent to STDOUT by default")
-	parser.add_argument("-v", "--verbose", action="store_true", help="Report how many times a species is found in each polygon")
+	parser.add_argument("--tab", help="Output in tab-separated format", action="store_true", default="False")
+	parser.add_argument("-v", "--verbose", action="store_true", help="Report how many times a species is found in each polygon. Don't use in combination with option '--number'")
 	parser.add_argument("-b", "--binomial", action="store_true", help="Treats first two words in species names as genus name and species epithet. Use with care as this option is LIKELY TO LEAD TO ERRONEOUS RESULTS if names in input data are not in binomial form.")
 	parser.add_argument("-n", "--number", help="Set the minimum number of occurrences (localities) needed for considering a species to be present in a polygon", nargs="*")
 	parser.add_argument("--test", help="Test if the input data is in the right format", action="store_true")
 	parser.add_argument("--dev", help=argparse.SUPPRESS, action="store_true")
-	#__ GUI STUFF
+	
+	### GUI options ###
 	parser.add_argument("--dir_output", help="Output directory for R plots", default=os.getcwd())
 	parser.add_argument("--path_script", help=argparse.SUPPRESS, default=os.getcwd())
 	
@@ -394,7 +395,12 @@ def main():
 						result.setResult(locality, polygon[0])
 						
 	sys.stderr.write("\n")
-	result.printNexus(args.out)
+
+	# Print the output
+	if args.tab == True:
+		result.printTab(args)
+	else:
+		result.printNexus(args)
 
 
 	if args.plot == True:
