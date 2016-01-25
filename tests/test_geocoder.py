@@ -5,6 +5,7 @@ sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 import pytest
 import geocoder
 import SGC_output
+import subprocess
 
 version = "SpeciesGeoCoder 0.9.4\n"
 
@@ -19,10 +20,15 @@ class TestParser:
 class TestClass:
 	
 	def setup_args(self):
-		return geocoder.parse_args(['-p', 'example_data/polygons.txt', '-l', 'example_data/localities.csv'])
+#		return geocoder.parse_args(['-p', 'example_data/polygons.txt', '-l', 'example_data/localities.csv'])
+		return geocoder.parse_args(['-p', 'example_data/polygons.txt', '-l', 'example_data/localities.csv', '-t', 'example_data/*.tif'])
 
 	def setup_args2(self):
 		return geocoder.parse_args(['-p', 'example_data/polygons.txt', '-g', 'example_data/gbif_Ivesia_localities.txt'])
+
+	def setup_args3(self):
+		# Coordinate columns in the "wrong" order.
+		return geocoder.parse_args(['-p', 'example_data/polygons.txt', '-l', 'tests/localities_wrong_coordinate-order.csv'])
 
 class TestClassPolygons(TestClass):
 	# Test the class Polygons and at the same time the polygon file
@@ -81,6 +87,10 @@ class TestClassMyLocalities(TestClass):
 	def setup_TestMyLocalities(self):
 		self.args = self.setup_args()
 		self.TestMyLocalities = geocoder.MyLocalities(self.args)
+	def setup_TestMyLocalities_wrong_coordinate_order(self):
+		# Using wrong coordinate culomn order
+		self.args3 = self.setup_args3()
+		self.TestMyLocalities3 = geocoder.MyLocalities(self.args3)
 	
 	def test_speciesNames(self):
 # Perhaps redundant
@@ -92,6 +102,10 @@ class TestClassMyLocalities(TestClass):
 	def test_getLocalities(self):
 		self.setup_TestMyLocalities()
 		assert list(self.TestMyLocalities.getLocalities()) == SGC_output.localities
+
+	def test_getLocalities_wrong_coordinate_order(self):
+		self.setup_TestMyLocalities_wrong_coordinate_order()
+		assert list(self.TestMyLocalities3.getLocalities()) == SGC_output.localities
 
 	def test_getCoOrder(self):
 		self.setup_TestMyLocalities()
@@ -231,11 +245,27 @@ class TestMain:
 		pass
 		
 
+class TestResult(TestClass):
+	
+	def test_RegularOutput(self, capsys):
+		# Test the regular output using locality data in csv format and polygons in text format.
+		myProcess = subprocess.Popen('speciesgeocoder -l example_data/localities.csv -p example_data/polygons.txt',shell=True, stdout=subprocess.PIPE)
+		nexus = open('tests/SGC_output.NEXUS', 'r')
+		assert myProcess.stdout.readlines() == nexus.readlines()
 
+	def test_RegularOutput2(self, capsys):
+		# Test the regular output using locality data in csv 
+		# format with the lat. long. columns in the "wrong" 
+		# order and polygons in text format.
+		myProcess2 = subprocess.Popen('speciesgeocoder -l tests/localities_wrong_coordinate-order.csv -p example_data/polygons.txt',shell=True, stdout=subprocess.PIPE)
+		nexus2 = open('tests/SGC_output.NEXUS', 'r')
+		assert myProcess2.stdout.readlines() == nexus2.readlines()
 
-
-
-
+	def test_ElevationOutput(self):
+		# Same as test_RegularOutput() but also using elevation data.
+		myElevationProcess = subprocess.Popen('speciesgeocoder -l example_data/localities.csv -p example_data/polygons.txt -t example_data/*.tif',shell=True, stdout=subprocess.PIPE)
+		elevationNexus = open('tests/SGC_elevation_output.NEXUS', 'r')
+		assert myElevationProcess.stdout.readlines() == elevationNexus.readlines()
 
 
 
