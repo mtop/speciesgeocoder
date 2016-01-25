@@ -49,6 +49,7 @@ def parse_args(args):
 	locality_group.add_argument("-g", "--gbif", help="Set path to file containing species locality data downloaded from GBIF")
 	parser.add_argument("-t", "--tif", help="Set path to geotiff file(s)", nargs="*")
 	parser.add_argument("--plot", help="Produce graphical output illustrating coexistance, distribution etc.", action="store_true", default="False")
+	parser.add_argument("--np", help="Number of CPU's to use for the analysis", default=1)
 	
 	### Stochastic mapping ###
 	mapping_group = parser.add_argument_group('Stochastic_mapping')
@@ -153,6 +154,7 @@ class MyLocalities(Localities):
 		self.speciesNames = []
 		self.order = ""
 		self.progress = 0
+		self.nr_localities = 0
 		for name in self.getLocalities():
 			self.setSpeciesName(name[0])
 
@@ -172,7 +174,6 @@ class MyLocalities(Localities):
 				break
 			# Determine the Lat/Long column order.
 			if line[0] == "#":
-				print line			# Devel.
 				
 				strings = ["Latitude", "latitude", "Lat.", "lat.", "Lat", "lat"]
 				# Dev-note: Test for other delimiters then \t
@@ -199,6 +200,7 @@ class MyLocalities(Localities):
 					latitude = splitline[2]
 			except IndexError:
 				sys.exit('[ Error ] The locality data file is not in tab delimited text format')
+			self.nr_localities += 1
 			yield species.replace("  ", " "), latitude, longitude
 	
 	def getCoOrder(self):
@@ -215,6 +217,9 @@ class MyLocalities(Localities):
 
 	def getLocalityFileName(self):
 		return self.localityFile
+	
+	def getNrLocalities(self):
+		return self.nr_localities
 
 class GbifLocalities(Localities):
 	# Object that contains the locality data in the form
@@ -335,6 +340,19 @@ def print_progress(done, numLoc):
 	sys.stderr.write("Point in polygon test: {0:.0f}%     \r".format(progress))
 	return done
 
+#def inParallel(localities):
+#	# Number of parallel processes to start
+#	nbr_cpu = args.np
+#	# Number of localities to analyse per process
+#	if args.localities:
+#		print 
+#	nbr_localities = 40
+#	pool = Pool( processes = nbr_cpu )
+#	nbr_samples_per_worker = nbr_samples / nbr_cpu
+#	nbr_trials_per_process = [nbr_samples_per_worker] * nbr_cpu
+#	result = pool.map(dummy, nbr_trials_per_process)
+#	print result							# Devel.
+
 def main():
 	from lib.result import Result
 	# Create list to store the geotif objects in.
@@ -363,7 +381,6 @@ def main():
 				# ... test if the locality record is found in the polygon.
 				# locality[0] = species name, locality[1] = latitude, locality[2] =  longitude
 				if pointInPolygon(polygon[1], locality[2], locality[1]) == True:
-
 					# Test if elevation files are available.
 					if args.tif:
 						if elevationTest(locality[1], locality[2], polygon, index) == True:
