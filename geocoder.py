@@ -172,6 +172,8 @@ class MyLocalities(Localities):
 				break
 			# Determine the Lat/Long column order.
 			if line[0] == "#":
+				print line			# Devel.
+				
 				strings = ["Latitude", "latitude", "Lat.", "lat.", "Lat", "lat"]
 				# Dev-note: Test for other delimiters then \t
 				if line.split("\t")[1] not in strings:
@@ -186,14 +188,21 @@ class MyLocalities(Localities):
 			else:
 				species = splitline[0].strip()
 			self.setSpeciesName(species)
+			
+			# Make sure the coordinates are stored in the correct order.
 			try:
-				latitude = splitline[1]
-				longitude = splitline[2]
+				if self.order == "lat-long":
+					latitude = splitline[1]
+					longitude = splitline[2]
+				else:
+					longitude = splitline[1]
+					latitude = splitline[2]
 			except IndexError:
 				sys.exit('[ Error ] The locality data file is not in tab delimited text format')
 			yield species.replace("  ", " "), latitude, longitude
 	
 	def getCoOrder(self):
+		# REDUNDANT
 		# Retur the order the localities are stored in input file
 		return self.order
 
@@ -352,24 +361,17 @@ def main():
 			# ... and for each polygon ...
 			for polygon in polygons.getPolygons():
 				# ... test if the locality record is found in the polygon.
-				if localities.getCoOrder() == "lat-long":
-					# locality[0] = species name, locality[1] = latitude, locality[2] =  longitude
-					if pointInPolygon(polygon[1], locality[2], locality[1]) == True:
+				# locality[0] = species name, locality[1] = latitude, locality[2] =  longitude
+				if pointInPolygon(polygon[1], locality[2], locality[1]) == True:
 
-						# Test if elevation files are available.
-						if args.tif:
-							if elevationTest(locality[1], locality[2], polygon, index) == True:
-								# Store the result
-								result.setResult(locality, polygon[0])		
-						else:
+					# Test if elevation files are available.
+					if args.tif:
+						if elevationTest(locality[1], locality[2], polygon, index) == True:
 							# Store the result
-							result.setResult(locality, polygon[0])
-				else:
-					# locality[0] = species name, locality[1] = longitude, locality[2] =  latitude
-					if pointInPolygon(polygon[1], locality[1], locality[2]) == True:
-						if args.tif:
-							if elevationTest(locality[2], locality[1], polygon, index) == True:
-								result.setResult(locality[0], polygon[0])
+							result.setResult(locality, polygon[0])		
+					else:
+						# Store the result
+						result.setResult(locality, polygon[0])
 	
 	if args.gbif:
 		gbifData = GbifLocalities(args)
