@@ -335,19 +335,6 @@ def print_progress(done, numLoc):
 	sys.stderr.write("Point in polygon test: {0:.0f}%     \r".format(progress))
 	return done
 
-#def inParallel(localities):
-#	# Number of parallel processes to start
-#	nbr_cpu = args.np
-#	# Number of localities to analyse per process
-#	if args.localities:
-#		print 
-#	nbr_localities = 40
-#	pool = Pool( processes = nbr_cpu )
-#	nbr_samples_per_worker = nbr_samples / nbr_cpu
-#	nbr_trials_per_process = [nbr_samples_per_worker] * nbr_cpu
-#	result = pool.map(dummy, nbr_trials_per_process)
-#	print result							# Devel.
-
 def main(locality_file):
 	from lib.result import Result
 	# Create list to store the geotif objects in.
@@ -407,9 +394,23 @@ def main(locality_file):
 					else:
 						# Store the result
 						result.setResult(locality, polygon[0])
-						
+	# Clean up
+	if args.np > 1:
+		try:
+			os.remove(locality_file)
+		except:
+			pass
 	sys.stderr.write("\n")
+	return result
 
+def plottResult(result):
+#	polygons = Polygons(args)
+#	if args.np > 1:
+#		# Combine the results if multiprocessing has been used.
+#		finalResult = Result(polygons, args)
+#		joinResults(finalResult, result_objects)
+
+###########################################
 	# Print the output
 	if args.tab == True:
 		result.printTab(args)
@@ -449,28 +450,38 @@ if __name__ == "__main__":
 	if args.np > 1:
 		from lib.splitLocalityFile import split_file
 		from multiprocessing import Pool
+		from lib.result import Result
+		from lib.joinResults import joinResults
 		if args.localities:
 			tmp_input_files = split_file(args.localities, args.np)
 		if args.gbif:
 			sys.exit("[Error] Multiprocessing with GBIF locality data is not implemented yet")
-
 		pool = Pool(processes = args.np)
-		pool.map(main, tmp_input_files)
-
-	if args.test == True:
-		if args.localities:
-			from lib.testData import testLocality
-			localities = MyLocalities(args)
-			testLocality(localities, args.localities)
-
-		if args.polygons:
-			from lib.testData import testPolygons
-			polygons = Polygons(args)
-			testPolygons(polygons, args.polygons)
-
+		result_objects = pool.map(main, tmp_input_files)
+		
+		# Instantiate a Result object to join the results from the parallel processes.
+		polygons = Polygons(args)
+		finalResult = Result(polygons, args)
+		Result.joinResults(finalResult, result_objects)
+		plottResult(finalResult)
+	
 	else:
-		if args.dev:
-			import cProfile
-			cProfile.run("main()")
+
+		if args.test == True:
+			if args.localities:
+				from lib.testData import testLocality
+				localities = MyLocalities(args)
+				testLocality(localities, args.localities)
+	
+			if args.polygons:
+				from lib.testData import testPolygons
+				polygons = Polygons(args)
+				testPolygons(polygons, args.polygons)
+	
 		else:
-			main(args.localities)
+			if args.dev:
+				import cProfile
+				cProfile.run("main()")
+			else:
+	#			main(args.localities)
+				plottResult(main(args.localities))
