@@ -331,8 +331,11 @@ def elevationTest(lat, lon, polygon, index):
 def print_progress(done, numLoc):
 	# Print progress report to STDERR (Thanks Martin Zackrisson for code snippet)
 	done += 1
+#	progress = (done/float(numLoc))*100
+#	sys.stderr.write("Point in polygon test: {0:.0f}%     \r".format(progress))
 	progress = (done/float(numLoc))*100
-	sys.stderr.write("Point in polygon test: {0:.0f}%     \r".format(progress))
+	length = 99
+	sys.stderr.write("Progress: [{}{}]		\r".format("="*int(progress)," "*(int(length)-int(progress))))
 	return done
 
 def main(locality_file):
