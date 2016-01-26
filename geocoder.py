@@ -49,7 +49,7 @@ def parse_args(args):
 	locality_group.add_argument("-g", "--gbif", help="Set path to file containing species locality data downloaded from GBIF")
 	parser.add_argument("-t", "--tif", help="Set path to geotiff file(s)", nargs="*")
 	parser.add_argument("--plot", help="Produce graphical output illustrating coexistance, distribution etc.", action="store_true", default="False")
-	parser.add_argument("--np", help="Number of CPU's to use for the analysis", default=1)
+	parser.add_argument("--np", help="Number of CPU's to use for the analysis", default=1, type=int)
 	
 	### Stochastic mapping ###
 	mapping_group = parser.add_argument_group('Stochastic_mapping')
@@ -148,9 +148,9 @@ class Localities(object):
 class MyLocalities(Localities):
 	# Object that contains the locality data
 	# read from a tab-delimited *.csv file.
-	def __init__(self, args):
+	def __init__(self, args, locality_file):
 		self.args = args
-		self.localityFile = self.args.localities # [0]
+		self.localityFile = locality_file  #self.args.localities # [0]
 		self.speciesNames = []
 		self.order = ""
 		self.progress = 0
@@ -348,7 +348,7 @@ def print_progress(done, numLoc):
 #	result = pool.map(dummy, nbr_trials_per_process)
 #	print result							# Devel.
 
-def main():
+def main(locality_file):
 	from lib.result import Result
 	# Create list to store the geotif objects in.
 	polygons = Polygons(args)
@@ -366,7 +366,7 @@ def main():
 	# are located in any of the polygons.
 	# For each locality record ...
 	if args.localities:
-		localities = MyLocalities(args)
+		localities = MyLocalities(args, locality_file)
 		numLoc = localities.getNrLocalities()
 		result.setSpeciesNames(localities)
 		for locality in localities.getLocalities():
@@ -445,7 +445,17 @@ if __name__ == "__main__":
 	# /how-do-you-write-tests-for-the-argparse-portion-of-a-python-module)
 	args = parse_args(sys.argv[1:])
 
+	# Multiprocessing
+	if args.np > 1:
+		from lib.splitLocalityFile import split_file
+		from multiprocessing import Pool
+		if args.localities:
+			tmp_input_files = split_file(args.localities, args.np)
+		if args.gbif:
+			sys.exit("[Error] Multiprocessing with GBIF locality data is not implemented yet")
 
+		pool = Pool(processes = args.np)
+		pool.map(main, tmp_input_files)
 
 	if args.test == True:
 		if args.localities:
@@ -463,4 +473,4 @@ if __name__ == "__main__":
 			import cProfile
 			cProfile.run("main()")
 		else:
-			main()
+			main(args.localities)
