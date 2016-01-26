@@ -137,7 +137,7 @@ class Localities(object):
 			pass
 		return name
 
-	def getQuant(self):
+	def getNrLocalities(self):
 		# Return the number of localities
 		nr = 0
 		for i in self.getLocalities():
@@ -154,7 +154,6 @@ class MyLocalities(Localities):
 		self.speciesNames = []
 		self.order = ""
 		self.progress = 0
-		self.nr_localities = 0
 		for name in self.getLocalities():
 			self.setSpeciesName(name[0])
 
@@ -200,7 +199,6 @@ class MyLocalities(Localities):
 					latitude = splitline[2]
 			except IndexError:
 				sys.exit('[ Error ] The locality data file is not in tab delimited text format')
-			self.nr_localities += 1
 			yield species.replace("  ", " "), latitude, longitude
 	
 	def getCoOrder(self):
@@ -218,9 +216,6 @@ class MyLocalities(Localities):
 	def getLocalityFileName(self):
 		return self.localityFile
 	
-	def getNrLocalities(self):
-		return self.nr_localities
-
 class GbifLocalities(Localities):
 	# Object that contains the locality data in the form
 	# that is delivered from http://data.gbif.org 
@@ -372,7 +367,7 @@ def main():
 	# For each locality record ...
 	if args.localities:
 		localities = MyLocalities(args)
-		numLoc = localities.getQuant()
+		numLoc = localities.getNrLocalities()
 		result.setSpeciesNames(localities)
 		for locality in localities.getLocalities():
 			done = print_progress(done, numLoc)
@@ -393,7 +388,7 @@ def main():
 	if args.gbif:
 		gbifData = GbifLocalities(args)
 		result.setSpeciesNames(gbifData)
-		numLoc = gbifData.getQuant()
+		numLoc = gbifData.getNrLocalities()
 
 		# For each GBIF locality record ...
 		for locality in gbifData.getLocalities():
@@ -446,8 +441,11 @@ def main():
 if __name__ == "__main__":
 	
 	# Parse the command line arguments
-	# Curticy of Viktor Kerkez (http://stackoverflow.com/questions/18160078/how-do-you-write-tests-for-the-argparse-portion-of-a-python-module)
+	# Curticy of Viktor Kerkez (http://stackoverflow.com/questions/18160078
+	# /how-do-you-write-tests-for-the-argparse-portion-of-a-python-module)
 	args = parse_args(sys.argv[1:])
+
+
 
 	if args.test == True:
 		if args.localities:
