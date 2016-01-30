@@ -29,11 +29,11 @@ class Result(object):
 		self.args = args
 		# Table to store info on which polygon a certain record was coded in
 		self.sampletable = []
+		self.result = {}						
 		
 		if args.out is None:
 			self.OUTHANDLE = sys.stdout
 		else:
-	#		self.OUTHANDLE = open(outputfile, 'w')
 			self.OUTHANDLE = open(args.out, 'w')
 
 
@@ -46,11 +46,6 @@ class Result(object):
 		self.initialList = []
 		for i in range(len(self.polygonNames)):
 			self.initialList.append(0)
-		try:
-			if self.result:
-				pass
-		except:
-			self.result = {}
 
 		for name in dataObject.getSpeciesNames():
 			# Make sure the species name is not empty
@@ -95,10 +90,6 @@ class Result(object):
 		return self.polygonNames.index(polygonName)
 
 	def printNexus(self, args): #outputfile=None):
-#		if outputfile is None:
-#			OUTHANDLE = sys.stdout
-#               else:
-#			OUTHANDLE = open(outputfile, 'w')
 
 		self.OUTHANDLE.write("#NEXUS\n\n")
 		self.OUTHANDLE.write("Begin data;\n")
@@ -174,3 +165,11 @@ class Result(object):
 		else:
 			string += "1,"
 		return string
+
+	def joinResults(self, result_objects):
+		import operator
+		for result in result_objects:
+			# Jumpstart the Results instance with a list of the analyses species.
+			self.setSpeciesNames(result)
+			for species, value in result.getResult().iteritems():
+				self.result[species] = map(operator.add, self.result[species], value)
