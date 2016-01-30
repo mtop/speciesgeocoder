@@ -1,12 +1,13 @@
 #!/usr/local/opt/python/bin/python2.7
 
 import uuid
+import sys
 
 def split_file(file_name, num_cpu):
 	# Split a locality input file in several files
 	# and store their names in a list for later removal
 	num_lines = sum(1 for line in open(file_name))
-	lines = num_lines / num_cpu
+	lines = (num_lines / num_cpu) + 1 
 	tmp_out_file_list = []
 	with open(file_name, 'r') as in_file:
 
@@ -34,6 +35,12 @@ def split_file(file_name, num_cpu):
 		finally:
 			# Close the last output file
 			out_file.close()
+			# Make sure the input file was split in the correct number of files.
+			if len(tmp_out_file_list) == num_cpu:
+				pass
+			else:
+				sys.exit('[Error] Something whent wrong when splitting the input file.\n        Try to specify a different number of CPUs to use.')
+
 			return tmp_out_file_list
 
 
