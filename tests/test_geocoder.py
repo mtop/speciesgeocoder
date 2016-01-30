@@ -267,7 +267,10 @@ class TestResult(TestClass):
 		elevationNexus = open('tests/SGC_elevation_output.NEXUS', 'r')
 		assert myElevationProcess.stdout.readlines() == elevationNexus.readlines()
 
-
+class TestoutputFile():
+	
+	def test_withOutputFile(self):
+		pass
 
 
 
