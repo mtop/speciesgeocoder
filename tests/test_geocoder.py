@@ -86,11 +86,11 @@ class TestClassMyLocalities(TestClass):
 	
 	def setup_TestMyLocalities(self):
 		self.args = self.setup_args()
-		self.TestMyLocalities = geocoder.MyLocalities(self.args)
+		self.TestMyLocalities = geocoder.MyLocalities(self.args, 'example_data/localities.csv')
 	def setup_TestMyLocalities_wrong_coordinate_order(self):
 		# Using wrong coordinate culomn order
 		self.args3 = self.setup_args3()
-		self.TestMyLocalities3 = geocoder.MyLocalities(self.args3)
+		self.TestMyLocalities3 = geocoder.MyLocalities(self.args3, 'example_data/localities.csv')
 	
 	def test_speciesNames(self):
 # Perhaps redundant
@@ -131,9 +131,9 @@ class TestClassMyLocalities(TestClass):
 # Perhaps something to implement
 #		assert self.TestMyLocalities.getBinomialName('New_species + name') == 'New species'
 
-	def test_getQuant(self):
+	def test_getNrLocalities(self):
 		self.setup_TestMyLocalities()
-		assert self.TestMyLocalities.getQuant() == 571
+		assert self.TestMyLocalities.getNrLocalities() == 571
 
 
 class TestGbifLocalities(TestClass):
@@ -158,9 +158,9 @@ class TestGbifLocalities(TestClass):
 		self.setup_TestGbifLocalities()
 		assert self.TestGbifLocalities.getgbifFile() == 'example_data/gbif_Ivesia_localities.txt'
 
-	def test_getQuant(self):
+	def test_getNrLocalities(self):
 		self.setup_TestGbifLocalities()
-		assert self.TestGbifLocalities.getQuant() == 3458
+		assert self.TestGbifLocalities.getNrLocalities() == 3458
 
 
 class TestPointInPolygon(TestClass):
