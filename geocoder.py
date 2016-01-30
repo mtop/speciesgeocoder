@@ -39,7 +39,7 @@ def parse_args(args):
 			sys.exit("[Error] Exiting due to missing dependency \"argparser\"")
 
 	parser = argparse.ArgumentParser(prog="SpeciesGeoCoder")
-	parser.add_argument('--version', action='version', version='%(prog)s 0.9.4')
+	parser.add_argument('--version', action='version', version='%(prog)s 0.9.5')
 	locality_group = parser.add_mutually_exclusive_group(required=True)
 	#polygon_group = parser.add_mutually_exclusive_group(required=True)
 	#polygon_group.add_argument("-p", "--polygons", help="Set path to file containing polygon coordinates")
