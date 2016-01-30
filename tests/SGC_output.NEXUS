@@ -1,0 +1,41 @@
+#NEXUS
+
+Begin data;
+	Dimensions ntax=22 nchar=8;
+	Format datatype=standard symbols="01" gap=-;
+	CHARSTATELABELS
+	1 Coastal California,
+	2 Great Basin,
+	3 Sierra Nevada High,
+	4 Sierra Nevada Low,
+	5 Colorado Plateau,
+	6 Mojave Desert,
+	7 Cascade range,
+	8 Northern rockies and Idaho batholith;
+
+
+	Matrix
+Ivesia_aperta 		01110000
+Ivesia_argyrocoma 		00000100
+Ivesia_arizonica 		01001000
+Ivesia_baileyi 		01000001
+Ivesia_cryptocaulis 		00001000
+Ivesia_jaegeri 		00001100
+Ivesia_kingii 		01110000
+Ivesia_longibracteata 		00110000
+Ivesia_lycopodioides 		01110000
+Ivesia_multifoliolata 		00001000
+Ivesia_pygmaea 		01110000
+Ivesia_rhypara 		01000010
+Ivesia_sabulosa 		01001000
+Ivesia_santolinoides 		00110100
+Ivesia_saxosa 		01111100
+Ivesia_sericoleuca 		01110000
+Ivesia_setosa 		01000001
+Ivesia_shockleyi 		11110000
+Ivesia_tweedyi 		00000011
+Ivesia_unguiculata 		10110000
+Ivesia_utahensis 		01000000
+Ivesia_webberi 		01110000
+	;
+End;
