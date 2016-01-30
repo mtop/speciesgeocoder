@@ -3,3 +3,6 @@
 *.pyc
 *.pyx
 *.c
+*.swp
+.cache/
+tests/.cache/
