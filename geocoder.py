@@ -352,6 +352,7 @@ def print_progress(done, numLoc):
 	sys.stderr.write("Progress: [{}{}]		\r".format("="*int(progress)," "*(int(length)-int(progress))))
 	return done
 
+
 def main(locality_file):
 	from lib.result import Result
 	# Create list to store the geotif objects in.
@@ -457,48 +458,57 @@ def plottResult(result):
 
 
 if __name__ == "__main__":
+	# Handle keyboard interupts.
+	try:
 	
-	# Parse the command line arguments
-	# Curticy of Viktor Kerkez (http://stackoverflow.com/questions/18160078
-	# /how-do-you-write-tests-for-the-argparse-portion-of-a-python-module)
-	args = parse_args(sys.argv[1:])
-
-	# Multiprocessing
-	if args.np > 1:
-		from lib.splitLocalityFile import split_file
-		from multiprocessing import Pool
-		from lib.result import Result
-		from lib.joinResults import joinResults
-		if args.localities:
-			tmp_input_files = split_file(args.localities, args.np)
-		if args.gbif:
-			sys.exit("[Error] Multiprocessing with GBIF locality data is not implemented yet")
-		pool = Pool(processes = args.np)
-		result_objects = pool.map(main, tmp_input_files)
-		
-		# Instantiate a Result object to join the results from the parallel processes.
-		polygons = Polygons(args)
-		finalResult = Result(polygons, args)
-		Result.joinResults(finalResult, result_objects)
-		plottResult(finalResult)
+		# Parse the command line arguments
+		# Curticy of Viktor Kerkez (http://stackoverflow.com/questions/18160078
+		# /how-do-you-write-tests-for-the-argparse-portion-of-a-python-module)
+		args = parse_args(sys.argv[1:])
 	
-	else:
-
-		if args.test == True:
+		# Multiprocessing
+		if args.np > 1:
+			from lib.splitLocalityFile import split_file
+			from multiprocessing import Pool
+			from lib.result import Result
+			from lib.joinResults import joinResults
 			if args.localities:
-				from lib.testData import testLocality
-				localities = MyLocalities(args)
-				testLocality(localities, args.localities)
-	
-			if args.polygons:
-				from lib.testData import testPolygons
-				polygons = Polygons(args)
-				testPolygons(polygons, args.polygons)
-	
+				tmp_input_files = split_file(args.localities, args.np)
+			if args.gbif:
+				sys.exit("[Error] Multiprocessing with GBIF locality data is not implemented yet")
+			pool = Pool(processes = args.np)
+			result_objects = pool.map(main, tmp_input_files)
+			
+			# Instantiate a Result object to join the results from the parallel processes.
+			polygons = Polygons(args)
+			finalResult = Result(polygons, args)
+			Result.joinResults(finalResult, result_objects)
+			plottResult(finalResult)
+		
 		else:
-			if args.dev:
-				import cProfile
-				cProfile.run("main()")
+	
+			if args.test == True:
+				if args.localities:
+					from lib.testData import testLocality
+					localities = MyLocalities(args)
+					testLocality(localities, args.localities)
+		
+				if args.polygons:
+					from lib.testData import testPolygons
+					polygons = Polygons(args)
+					testPolygons(polygons, args.polygons)
+		
 			else:
-	#			main(args.localities)
-				plottResult(main(args.localities))
+				if args.dev:
+					import cProfile
+					cProfile.run("main()")
+				else:
+		#			main(args.localities)
+					plottResult(main(args.localities))
+	
+	except KeyboardInterrupt:
+		print 'Interrupted'
+		try:
+			sys.exit(0)
+		except SystemExit:
+			os._exit(0)
