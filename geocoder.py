@@ -39,7 +39,7 @@ def parse_args(args):
 			sys.exit("[Error] Exiting due to missing dependency \"argparser\"")
 
 	parser = argparse.ArgumentParser(prog="SpeciesGeoCoder")
-	parser.add_argument('--version', action='version', version='%(prog)s 0.9.5')
+	parser.add_argument('--version', action='version', version='%(prog)s 0.9.7')
 	locality_group = parser.add_mutually_exclusive_group(required=True)
 	#polygon_group = parser.add_mutually_exclusive_group(required=True)
 	#polygon_group.add_argument("-p", "--polygons", help="Set path to file containing polygon coordinates")
@@ -222,8 +222,10 @@ class GbifLocalities(Localities):
 	def __init__(self, args):
 		self.gbifFile = args.gbif
 		self.speciesNames = []
+		
 		for name in self.getLocalities():
 			self.setSpeciesNames(name[0])
+	
 
 	def getLocalities(self):
 		try:
@@ -232,15 +234,27 @@ class GbifLocalities(Localities):
 		except IOError:
 			sys.exit("[ Error ] No such file \'%s\'" % self.polygonFile)
 
+		# Find order of columns
+		column_nr = 0
+		for column in lines[0].split('\t'):
+			if column == 'species':
+				species_column = column_nr
+			if column.lower() == 'decimallatitude':
+				latitude_column = column_nr
+			if column.lower() == 'decimallongitude':
+				longitude_column = column_nr
+			column_nr += 1
+
 		for line in lines:
 			# Make sure the record has both lat. and long. data.
-			if len(line.split("\t")[77]) > 0 and len(line.split("\t")[78]) > 0:
-				# Simple check if the names of the columns are sane
-				if line.split("\t")[77] == "decimalLatitude" and line.split("\t")[78] == "decimalLongitude":
-					continue
+#			if len(line.split("\t")[77]) > 0 and len(line.split("\t")[78]) > 0:
+			# Simple check if the names of the columns are sane. Skip first line.
+			# This test seems to be redundant!
+			if line.split("\t")[latitude_column].lower() == "decimallatitude" and line.split("\t")[longitude_column].lower() == "decimallongitude":
+				continue
 			try:
-				float(line.split("\t")[77])
-				float(line.split("\t")[78])
+				float(line.split("\t")[latitude_column])
+				float(line.split("\t")[longitude_column])
 			except:
 				continue
 			# Under development.
@@ -248,9 +262,9 @@ class GbifLocalities(Localities):
 #				species = self.getBinomialName(line.split("\t")[3])
 #			else:
 #				species = line.split("\t")[219]
-			species = line.split("\t")[219]
-			latitude = line.split("\t")[77]
-			longitude = line.split("\t")[78]
+			species = line.split("\t")[species_column]
+			latitude = line.split("\t")[latitude_column]
+			longitude = line.split("\t")[longitude_column]
 			yield species.replace("  ", " "), latitude, longitude
 
 	def setSpeciesNames(self, name):
