@@ -26,6 +26,7 @@ import sys
 class Result(object):
 	def __init__(self, polygons, args):
 		self.polygonNames =  polygons.getPolygonNames()
+#		print self.polygonNames
 		self.args = args
 		# Table to store info on which polygon a certain record was coded in
 		self.sampletable = []
@@ -129,7 +130,7 @@ class Result(object):
 
 		# Print the result
 		for species in self.getResult():
-			row = species
+			row = species + "\t"
 			for value in self.resultToStr(self.result[species]).replace(",", "\t"):
 				row += value
 			self.OUTHANDLE.write("%s%s" % (row, "\n"))
