@@ -41,10 +41,10 @@ def parse_args(args):
 	parser = argparse.ArgumentParser(prog="SpeciesGeoCoder")
 	parser.add_argument('--version', action='version', version='%(prog)s 0.9.7')
 	locality_group = parser.add_mutually_exclusive_group(required=True)
-	#polygon_group = parser.add_mutually_exclusive_group(required=True)
-	#polygon_group.add_argument("-p", "--polygons", help="Set path to file containing polygon coordinates")
-	parser.add_argument("-p", "--polygons", help="Set path to file containing polygon coordinates", required=True)
-	#polygon_group.add_argument("-s", "--shape", help="Set path to shape file containing polygons")
+	polygon_group = parser.add_mutually_exclusive_group(required=True)
+	polygon_group.add_argument("-p", "--polygons", help="Set path to file containing polygon coordinates")
+	#polygon_group.add_argument("-p", "--polygons", help="Set path to file containing polygon coordinates", required=True)
+	polygon_group.add_argument("-s", "--shape", help="Set path to shape file containing polygons")
 	locality_group.add_argument("-l", "--localities", help="Set path to file containing species locality data")
 	locality_group.add_argument("-g", "--gbif", help="Set path to file containing species locality data downloaded from GBIF")
 	parser.add_argument("-t", "--tif", help="Set path to geotiff file(s)", nargs="*")
@@ -78,12 +78,24 @@ def parse_args(args):
 
 
 class Polygons(object):
+	def __init__(self, args):
+		pass
+    
+	def setPolygonName(self, name):
+		if name not in self.polygonNames:
+			self.polygonNames.append(name)
+
+	def getPolygonNames(self):
+		return self.polygonNames
+	
+
+class TextPolygons(Polygons):
 	# Object that contains polygons exported from QGIS.
 	def __init__(self, args):
 		self.polygonFile = args.polygons
 		self.polygonNames = []
 		for polygon in self.getPolygons():
-			self.setPolygonNames(polygon[0])
+			self.setPolygonName(polygon[0])
 	
 	def getPolygons(self):
 		try:
@@ -114,15 +126,50 @@ class Polygons(object):
 				except:
 					low = None
 					high = None
-#				print name, polygon, low, high		# Devel.
 				yield name, polygon, low, high
 
-	def setPolygonNames(self, name):
-		if name not in self.polygonNames:
-			self.polygonNames.append(name)
 
-	def getPolygonNames(self):
-		return self.polygonNames
+class ShapePolygons(Polygons):
+	
+	def __init__(self, args):
+		try:
+			import shapefile
+		except ImportError:
+			# Extend this part with a function similar to the one 
+			# handling an ImportError for the argparse module.
+			sys.stderr.write("[Error] The python module \"shapefile\" is not installed\n")
+			
+		self.shapeFile = args.shape
+		self.sf = shapefile.Reader(self.shapeFile)
+		self.shapes = self.sf.shapes()
+		self.numberOfPolygons = self.sf.numRecords
+		self.polygonNames = []
+
+		for polygon in self.getPolygons():
+			self.setPolygonName(polygon[0])
+
+	def getPolygons(self):
+		nbr = 0
+		for nbr in range(self.numberOfPolygons):
+			self.setPolygonName(self.sf.record()[nbr])
+			# Name
+			name =  self.sf.record()[nbr]
+			# Coordinates
+			self.raw_polygon = self.sf.shapes()[nbr].points
+			
+			# Format the polygon data correctly
+			polygon = []
+			for edge in self.raw_polygon:
+				lat = str(edge[0])
+				lon = str(edge[1])
+				polygon.append(lat + " " + lon)
+			nbr += 1
+		
+			# Dummy code for now
+			low = None
+			high = None
+
+			yield name, polygon, low, high	
 
 
 class Localities(object):
@@ -355,8 +402,11 @@ def print_progress(done, numLoc):
 
 def main(locality_file):
 	from lib.result import Result
-	# Create list to store the geotif objects in.
-	polygons = Polygons(args)
+	
+	if args.shape:
+		polygons = ShapePolygons(args)
+	if args.polygons:
+		polygons = TextPolygons(args)
 	result = Result(polygons, args)
 	done = 0
 	# Index the geotiff files if available.
@@ -422,7 +472,7 @@ def main(locality_file):
 	return result
 
 def plottResult(result):
-#	polygons = Polygons(args)
+#	polygons = TextPolygons(args)
 #	if args.np > 1:
 #		# Combine the results if multiprocessing has been used.
 #		finalResult = Result(polygons, args)
@@ -480,7 +530,10 @@ if __name__ == "__main__":
 			result_objects = pool.map(main, tmp_input_files)
 			
 			# Instantiate a Result object to join the results from the parallel processes.
-			polygons = Polygons(args)
+			if args.polygons:
+				polygons = TextPolygons(args)
+			if args.shape:
+				polygons = ShapePolygons(args)
 			finalResult = Result(polygons, args)
 			Result.joinResults(finalResult, result_objects)
 			plottResult(finalResult)
@@ -495,7 +548,7 @@ if __name__ == "__main__":
 		
 				if args.polygons:
 					from lib.testData import testPolygons
-					polygons = Polygons(args)
+					polygons = TextPolygons(args)
 					testPolygons(polygons, args.polygons)
 		
 			else:
