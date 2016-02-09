@@ -80,6 +80,14 @@ class Result(object):
 					index += 1
 			self.result[Locality[0]] = newList
 			self.sampletable.append((Locality[0], polygonName, Locality[2], Locality[1]))
+	def localitiesInPolygons(self):
+		# Output only the localities that was found in one of the polygons
+		output = "# Species	Latitude	Longitude	Found in Polygon\n"
+		for sample in self.sampletable:
+			output += str(sample[0]) + "\t" + str(sample[3]) + "\t" + str(sample[2]) + "\t" + str(sample[1]) + "\n"
+		return output
+
+	
 	
 	def getSampletable(self):
 		return self.sampletable

@@ -42,14 +42,29 @@ def parse_args(args):
 	parser.add_argument('--version', action='version', version='%(prog)s 0.9.7')
 	locality_group = parser.add_mutually_exclusive_group(required=True)
 	polygon_group = parser.add_mutually_exclusive_group(required=True)
+
+	# Input files
 	polygon_group.add_argument("-p", "--polygons", help="Set path to file containing polygon coordinates")
 	#polygon_group.add_argument("-p", "--polygons", help="Set path to file containing polygon coordinates", required=True)
 	polygon_group.add_argument("-s", "--shape", help="Set path to shape file containing polygons")
 	locality_group.add_argument("-l", "--localities", help="Set path to file containing species locality data")
 	locality_group.add_argument("-g", "--gbif", help="Set path to file containing species locality data downloaded from GBIF")
 	parser.add_argument("-t", "--tif", help="Set path to geotiff file(s)", nargs="*")
+
+	# Output
+	parser.add_argument("-o", "--out", help="Name of optional output file. Output is sent to STDOUT by default")
 	parser.add_argument("--plot", help="Produce graphical output illustrating coexistance, distribution etc.", action="store_true", default="False")
+	parser.add_argument("--tab", help="Output in tab-separated format instead of NEXUS", action="store_true", default="False")
+	parser.add_argument("--localities_in_polygon_tab", help="Output a tab-separated list of localities found in one of the input polygons")
+	parser.add_argument("--localities_in_polygon_shape", help="Output the localities found in one of the input polygons in shapefile format")
+
+	# Misc.
 	parser.add_argument("--np", help="Number of CPU's to use for the analysis", default=1, type=int)
+	parser.add_argument("-v", "--verbose", action="store_true", help="Report how many times a species is found in each polygon. Don't use in combination with option '--number'")
+	parser.add_argument("-b", "--binomial", action="store_true", help="Treats first two words in species names as genus name and species epithet. Use with care as this option is LIKELY TO LEAD TO ERRONEOUS RESULTS if names in input data are not in binomial form.")
+	parser.add_argument("-n", "--number", help="Set the minimum number of occurrences (localities) needed for considering a species to be present in a polygon", nargs="*")
+	parser.add_argument("--test", help="Test if the input data is in the right format", action="store_true")
+	parser.add_argument("--dev", help=argparse.SUPPRESS, action="store_true")
 	
 	### Stochastic mapping ###
 	mapping_group = parser.add_argument_group('Stochastic_mapping')
@@ -62,13 +77,6 @@ def parse_args(args):
 	mapping_group.add_argument("--max_run_time", help="Max run time for 1 stochastic map (in seconds).", default=60)
 	mapping_group.add_argument("--trait", help="Trait >0 indicates the number of the character to be analyzed", default=0)
 	
-	parser.add_argument("-o", "--out", help="Name of optional output file. Output is sent to STDOUT by default")
-	parser.add_argument("--tab", help="Output in tab-separated format", action="store_true", default="False")
-	parser.add_argument("-v", "--verbose", action="store_true", help="Report how many times a species is found in each polygon. Don't use in combination with option '--number'")
-	parser.add_argument("-b", "--binomial", action="store_true", help="Treats first two words in species names as genus name and species epithet. Use with care as this option is LIKELY TO LEAD TO ERRONEOUS RESULTS if names in input data are not in binomial form.")
-	parser.add_argument("-n", "--number", help="Set the minimum number of occurrences (localities) needed for considering a species to be present in a polygon", nargs="*")
-	parser.add_argument("--test", help="Test if the input data is in the right format", action="store_true")
-	parser.add_argument("--dev", help=argparse.SUPPRESS, action="store_true")
 	
 	### GUI options ###
 	parser.add_argument("--dir_output", help="Output directory for R plots", default=os.getcwd())
@@ -485,8 +493,38 @@ def plottResult(result):
 	else:
 		result.printNexus(args)
 
+	if args.localities_in_polygon_tab:
+		# Print the localities found in a polygon to a tab-separated file
+		localities_in_polygon_tab = open(args.localities_in_polygon_tab, "w")
+		localities_in_polygon_tab.write(result.localitiesInPolygons())
+		localities_in_polygon_tab.close()
+
+	if args.localities_in_polygon_shape:
+		import shapefile
+		w = shapefile.Writer(shapefile.POINT)
+#		shape_outfile = args.localities_in_polygon_shape
+#		print shape_outfile
+		w.autoBalance = 1
+		w.field('LATITUDE')
+                w.field('LONGITUDE')
+                w.field('SPECIES', 'C', '100')
+
+#		for locality in result.localitiesInPolygons():
+		for locality in result.sampletable:
+			w.point(float(locality[2]), float(locality[3]))
+			# Set the field names
+			
+			# Set record name and type
+			w.record(SPECIES=str(locality[0]), LATITUDE=float(locality[3]), LONGITUDE=float(locality[2]))
+#		w.record('First', 'Point')
+		w.save(args.localities_in_polygon_shape)
+#		w.save(shape_outfile)
+
+
+
 
 	if args.plot == True:
+		# Generate various plots using R
 		import os
 		from lib.plot import prepare_plots
 		prepare_plots(result, polygons)
@@ -500,6 +538,7 @@ def plottResult(result):
 
 
 	if args.stochastic_mapping == True:
+		# Run teh stochastic mapping analysis
 		import os
 		import lib.stochasticMapping as stochasticMapping
 		# Run the stochastic mapping analysis

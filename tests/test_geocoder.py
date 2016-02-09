@@ -7,7 +7,7 @@ import geocoder
 import SGC_output
 import subprocess
 
-version = "SpeciesGeoCoder 0.9.4\n"
+version = "SpeciesGeoCoder 0.9.7\n"
 
 class TestParser:
 
@@ -30,13 +30,13 @@ class TestClass:
 		# Coordinate columns in the "wrong" order.
 		return geocoder.parse_args(['-p', 'example_data/polygons.txt', '-l', 'tests/localities_wrong_coordinate-order.csv'])
 
-class TestClassPolygons(TestClass):
-	# Test the class Polygons and at the same time the polygon file
+class TestClassTextPolygons(TestClass):
+	# Test the class TextPolygons and at the same time the polygon file
 
-	def setup_TestPolygons(self):
+	def setup_TestTextPolygons(self):
 		self.args = self.setup_args()
-		self.TestPolygons = geocoder.Polygons(self.args)
-		self.polygon = list(self.TestPolygons.getPolygons())
+		self.TestTextPolygons = geocoder.TextPolygons(self.args)
+		self.polygon = list(self.TestTextPolygons.getPolygons())
 
 	def loop_over_polygons(self, position):
 		for item in self.polygon:
@@ -46,41 +46,41 @@ class TestClassPolygons(TestClass):
 
 	def test_number_of_polygons(self):
 		# Test number of polygons in input file
-		self.setup_TestPolygons()
+		self.setup_TestTextPolygons()
 		assert len(self.polygon) == 8
 		
 	def test_polygonNames(self):
 		# Test names of polygons
-		self.setup_TestPolygons()
+		self.setup_TestTextPolygons()
 		# Test first list that only contains the polygon names
-		assert self.TestPolygons.polygonNames == SGC_output.polygonNames
+		assert self.TestTextPolygons.polygonNames == SGC_output.polygonNames
 
 		self.loop_over_polygons(position=0)
 
 	def test_polygons(self):
 		# Test the polygons
-		self.setup_TestPolygons()
+		self.setup_TestTextPolygons()
 		self.loop_over_polygons(position=1)
 
 	def test_low(self):
 		# Test the low value of the elevation range
-		self.setup_TestPolygons()
+		self.setup_TestTextPolygons()
 		self.loop_over_polygons(position=2)
 
 	def test_high(self):
 		# Test the high value of the elevation range
-		self.setup_TestPolygons()
+		self.setup_TestTextPolygons()
 		self.loop_over_polygons(position=3)
 	
-	def test_setPolygonNames(self):
+	def test_setPolygonName(self):
 		# Again test the list that only contains the names of the polygons
-		self.setup_TestPolygons()
-		self.TestPolygons.setPolygonNames('New_Polygon')
-		assert self.TestPolygons.polygonNames == SGC_output.modified_polygonNames
+		self.setup_TestTextPolygons()
+		self.TestTextPolygons.setPolygonName('New_Polygon')
+		assert self.TestTextPolygons.polygonNames == SGC_output.modified_polygonNames
 
 	def test_getPolygonNames(self):
-		self.setup_TestPolygons()
-		assert self.TestPolygons.getPolygonNames() == SGC_output.polygonNames
+		self.setup_TestTextPolygons()
+		assert self.TestTextPolygons.getPolygonNames() == SGC_output.polygonNames
 
 class TestClassMyLocalities(TestClass):
 	
@@ -266,6 +266,20 @@ class TestResult(TestClass):
 		myElevationProcess = subprocess.Popen('speciesgeocoder -l example_data/localities.csv -p example_data/polygons.txt -t example_data/*.tif',shell=True, stdout=subprocess.PIPE)
 		elevationNexus = open('tests/SGC_elevation_output.NEXUS', 'r')
 		assert myElevationProcess.stdout.readlines() == elevationNexus.readlines()
+	
+	def testRegularGbifOutput(self):
+		# Test the regular output using Gbif locality data and polygons in text format.
+		myProcess = subprocess.Popen('speciesgeocoder -g example_data/gbif_Ivesia_localities.txt -p example_data/polygons.txt',shell=True, stdout=subprocess.PIPE)
+		nexus = open('tests/SGE_Gbif-output.NEXUS', 'r')
+		assert myProcess.stdout.readlines() == nexus.readlines()
+
+	def testRegularShapePolygonOutput(self):
+		# Test the regular output using locality data in csv
+		# and a polygon in Shape format.
+		myProcess = subprocess.Popen('speciesgeocoder -l example_data/localities.csv -s tests/SierraNevada',shell=True, stdout=subprocess.PIPE)
+		shapeOutput = open('tests/SGE_Shape-output.NEXUS', 'r')
+		assert myProcess.stdout.readlines() == shapeOutput.readlines()
+
 
 class TestoutputFile():
 	
