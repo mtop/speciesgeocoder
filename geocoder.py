@@ -564,7 +564,7 @@ if __name__ == "__main__":
 			if args.localities:
 				tmp_input_files = split_file(args.localities, args.np)
 			if args.gbif:
-				sys.exit("[Error] Multiprocessing with GBIF locality data is not implemented yet")
+				tmp_input_files = split_file(args.gbif, args.np)
 			pool = Pool(processes = args.np)
 			result_objects = pool.map(main, tmp_input_files)
 			
@@ -598,6 +598,7 @@ if __name__ == "__main__":
 		#			main(args.localities)
 					plottResult(main(args.localities))
 	
+	# (cont.) Handle keyboard interupts.
 	except KeyboardInterrupt:
 		print 'Interrupted'
 		try:
