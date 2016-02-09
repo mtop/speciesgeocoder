@@ -44,42 +44,43 @@ def parse_args(args):
 	polygon_group = parser.add_mutually_exclusive_group(required=True)
 
 	# Input files
-	polygon_group.add_argument("-p", "--polygons", help="Set path to file containing polygon coordinates")
+	polygon_group.add_argument("-p", "--polygons", help="Set path to file containing polygon coordinates in text format.")
 	#polygon_group.add_argument("-p", "--polygons", help="Set path to file containing polygon coordinates", required=True)
-	polygon_group.add_argument("-s", "--shape", help="Set path to shape file containing polygons")
-	locality_group.add_argument("-l", "--localities", help="Set path to file containing species locality data")
-	locality_group.add_argument("-g", "--gbif", help="Set path to file containing species locality data downloaded from GBIF")
-	parser.add_argument("-t", "--tif", help="Set path to geotiff file(s)", nargs="*")
+	polygon_group.add_argument("--p_shape", help="Set path to shape file containing polygons in shapefile format.")
+	locality_group.add_argument("-l", "--localities", help="Set path to file containing species locality data in text format.")
+	locality_group.add_argument("--l_shape", help="Set path to shape file containing locality data in shapefile format.")
+	locality_group.add_argument("-g", "--gbif", help="Set path to file containing species locality data downloaded from GBIF.")
+	parser.add_argument("-t", "--tif", help="Set path to geotiff file(s).", nargs="*")
 
 	# Output
-	parser.add_argument("-o", "--out", help="Name of optional output file. Output is sent to STDOUT by default")
+	parser.add_argument("-o", "--out", help="Name of optional output file. Output is sent to STDOUT by default.")
 	parser.add_argument("--plot", help="Produce graphical output illustrating coexistance, distribution etc.", action="store_true", default="False")
-	parser.add_argument("--tab", help="Output in tab-separated format instead of NEXUS", action="store_true", default="False")
-	parser.add_argument("--localities_in_polygon_tab", help="Output a tab-separated list of localities found in one of the input polygons")
-	parser.add_argument("--localities_in_polygon_shape", help="Output the localities found in one of the input polygons in shapefile format")
+	parser.add_argument("--tab", help="Output in tab-separated format instead of NEXUS.", action="store_true", default="False")
+	parser.add_argument("--localities_in_polygon_tab", help="Output a tab-separated list of localities found in one of the input polygons.")
+	parser.add_argument("--localities_in_polygon_shape", help="Output the localities found in one of the input polygons in shapefile format.")
 
 	# Misc.
-	parser.add_argument("--np", help="Number of CPU's to use for the analysis", default=1, type=int)
-	parser.add_argument("-v", "--verbose", action="store_true", help="Report how many times a species is found in each polygon. Don't use in combination with option '--number'")
+	parser.add_argument("--np", help="Number of CPU's to use for the analysis.", default=1, type=int)
+	parser.add_argument("-v", "--verbose", action="store_true", help="Report how many times a species is found in each polygon. Don't use in combination with option '--number'.")
 	parser.add_argument("-b", "--binomial", action="store_true", help="Treats first two words in species names as genus name and species epithet. Use with care as this option is LIKELY TO LEAD TO ERRONEOUS RESULTS if names in input data are not in binomial form.")
-	parser.add_argument("-n", "--number", help="Set the minimum number of occurrences (localities) needed for considering a species to be present in a polygon", nargs="*")
-	parser.add_argument("--test", help="Test if the input data is in the right format", action="store_true")
+	parser.add_argument("-n", "--number", help="Set the minimum number of occurrences (localities) needed for considering a species to be present in a polygon.", nargs="*")
+	parser.add_argument("--test", help="Test if the input data is in the right (text) format.", action="store_true")
 	parser.add_argument("--dev", help=argparse.SUPPRESS, action="store_true")
 	
 	### Stochastic mapping ###
 	mapping_group = parser.add_argument_group('Stochastic_mapping')
-	mapping_group.add_argument("--stochastic_mapping", help="Do stochastic mapping", action="store_true")
+	mapping_group.add_argument("--stochastic_mapping", help="Do stochastic mapping.", action="store_true")
 	#mapping_group.add_argument("--distribution_table", help="Path to species distribution table produced by SpeciesGeoCoder", default="occurences.sgc.txt")
-	mapping_group.add_argument("--tree", help="Set path to NEXUS tree file")
-	mapping_group.add_argument("--m_out", help="Name of the output file from the stochastic mapping analysis", default="Stochastic_mapping")
-	mapping_group.add_argument("--n_rep", help="Number of stochastic maps", default=100)
-	mapping_group.add_argument("--map_model", help="Transition model", choices=['ER', 'SYM', 'ARD'], default="ER") 
+	mapping_group.add_argument("--tree", help="Set path to NEXUS tree file.")
+	mapping_group.add_argument("--m_out", help="Name of the output file from the stochastic mapping analysis.", default="Stochastic_mapping")
+	mapping_group.add_argument("--n_rep", help="Number of stochastic maps.", default=100)
+	mapping_group.add_argument("--map_model", help="Transition model.", choices=['ER', 'SYM', 'ARD'], default="ER") 
 	mapping_group.add_argument("--max_run_time", help="Max run time for 1 stochastic map (in seconds).", default=60)
-	mapping_group.add_argument("--trait", help="Trait >0 indicates the number of the character to be analyzed", default=0)
+	mapping_group.add_argument("--trait", help="Trait >0 indicates the number of the character to be analyzed.", default=0)
 	
 	
 	### GUI options ###
-	parser.add_argument("--dir_output", help="Output directory for R plots", default=os.getcwd())
+	parser.add_argument("--dir_output", help="Output directory for R plots.", default=os.getcwd())
 	parser.add_argument("--path_script", help=argparse.SUPPRESS, default=os.getcwd())
 	
 	return parser.parse_args(args)
@@ -147,7 +148,7 @@ class ShapePolygons(Polygons):
 			# handling an ImportError for the argparse module.
 			sys.stderr.write("[Error] The python module \"shapefile\" is not installed\n")
 			
-		self.shapeFile = args.shape
+		self.shapeFile = args.p_shape
 		self.sf = shapefile.Reader(self.shapeFile)
 		self.shapes = self.sf.shapes()
 		self.numberOfPolygons = self.sf.numRecords
@@ -199,8 +200,72 @@ class Localities(object):
 			nr += 1
 		return nr
 
+class ShapeLocalities(Localities):
+	# Object that contains the locality data
+	# read from a shapefile.
+	def __init__(self, args, locality_file):
+		try:
+			import shapefile
+		except ImportError:
+			# Extend this part with a function similar to the one 
+			# handling an ImportError for the argparse module.
+			sys.stderr.write("[Error] The python module \"shapefile\" is not installed\n")
+		self.args = args
+		self.shapeFile = locality_file
+		self.localityFile = locality_file
+		# Note: Add a try/except statement here
+		self.sf = shapefile.Reader(self.shapeFile)
+		self.shapes = self.sf.shapes()		
+		self.numberOfLocalities = self.sf.numRecords
+		self.speciesNames = []
+#		self.order = ""
+		self.progress = 0
+#		for name in self.getLocalities():
+#			self.setSpeciesName(name[0])
 
-class MyLocalities(Localities):
+		
+
+	def getLocalities(self):
+		for number in range(len(self.sf.fields)):
+			if self.sf.fields[number][0] == "SPECIES":
+				self.SPECIES = number - 1
+			if self.sf.fields[number][0] == "LATITUDE":
+				self.LATITUDE = number - 1 
+			if self.sf.fields[number][0] == "LONGITUDE":
+				self.LONGITUDE = number - 1
+
+		for locality in self.sf.records():
+			if self.args.binomial:
+				locality[self.SPECIES] = self.getBinomialName(locality[self.SPECIES])
+			self.setSpeciesName(locality[self.SPECIES])
+			
+			yield locality[self.SPECIES] , locality[self.LATITUDE], locality[self.LONGITUDE]
+	
+	def getCoOrder(self):            		
+        	# REDUNDANT
+        	# Retur the order of the coordinates
+        	return "lat-long"
+                                         
+        def setSpeciesName(self, name):
+        	if name not in self.speciesNames:
+        		self.speciesNames.append(name)
+                                         
+        def getSpeciesNames(self):
+        	return self.speciesNames
+                                         
+        def getLocalityFileName(self):
+        	return self.localityFile
+
+
+
+
+
+
+
+		
+
+
+class TextLocalities(Localities):
 	# Object that contains the locality data
 	# read from a tab-delimited *.csv file.
 	def __init__(self, args, locality_file):
@@ -409,9 +474,15 @@ def print_progress(done, numLoc):
 
 
 def main(locality_file):
+
+	if args.l_shape:
+		localities = ShapeLocalities(args, locality_file)
+	if args.localities:
+		localities = TextLocalities(args, locality_file)
+
 	from lib.result import Result
 	
-	if args.shape:
+	if args.p_shape:
 		polygons = ShapePolygons(args)
 	if args.polygons:
 		polygons = TextPolygons(args)
@@ -428,8 +499,8 @@ def main(locality_file):
 	# Read the locality data and test if the coordinates
 	# are located in any of the polygons.
 	# For each locality record ...
-	if args.localities:
-		localities = MyLocalities(args, locality_file)
+	if args.localities or args.l_shape:
+#		localities = TextLocalities(args, locality_file)
 		numLoc = localities.getNrLocalities()
 		result.setSpeciesNames(localities)
 		for locality in localities.getLocalities():
@@ -571,7 +642,7 @@ if __name__ == "__main__":
 			# Instantiate a Result object to join the results from the parallel processes.
 			if args.polygons:
 				polygons = TextPolygons(args)
-			if args.shape:
+			if args.p_shape:
 				polygons = ShapePolygons(args)
 			finalResult = Result(polygons, args)
 			Result.joinResults(finalResult, result_objects)
@@ -582,7 +653,7 @@ if __name__ == "__main__":
 			if args.test == True:
 				if args.localities:
 					from lib.testData import testLocality
-					localities = MyLocalities(args)
+					localities = TextLocalities(args)
 					testLocality(localities, args.localities)
 		
 				if args.polygons:
@@ -596,7 +667,12 @@ if __name__ == "__main__":
 					cProfile.run("main()")
 				else:
 		#			main(args.localities)
-					plottResult(main(args.localities))
+					if args.localities:
+						plottResult(main(args.localities))
+					if args.l_shape:
+						plottResult(main(args.l_shape))
+					if args.gbif:
+						plottResult(main(args.gbif))
 	
 	# (cont.) Handle keyboard interupts.
 	except KeyboardInterrupt:
