@@ -82,58 +82,58 @@ class TestClassTextPolygons(TestClass):
 		self.setup_TestTextPolygons()
 		assert self.TestTextPolygons.getPolygonNames() == SGC_output.polygonNames
 
-class TestClassMyLocalities(TestClass):
+class TestClassTextLocalities(TestClass):
 	
-	def setup_TestMyLocalities(self):
+	def setup_TestTextLocalities(self):
 		self.args = self.setup_args()
-		self.TestMyLocalities = geocoder.MyLocalities(self.args, 'example_data/localities.csv')
-	def setup_TestMyLocalities_wrong_coordinate_order(self):
+		self.TestTextLocalities = geocoder.TextLocalities(self.args, 'example_data/localities.csv')
+	def setup_TestTextLocalities_wrong_coordinate_order(self):
 		# Using wrong coordinate culomn order
 		self.args3 = self.setup_args3()
-		self.TestMyLocalities3 = geocoder.MyLocalities(self.args3, 'example_data/localities.csv')
+		self.TestTextLocalities3 = geocoder.TextLocalities(self.args3, 'example_data/localities.csv')
 	
 	def test_speciesNames(self):
 # Perhaps redundant
 		# Test species names
-        	self.setup_TestMyLocalities()
+        	self.setup_TestTextLocalities()
         	# Test first list that only contains the species names
-        	assert self.TestMyLocalities.speciesNames == SGC_output.speciesNames
+        	assert self.TestTextLocalities.speciesNames == SGC_output.speciesNames
 
 	def test_getLocalities(self):
-		self.setup_TestMyLocalities()
-		assert list(self.TestMyLocalities.getLocalities()) == SGC_output.localities
+		self.setup_TestTextLocalities()
+		assert list(self.TestTextLocalities.getLocalities()) == SGC_output.localities
 
 	def test_getLocalities_wrong_coordinate_order(self):
-		self.setup_TestMyLocalities_wrong_coordinate_order()
-		assert list(self.TestMyLocalities3.getLocalities()) == SGC_output.localities
+		self.setup_TestTextLocalities_wrong_coordinate_order()
+		assert list(self.TestTextLocalities3.getLocalities()) == SGC_output.localities
 
 	def test_getCoOrder(self):
-		self.setup_TestMyLocalities()
-		assert self.TestMyLocalities.getCoOrder() == 'lat-long'
+		self.setup_TestTextLocalities()
+		assert self.TestTextLocalities.getCoOrder() == 'lat-long'
 
 	def test_setSpeciesNames(self):
-		self.setup_TestMyLocalities()
-		self.TestMyLocalities.setSpeciesName('New Species')
-		assert self.TestMyLocalities.speciesNames == SGC_output.modified_speciesNames
+		self.setup_TestTextLocalities()
+		self.TestTextLocalities.setSpeciesName('New Species')
+		assert self.TestTextLocalities.speciesNames == SGC_output.modified_speciesNames
 
 	def test_getSpeciesNames(self):
-		self.setup_TestMyLocalities()
-		assert self.TestMyLocalities.getSpeciesNames() == SGC_output.speciesNames
+		self.setup_TestTextLocalities()
+		assert self.TestTextLocalities.getSpeciesNames() == SGC_output.speciesNames
 
 	def test_getLocalityFileName(self):
-		self.setup_TestMyLocalities()
-		assert self.TestMyLocalities.getLocalityFileName() == 'example_data/localities.csv'
+		self.setup_TestTextLocalities()
+		assert self.TestTextLocalities.getLocalityFileName() == 'example_data/localities.csv'
 	
 	def test_getBinomialName(self):
-		self.setup_TestMyLocalities()
-		assert self.TestMyLocalities.getBinomialName('New species name') == 'New species'
-		assert self.TestMyLocalities.getBinomialName('New species with name') == 'New species'
+		self.setup_TestTextLocalities()
+		assert self.TestTextLocalities.getBinomialName('New species name') == 'New species'
+		assert self.TestTextLocalities.getBinomialName('New species with name') == 'New species'
 # Perhaps something to implement
-#		assert self.TestMyLocalities.getBinomialName('New_species + name') == 'New species'
+#		assert self.TestTextLocalities.getBinomialName('New_species + name') == 'New species'
 
 	def test_getNrLocalities(self):
-		self.setup_TestMyLocalities()
-		assert self.TestMyLocalities.getNrLocalities() == 571
+		self.setup_TestTextLocalities()
+		assert self.TestTextLocalities.getNrLocalities() == 571
 
 
 class TestGbifLocalities(TestClass):
@@ -172,38 +172,44 @@ class TestPointInPolygon(TestClass):
 		self.setup_PipTest()
 		x = -120.42
 		y = 39.48
+		locality = ['Specie name', y, x]
 #		print list(geocoder.pointInPolygon(poly, x, y))
-		assert geocoder.pointInPolygon(self.poly, x, y) == False
+		assert geocoder.pointInPolygon(self.poly, locality) == False
 	
 	def test_True1(self):
 		self.setup_PipTest()
 		x = -117.0
 		y = 46.0
-		assert geocoder.pointInPolygon(self.poly, x, y) == True
+		locality = ['Specie name', y, x]
+		assert geocoder.pointInPolygon(self.poly, locality) == True
 
 	def test_True2(self):
 		self.setup_PipTest()
 		x = -117.1111111111111111111111111111111111111111111111
 		y = 46.1111111111111111111111111111111111111111111111
-		assert geocoder.pointInPolygon(self.poly, x, y) == True
+		locality = ['Specie name', y, x]
+		assert geocoder.pointInPolygon(self.poly, locality) == True
 
 	def test_OnEdge(self):
 		self.setup_PipTest()
 		x = -118.005656529728995
 		y = 45.98799579322525233
-		assert geocoder.pointInPolygon(self.poly, x, y) == False
+		locality = ['Specie name', y, x]
+		assert geocoder.pointInPolygon(self.poly, locality) == False
 
 	def test_NonFloat(self):
 		self.setup_PipTest()
 		x = 0
 		y = 1
-		assert geocoder.pointInPolygon(self.poly, x, y) == False
+		locality = ['Specie name', y, x]
+		assert geocoder.pointInPolygon(self.poly, locality) == False
 
 	def test_NonNumber(self):
 		self.setup_PipTest()
 		x = 'yes'
 		y = 'no'
-		assert geocoder.pointInPolygon(self.poly, x, y) == False
+		locality = ['Specie name', y, x]
+		assert geocoder.pointInPolygon(self.poly, locality) == False
 
 #	def test_InputData(self):		
 #		self.setup_args()
@@ -276,7 +282,7 @@ class TestResult(TestClass):
 	def testRegularShapePolygonOutput(self):
 		# Test the regular output using locality data in csv
 		# and a polygon in Shape format.
-		myProcess = subprocess.Popen('speciesgeocoder -l example_data/localities.csv -s tests/SierraNevada',shell=True, stdout=subprocess.PIPE)
+		myProcess = subprocess.Popen('speciesgeocoder -l example_data/localities.csv --p_shape tests/SierraNevada',shell=True, stdout=subprocess.PIPE)
 		shapeOutput = open('tests/SGE_Shape-output.NEXUS', 'r')
 		assert myProcess.stdout.readlines() == shapeOutput.readlines()
 
