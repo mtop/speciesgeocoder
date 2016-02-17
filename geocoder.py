@@ -398,21 +398,28 @@ class GbifLocalities(Localities):
 		return self.gbifFile
 
 
-def pointInPolygon(poly, x, y):
+#def pointInPolygon(poly, x, y):
+def pointInPolygon(poly, locality):
 	# Returns "True" if a point is inside a given polygon. 
 	# Othewise returns "False". The polygon is a list of 
 	# Longitude/Latitude (x,y) pairs.
 	# Code modified from  http://www.ariel.com.au/a/python-point-int-poly.html
 	# and alos described at http://geospatialpython.com/2011/01/point-in-polygon.html
 	try:
-		x = float(x)
+#		x = float(x)
+		x = float(locality[2])
 	except:
-		sys.stderr.write("[ Warning ] \'%s\' is not a number\n" % x)
+#		sys.stderr.write("[ Warning ] \'%s\' is not a number\n" % x)
+#		sys.stderr.write("[ Warning ] \'%s\' is not a number\n" % locality[2])
+		sys.stderr.write("[ Warning ] \'%s\t%s\t%s\' does not have valid coordinates\n" % (locality[0], locality[1], locality[2]))
 		return False
 	try:
-		y = float(y)
+#		y = float(y)
+		y = float(locality[1])
 	except:
-		sys.stderr.write("[ Warning ] \'%s\' is not a number\n" % y)
+#		sys.stderr.write("[ Warning ] \'%s\' is not a number\n" % y)
+#		sys.stderr.write("[ Warning ] \'%s\' is not a number\n" % locality[1])
+		sys.stderr.write("[ Warning ] \'%s\t%s\t%s\' does not have valid coordinates\n" % (locality[0], locality[1], locality[2]))
 		return False
 	n = len(poly)
 	inside = False
@@ -509,7 +516,8 @@ def main(locality_file):
 			for polygon in polygons.getPolygons():
 				# ... test if the locality record is found in the polygon.
 				# locality[0] = species name, locality[1] = latitude, locality[2] =  longitude
-				if pointInPolygon(polygon[1], locality[2], locality[1]) == True:
+#				if pointInPolygon(polygon[1], locality[2], locality[1]) == True:
+				if pointInPolygon(polygon[1], locality) == True:
 					# Test if elevation files are available.
 					if args.tif:
 						if elevationTest(locality[1], locality[2], polygon, index) == True:
@@ -530,7 +538,8 @@ def main(locality_file):
 			# ... and for each polygon ...
 			for polygon in polygons.getPolygons():
 				# ... test if the locality record is found in the polygon.
-				if pointInPolygon(polygon[1], locality[2], locality[1]) == True:
+#				if pointInPolygon(polygon[1], locality[2], locality[1]) == True:
+				if pointInPolygon(polygon[1], locality) == True:
 					result.setResult(locality, polygon[0])
 					
 					# Test if elevation files are available.
