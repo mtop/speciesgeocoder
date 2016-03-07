@@ -125,6 +125,8 @@ class Result(object):
 		if args.out is not None:
 			self.OUTHANDLE.close()
 
+#		print self.getResult()
+
 
 	def printTab(self, args):
 		# Print the result in tab-delimited format.
@@ -182,3 +184,7 @@ class Result(object):
 			self.setSpeciesNames(result)
 			for species, value in result.getResult().iteritems():
 				self.result[species] = map(operator.add, self.result[species], value)
+
+	def sensitivityTest(self):
+		import randomizationTest 
+		randomizationTest.sensitivity_test(self.getResult())
