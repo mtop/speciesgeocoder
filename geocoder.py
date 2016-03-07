@@ -60,6 +60,7 @@ def parse_args(args):
 	parser.add_argument("--localities_in_polygon_shape", help="Output the localities found in one of the input polygons in shapefile format.")
 
 	# Misc.
+	parser.add_argument("--uncertainty", help="Estimate the uncertainty on the geographycal coding", action="store_true")
 	parser.add_argument("--np", help="Number of CPU's to use for the analysis.", default=1, type=int)
 	parser.add_argument("-v", "--verbose", action="store_true", help="Report how many times a species is found in each polygon. Don't use in combination with option '--number'.")
 	parser.add_argument("-b", "--binomial", action="store_true", help="Treats first two words in species names as genus name and species epithet. Use with care as this option is LIKELY TO LEAD TO ERRONEOUS RESULTS if names in input data are not in binomial form.")
@@ -550,6 +551,7 @@ def main(locality_file):
 					else:
 						# Store the result
 						result.setResult(locality, polygon[0])
+
 	# Clean up
 	if args.np > 1:
 		try:
@@ -624,6 +626,10 @@ def plottResult(result):
 		# Run the stochastic mapping analysis
 		stochasticMapping.main(args, result)
 
+	# Take uncertainty into account
+	if args.uncertainty == True:
+		print "\n"
+		result.sensitivityTest()
 
 
 if __name__ == "__main__":
@@ -656,7 +662,7 @@ if __name__ == "__main__":
 			finalResult = Result(polygons, args)
 			Result.joinResults(finalResult, result_objects)
 			plottResult(finalResult)
-		
+
 		else:
 	
 			if args.test == True:
@@ -682,7 +688,7 @@ if __name__ == "__main__":
 						plottResult(main(args.l_shape))
 					if args.gbif:
 						plottResult(main(args.gbif))
-	
+
 	# (cont.) Handle keyboard interupts.
 	except KeyboardInterrupt:
 		print 'Interrupted'
