@@ -679,7 +679,7 @@ if __name__ == "__main__":
 			else:
 				if args.dev:
 					import cProfile
-					cProfile.run("main()")
+					cProfile.run("main(locality_file)")
 				else:
 		#			main(args.localities)
 					if args.localities:
