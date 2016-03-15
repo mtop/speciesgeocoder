@@ -26,7 +26,7 @@ def sensitivity_test(dict):
 			species_differently_coded = sum(abs(randomized_pres_abs-pres_abs),axis=1)
 			areas_differently_coded = sum(abs(randomized_pres_abs-pres_abs),axis=0)
 			ind_species_differently_coded = np.zeros(np.shape(species_differently_coded))
-			ind_species_differently_coded[species_differently_coded>1]+=1
+			ind_species_differently_coded[species_differently_coded>0]+=1
 			n_wrong_sp.append(len(species_differently_coded[species_differently_coded>0]))
 			l.append(ind_species_differently_coded)
 		
