@@ -1,3 +1,5 @@
+import sys
+
 try: 
 	from numpy import *
 	import numpy as np
