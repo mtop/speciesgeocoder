@@ -172,7 +172,10 @@ for (replicate in 1:n_rep){
 	if (class(tree_obj)=="multiPhylo"){
 		S=sample(length(tree_obj),1)
 		current_tree=tree_obj[[S]]
-	}else{current_tree=tree_obj}
+	}else{
+		current_tree=tree_obj
+		S=1
+	}
 	
 	cat("\nreplicate:", replicate, "tree:", S, "\t")
 	#print(no_char)
