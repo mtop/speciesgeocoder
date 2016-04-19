@@ -52,7 +52,7 @@ def sensitivity_test(dict):
 		outfile.writelines(line)
 	
 	outfile.close()
-	sys.stderr.write("Results of the sensitivity test are saved in 'sensitivity_test.txt'")
+	sys.stderr.write("Results of the sensitivity test are saved in 'sensitivity_test.txt'\n")
 
 
 # test
