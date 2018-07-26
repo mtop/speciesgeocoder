@@ -71,7 +71,7 @@ def parse_args(args):
 	### Stochastic mapping ###
 	mapping_group = parser.add_argument_group('Stochastic_mapping')
 	mapping_group.add_argument("--stochastic_mapping", help="Do stochastic mapping.", action="store_true")
-	#mapping_group.add_argument("--distribution_table", help="Path to species distribution table produced by SpeciesGeoCoder", default="occurences.sgc.txt")
+	mapping_group.add_argument("--distribution_table", help="Path to species distribution table produced by SpeciesGeoCoder", default="occurences.sgc.txt")
 	mapping_group.add_argument("--tree", help="Set path to NEXUS tree file.")
 	mapping_group.add_argument("--m_out", help="Name of the output file from the stochastic mapping analysis.", default="Stochastic_mapping")
 	mapping_group.add_argument("--n_rep", help="Number of stochastic maps.", default=100)
@@ -161,6 +161,7 @@ class ShapePolygons(Polygons):
 	def getPolygons(self):
 		nbr = 0
 		for nbr in range(self.numberOfPolygons):
+
 			self.setPolygonName(self.sf.record()[nbr])
 			# Name
 			name =  self.sf.record()[nbr]

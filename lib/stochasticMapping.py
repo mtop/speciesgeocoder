@@ -47,7 +47,9 @@ def main(args, result):
 	for name in sorted(result.getResult()):
 		string = "%s\t" % name.replace(" ", "_")
 		for record in result.resultToStr(result.result[name]):
-			string += "%s\t" % record
+#			string += "%s\t" % record
+			string += "%s" % record.replace(",", "\t")
+#			print string					# Devel.
 		string = string[:-1] + "\n"
 		out.write(string)
 	out.close()
