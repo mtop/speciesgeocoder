@@ -490,7 +490,8 @@ def main(locality_file):
 		localities = TextLocalities(args, locality_file)
 
 	from lib.result import Result
-	
+
+	# This next part is probably redundant, sinch assigning the 'polygons' variable is now done in the main() function.
 	if args.p_shape:
 		polygons = ShapePolygons(args)
 	if args.polygons:
@@ -641,6 +642,11 @@ if __name__ == "__main__":
 		# Curticy of Viktor Kerkez (http://stackoverflow.com/questions/18160078
 		# /how-do-you-write-tests-for-the-argparse-portion-of-a-python-module)
 		args = parse_args(sys.argv[1:])
+
+		if args.polygons:
+			polygons = TextPolygons(args)
+		if args.p_shape:
+			polygons = ShapePolygons(args)
 	
 		# Multiprocessing
 		if args.np > 1:
@@ -656,10 +662,10 @@ if __name__ == "__main__":
 			result_objects = pool.map(main, tmp_input_files)
 			
 			# Instantiate a Result object to join the results from the parallel processes.
-			if args.polygons:
-				polygons = TextPolygons(args)
-			if args.p_shape:
-				polygons = ShapePolygons(args)
+#			if args.polygons:
+#				polygons = TextPolygons(args)
+#			if args.p_shape:
+#				polygons = ShapePolygons(args)
 			finalResult = Result(polygons, args)
 			Result.joinResults(finalResult, result_objects)
 			plottResult(finalResult)
@@ -674,7 +680,7 @@ if __name__ == "__main__":
 		
 				if args.polygons:
 					from lib.testData import testPolygons
-					polygons = TextPolygons(args)
+#					polygons = TextPolygons(args)
 					testPolygons(polygons, args.polygons)
 		
 			else:
