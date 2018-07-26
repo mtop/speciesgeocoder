@@ -662,10 +662,6 @@ if __name__ == "__main__":
 			result_objects = pool.map(main, tmp_input_files)
 			
 			# Instantiate a Result object to join the results from the parallel processes.
-#			if args.polygons:
-#				polygons = TextPolygons(args)
-#			if args.p_shape:
-#				polygons = ShapePolygons(args)
 			finalResult = Result(polygons, args)
 			Result.joinResults(finalResult, result_objects)
 			plottResult(finalResult)
@@ -680,7 +676,6 @@ if __name__ == "__main__":
 		
 				if args.polygons:
 					from lib.testData import testPolygons
-#					polygons = TextPolygons(args)
 					testPolygons(polygons, args.polygons)
 		
 			else:
@@ -688,7 +683,6 @@ if __name__ == "__main__":
 					import cProfile
 					cProfile.run("main(locality_file)")
 				else:
-		#			main(args.localities)
 					if args.localities:
 						plottResult(main(args.localities))
 					if args.l_shape:
