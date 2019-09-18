@@ -243,20 +243,20 @@ class ShapeLocalities(Localities):
 			
 			yield locality[self.SPECIES] , locality[self.LATITUDE], locality[self.LONGITUDE]
 	
-	def getCoOrder(self):            		
-        	# REDUNDANT
-        	# Retur the order of the coordinates
-        	return "lat-long"
-                                         
-        def setSpeciesName(self, name):
-        	if name not in self.speciesNames:
-        		self.speciesNames.append(name)
-                                         
-        def getSpeciesNames(self):
-        	return self.speciesNames
-                                         
-        def getLocalityFileName(self):
-        	return self.localityFile
+	def getCoOrder(self):       		
+		# REDUNDANT
+		# Retur the order of the coordinates
+		return "lat-long"
+
+	def setSpeciesName(self, name):
+		if name not in self.speciesNames:
+			self.speciesNames.append(name)
+			
+	def getSpeciesNames(self):
+		return self.speciesNames
+
+	def getLocalityFileName(self):
+		return self.localityFile
 
 
 
@@ -590,8 +590,8 @@ def plottResult(result):
 #		print shape_outfile
 		w.autoBalance = 1
 		w.field('LATITUDE')
-                w.field('LONGITUDE')
-                w.field('SPECIES', 'C', '100')
+		w.field('LONGITUDE')
+		w.field('SPECIES', 'C', '100')
 
 #		for locality in result.localitiesInPolygons():
 		for locality in result.sampletable:
@@ -613,7 +613,7 @@ def plottResult(result):
 		from lib.plot import prepare_plots
 		prepare_plots(result, polygons)
 		#__ GUI STUFF
-		dir_output = args.dir_output         # Working directory
+		dir_output = args.dir_output	 # Working directory
 		path_script = args.path_script
 		cmd="Rscript %s/R/graphical_output.R %s %s %s %s %s %s" \
 		% (path_script,path_script, "coordinates.sgc.txt", "polygons.sgc.txt", "sampletable.sgc.txt", "speciestable.sgc.txt",dir_output)
