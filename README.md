@@ -1,12 +1,12 @@
 ### What is SpeciesGeoCoder?
 
-SpeciesGeoCoder is a free software package for coding species occurrences into user-defined units for e.g. biogeographic analyses. The background and goals of the package are described in the following pre-print: http://biorxiv.org/content/early/2014/09/17/009274
+SpeciesGeoCoder is a free software package for coding species occurrences into user-defined units for e.g. biogeographic analyses. The background and goals of the package are described in this paper: https://academic.oup.com/sysbio/article/66/2/145/2670075
 
 ### Which versions are available?
 
 1. The one available here and written in Python 
 1. A web interface that allows the analysis of data online: https://portal.bils.se/tools/speciesgeocoder
-1. A similar package written solely in R: https://cran.rstudio.com/web/packages/speciesgeocodeR/
+1. A similar package written solely in R: https://github.com/azizka/speciesgeocodeR
 
 ### More details
 
